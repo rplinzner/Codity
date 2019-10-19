@@ -15,5 +15,6 @@ namespace Twitter.Data.Model
         public string Text { get; set; }
 
         public ICollection<Comment> Comments { get; set; }
+        public ICollection<TweetLike> Likes { get; set; }
     }
 }

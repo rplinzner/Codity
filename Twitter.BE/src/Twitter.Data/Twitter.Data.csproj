@@ -5,12 +5,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Model\User.cs~RF219048e0.TMP" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.0.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
   </ItemGroup>
 
 </Project>

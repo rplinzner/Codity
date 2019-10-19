@@ -11,6 +11,9 @@ namespace Twitter.Data.Model
         public string AboutMe { get; set; }
         public DateTime? BirthDay { get; set; }
         public string Image { get; set; }
+       
+        public int? GenderId { get; set; }
+        public Gender Gender { get; set; }
 
         public Settings Settings { get; set; }
         public ICollection<Tweet> Tweets { get; set; }

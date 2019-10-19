@@ -1,9 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using Twitter.Data.Model;
 
 namespace Twitter.Data.Context
@@ -29,10 +26,37 @@ namespace Twitter.Data.Context
 
             builder.Entity<User>(entity =>
             {
+                entity
+                    .HasMany(c=>c.Following)
+                    .WithOne(c => c.Follower)
+                    .HasForeignKey(c => c.FollowerId)
+                    .OnDelete(DeleteBehavior.Restrict);
+                
+                entity
+                    .HasMany(c=>c.Followers)
+                    .WithOne(c => c.Following)
+                    .HasForeignKey(c => c.FollowingId);
+
                 entity.ToTable("Users");
             });
 
-            builder.Entity<IdentityRole>().ToTable("Roles");
+            builder.Entity<Tweet>(entity =>
+            {
+                entity
+                    .HasMany(c => c.Comments)
+                    .WithOne(c => c.Tweet)
+                    .HasForeignKey(c => c.TweetId)
+                    .OnDelete(DeleteBehavior.Restrict);
+                
+                entity
+                    .HasMany(c => c.Likes)
+                    .WithOne(c => c.Tweet)
+                    .HasForeignKey(c => c.TweetId)
+                    .OnDelete(DeleteBehavior.Restrict);
+            });
+
+
+            builder.Entity<IdentityRole<int>>().ToTable("Roles");
             builder.Entity<IdentityRoleClaim<int>>().ToTable("RoleClaims");
             builder.Entity<IdentityUserLogin<int>>().ToTable("UserLogins");
             builder.Entity<IdentityUserClaim<int>>().ToTable("UserClaims");

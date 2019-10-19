@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Twitter.WebApi.ExtensionMethods;
 
 namespace Twitter.WebApi
 {
@@ -18,6 +19,11 @@ namespace Twitter.WebApi
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            services.AddDbContext(Configuration);
+            services.AddIdentity();
+            services.AddServices();
+            services.AddRepositories();
+
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
