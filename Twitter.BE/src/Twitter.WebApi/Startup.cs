@@ -20,8 +20,12 @@ namespace Twitter.WebApi
         {
             services.AddControllers();
             services.AddDbContext(Configuration);
+            services.AddAuthentication(Configuration);
+            services.AddAndConfigureLocalization();
             services.AddIdentity();
+            services.AddAndConfigureAutoMapper();
             services.AddServices();
+            services.ConfigureOptions(Configuration);
             services.AddRepositories();
 
         }
@@ -35,7 +39,11 @@ namespace Twitter.WebApi
 
             app.UseHttpsRedirection();
 
+            app.UseRequestLocalization();
+
             app.UseRouting();
+
+            app.UseAuthentication();
 
             app.UseAuthorization();
 
