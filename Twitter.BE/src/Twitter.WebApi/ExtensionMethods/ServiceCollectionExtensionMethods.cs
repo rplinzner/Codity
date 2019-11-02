@@ -12,11 +12,13 @@ using System.Globalization;
 using System.Text;
 using Twitter.Data.Context;
 using Twitter.Data.Model;
+using Twitter.Repositories.Interfaces;
+using Twitter.Repositories.Repositories;
+using Twitter.Services.Helpers;
 using Twitter.Services.Interfaces;
 using Twitter.Services.Mappings;
 using Twitter.Services.Options;
 using Twitter.Services.Services;
-using Twitter.Shared.Helpers;
 
 namespace Twitter.WebApi.ExtensionMethods
 {
@@ -77,7 +79,12 @@ namespace Twitter.WebApi.ExtensionMethods
 
         public static void AddAuthentication(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            services
+                .AddAuthentication(options =>
+                {
+                    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                })
                 .AddJwtBearer(options =>
                 {
                     options.TokenValidationParameters = new TokenValidationParameters
@@ -106,10 +113,17 @@ namespace Twitter.WebApi.ExtensionMethods
             services.AddTransient<IAuthenticationService, AuthenticationService>();
             services.AddTransient<IEmailSenderService, EmailSenderService>();
             services.AddTransient<ITokenProviderService, JwtTokenProviderService>();
+            services.AddTransient<IUserService, UserService>();
+            services.AddTransient<IUserContext, UserContext>();
+            services.AddTransient<DataSeeder>();
         }
 
         public static void AddRepositories(this IServiceCollection services)
         {
+            services.AddTransient<IBaseRepository<Follow>, BaseRepository<Follow>>();
+            services.AddTransient<IBaseRepository<User>, BaseRepository<User>>();
+            services.AddTransient<IBaseRepository<Language>, BaseRepository<Language>>();
+            services.AddTransient<IBaseRepository<Gender>, BaseRepository<Gender>>();
         }
     }
 }

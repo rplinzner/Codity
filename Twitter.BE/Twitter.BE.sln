@@ -5,13 +5,11 @@ VisualStudioVersion = 16.0.29306.81
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Twitter.Services", "src\Twitter.Services\Twitter.Services.csproj", "{B9F447AA-A2B9-4175-B705-8B55E12925DB}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Twitter.Shared", "src\Twitter.Shared\Twitter.Shared.csproj", "{C2B98D7C-1D9A-4E68-A3FC-B09CFF5555A5}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Twitter.Data", "src\Twitter.Data\Twitter.Data.csproj", "{A397B83C-8D6E-4F41-8B5E-045F44E67928}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Twitter.Repositories", "src\Twitter.Repositories\Twitter.Repositories.csproj", "{6D095A9B-EAAC-4C17-87BB-3FF2A612D701}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Twitter.WebApi", "src\Twitter.WebApi\Twitter.WebApi.csproj", "{88AE3A27-0753-43DA-B7FD-FDD8C0ED1CAC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Twitter.WebApi", "src\Twitter.WebApi\Twitter.WebApi.csproj", "{88AE3A27-0753-43DA-B7FD-FDD8C0ED1CAC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,10 +21,6 @@ Global
 		{B9F447AA-A2B9-4175-B705-8B55E12925DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B9F447AA-A2B9-4175-B705-8B55E12925DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B9F447AA-A2B9-4175-B705-8B55E12925DB}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C2B98D7C-1D9A-4E68-A3FC-B09CFF5555A5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C2B98D7C-1D9A-4E68-A3FC-B09CFF5555A5}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C2B98D7C-1D9A-4E68-A3FC-B09CFF5555A5}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C2B98D7C-1D9A-4E68-A3FC-B09CFF5555A5}.Release|Any CPU.Build.0 = Release|Any CPU
 		{A397B83C-8D6E-4F41-8B5E-045F44E67928}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{A397B83C-8D6E-4F41-8B5E-045F44E67928}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A397B83C-8D6E-4F41-8B5E-045F44E67928}.Release|Any CPU.ActiveCfg = Release|Any CPU

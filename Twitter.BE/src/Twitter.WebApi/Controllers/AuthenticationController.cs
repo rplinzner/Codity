@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Twitter.Services.Interfaces;
-using Twitter.Shared.RequestModels.Authentication;
+using Twitter.Services.RequestModels.Authentication;
 
 namespace Twitter.WebApi.Controllers
 {

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Twitter.Data.Model
 {
-    public class User: IdentityUser<int>
+    public class User: IdentityUser<int>, IBaseEntity
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }
@@ -19,5 +19,6 @@ namespace Twitter.Data.Model
         public ICollection<Tweet> Tweets { get; set; }
         public ICollection<Follow> Followers { get; set; }
         public ICollection<Follow> Following { get; set; }
+        public ICollection<Notification> Notifications { get; set; }
     }
 }

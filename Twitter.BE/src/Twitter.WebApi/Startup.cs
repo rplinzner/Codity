@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Twitter.Services.Helpers;
 using Twitter.WebApi.ExtensionMethods;
 
 namespace Twitter.WebApi
@@ -27,23 +28,23 @@ namespace Twitter.WebApi
             services.AddServices();
             services.ConfigureOptions(Configuration);
             services.AddRepositories();
-
         }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, DataSeeder dataSeeder)
         {
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                dataSeeder.EnsureSeedData();
             }
+
+            app.UseAuthentication();
 
             app.UseHttpsRedirection();
 
             app.UseRequestLocalization();
 
             app.UseRouting();
-
-            app.UseAuthentication();
 
             app.UseAuthorization();
 

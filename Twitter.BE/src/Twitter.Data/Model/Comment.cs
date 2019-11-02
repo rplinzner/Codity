@@ -1,6 +1,6 @@
 ﻿namespace Twitter.Data.Model
 {
-    public class Comment : BaseEntity
+    public class Comment : BaseEntity, IBaseEntity
     {
         public int TweetId { get; set; }
         public Tweet Tweet { get; set; }

@@ -1,6 +1,6 @@
 ﻿namespace Twitter.Data.Model
 {
-    public class TweetLike: BaseEntity
+    public class TweetLike: BaseEntity, IBaseEntity
     {
         public int UserId { get; set; }
         public User User { get; set; }

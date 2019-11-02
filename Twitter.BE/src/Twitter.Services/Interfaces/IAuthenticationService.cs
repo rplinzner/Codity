@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
-using Twitter.Shared.RequestModels.Authentication;
-using Twitter.Shared.ResponseModels.DTOs;
-using Twitter.Shared.ResponseModels.Interfaces;
+using Twitter.Services.RequestModels.Authentication;
+using Twitter.Services.ResponseModels.DTOs.Authentication;
+using Twitter.Services.ResponseModels.Interfaces;
 
 namespace Twitter.Services.Interfaces
 {

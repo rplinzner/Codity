@@ -160,9 +160,6 @@ namespace Twitter.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("ProgrammingLanguage")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int>("ProgrammingLanguageId")
                         .HasColumnType("int");
 
@@ -170,6 +167,8 @@ namespace Twitter.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ProgrammingLanguageId");
 
                     b.ToTable("CodeSnippets");
                 });
@@ -233,7 +232,7 @@ namespace Twitter.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Gender");
+                    b.ToTable("Genders");
                 });
 
             modelBuilder.Entity("Twitter.Data.Model.Language", b =>
@@ -249,6 +248,35 @@ namespace Twitter.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Languages");
+                });
+
+            modelBuilder.Entity("Twitter.Data.Model.Notification", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("CreatedTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsRead")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("RedirectTo")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Text")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Notifications");
                 });
 
             modelBuilder.Entity("Twitter.Data.Model.ProgrammingLanguage", b =>
@@ -429,6 +457,28 @@ namespace Twitter.Data.Migrations
                     b.ToTable("Users");
                 });
 
+            modelBuilder.Entity("Twitter.Data.Model.UserNotification", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("NotificationId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NotificationId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserNotifications");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole<int>", null)
@@ -480,6 +530,15 @@ namespace Twitter.Data.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Twitter.Data.Model.CodeSnippet", b =>
+                {
+                    b.HasOne("Twitter.Data.Model.ProgrammingLanguage", "ProgrammingLanguage")
+                        .WithMany()
+                        .HasForeignKey("ProgrammingLanguageId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Twitter.Data.Model.Comment", b =>
                 {
                     b.HasOne("Twitter.Data.Model.User", "Author")
@@ -508,6 +567,13 @@ namespace Twitter.Data.Migrations
                         .HasForeignKey("FollowingId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Twitter.Data.Model.Notification", b =>
+                {
+                    b.HasOne("Twitter.Data.Model.User", null)
+                        .WithMany("Notifications")
+                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("Twitter.Data.Model.Settings", b =>
@@ -558,6 +624,21 @@ namespace Twitter.Data.Migrations
                     b.HasOne("Twitter.Data.Model.Gender", "Gender")
                         .WithMany()
                         .HasForeignKey("GenderId");
+                });
+
+            modelBuilder.Entity("Twitter.Data.Model.UserNotification", b =>
+                {
+                    b.HasOne("Twitter.Data.Model.Notification", "Notification")
+                        .WithMany()
+                        .HasForeignKey("NotificationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Twitter.Data.Model.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

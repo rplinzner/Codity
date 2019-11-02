@@ -1,10 +1,10 @@
 ﻿namespace Twitter.Data.Model
 {
-    public class CodeSnippet : BaseEntity
+    public class CodeSnippet : BaseEntity, IBaseEntity
     {
         public string Text { get; set; }
 
         public int ProgrammingLanguageId { get; set; }
-        public string ProgrammingLanguage { get; set; }
+        public ProgrammingLanguage ProgrammingLanguage { get; set; }
     }
 }

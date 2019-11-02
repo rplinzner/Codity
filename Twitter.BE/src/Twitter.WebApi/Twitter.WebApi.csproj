@@ -25,7 +25,6 @@
   <ItemGroup>
     <ProjectReference Include="..\Twitter.Data\Twitter.Data.csproj" />
     <ProjectReference Include="..\Twitter.Services\Twitter.Services.csproj" />
-    <ProjectReference Include="..\Twitter.Shared\Twitter.Shared.csproj" />
   </ItemGroup>
 
 </Project>

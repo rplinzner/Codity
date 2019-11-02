@@ -1,21 +1,24 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Twitter.Data.Model;
+using Twitter.Repositories.Interfaces;
 using Twitter.Services.Interfaces;
 using Twitter.Services.Options;
-using Twitter.Shared.RequestModels.Authentication;
-using Twitter.Shared.Resources;
-using Twitter.Shared.ResponseModels;
-using Twitter.Shared.ResponseModels.DTOs;
-using Twitter.Shared.ResponseModels.Interfaces;
+using Twitter.Services.RequestModels.Authentication;
+using Twitter.Services.Resources;
+using Twitter.Services.ResponseModels;
+using Twitter.Services.ResponseModels.DTOs.Authentication;
+using Twitter.Services.ResponseModels.Interfaces;
 
 namespace Twitter.Services.Services
 {
     public class AuthenticationService : IAuthenticationService
     {
+        private readonly IBaseRepository<Language> _languageRepository;
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
         private readonly IEmailSenderService _emailSenderService;
@@ -24,6 +27,7 @@ namespace Twitter.Services.Services
         private readonly IMapper _mapper;
 
         public AuthenticationService(
+            IBaseRepository<Language> languageRepository,
             UserManager<User> userManager,
             SignInManager<User> signInManager,
             IEmailSenderService emailSenderService,
@@ -31,6 +35,7 @@ namespace Twitter.Services.Services
             IOptions<RedirectOptions> redirectOptions,
             IMapper mapper)
         {
+            _languageRepository = languageRepository;
             _userManager = userManager;
             _signInManager = signInManager;
             _emailSenderService = emailSenderService;
@@ -89,6 +94,14 @@ namespace Twitter.Services.Services
         {
             var response = new BaseResponse();
             var user = _mapper.Map<User>(model);
+            
+            var language = await _languageRepository.GetAllAsync();
+            user.Settings = new Settings
+            {
+                IsDarkTheme = true,
+                LanguageId = language.First().Id
+            };
+
             var result = await _userManager.CreateAsync(user, model.Password);
             if (!result.Succeeded)
             {
@@ -115,6 +128,7 @@ namespace Twitter.Services.Services
                 {
                     Message = ErrorTranslations.EmailSendingError
                 });
+
                 return response;
             }
 

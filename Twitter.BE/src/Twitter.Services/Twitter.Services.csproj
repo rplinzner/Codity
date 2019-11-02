@@ -14,7 +14,22 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Twitter.Data\Twitter.Data.csproj" />
-    <ProjectReference Include="..\Twitter.Shared\Twitter.Shared.csproj" />
+    <ProjectReference Include="..\Twitter.Repositories\Twitter.Repositories.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Resources\ErrorTranslations.Designer.cs">
+      <DependentUpon>ErrorTranslations.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Resources\ErrorTranslations.resx">
+      <LastGenOutput>ErrorTranslations.Designer.cs</LastGenOutput>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
   </ItemGroup>
 
 </Project>

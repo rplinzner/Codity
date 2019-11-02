@@ -9,8 +9,11 @@ namespace Twitter.Data.Context
     {
         public DbSet<CodeSnippet> CodeSnippets { get; set; }
         public DbSet<Comment> Comments { get; set; }
+        public DbSet<Gender> Genders { get; set; }
         public DbSet<Follow> Follows { get; set; }
         public DbSet<Language> Languages { get; set; }
+        public DbSet<Notification> Notifications { get; set; }
+        public DbSet<UserNotification> UserNotifications { get; set; }
         public DbSet<ProgrammingLanguage> ProgrammingLanguages { get; set; }
         public DbSet<Settings> Settings { get; set; }
         public DbSet<Tweet> Tweets { get; set; }
@@ -27,13 +30,13 @@ namespace Twitter.Data.Context
             builder.Entity<User>(entity =>
             {
                 entity
-                    .HasMany(c=>c.Following)
+                    .HasMany(c => c.Following)
                     .WithOne(c => c.Follower)
                     .HasForeignKey(c => c.FollowerId)
                     .OnDelete(DeleteBehavior.Restrict);
-                
+
                 entity
-                    .HasMany(c=>c.Followers)
+                    .HasMany(c => c.Followers)
                     .WithOne(c => c.Following)
                     .HasForeignKey(c => c.FollowingId);
 
@@ -47,7 +50,7 @@ namespace Twitter.Data.Context
                     .WithOne(c => c.Tweet)
                     .HasForeignKey(c => c.TweetId)
                     .OnDelete(DeleteBehavior.Restrict);
-                
+
                 entity
                     .HasMany(c => c.Likes)
                     .WithOne(c => c.Tweet)

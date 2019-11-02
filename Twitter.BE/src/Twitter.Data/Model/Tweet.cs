@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Twitter.Data.Model
 {
-    public class Tweet : BaseEntity
+    public class Tweet : BaseEntity, IBaseEntity
     {
         public int AuthorId { get; set; }
         public User Author { get; set; }

@@ -1,6 +1,6 @@
 ﻿namespace Twitter.Data.Model
 {
-    public class Settings : BaseEntity
+    public class Settings : BaseEntity, IBaseEntity
     {
         public bool IsDarkTheme { get; set; }
 
