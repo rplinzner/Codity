@@ -13,6 +13,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Text;
 using Twitter.Data.Context;
@@ -39,10 +40,33 @@ namespace Twitter.WebApi.ExtensionMethods
                     Title = "Not A Twitter Web Api",
                     Version = "v1"
                 });
+
+                var apiScheme = new OpenApiSecurityScheme
+                {
+                    In = ParameterLocation.Header,
+                    Description = "Please enter into field the word 'Bearer' following by space and JWT",
+                    Name = "Authorization",
+                    Type = SecuritySchemeType.ApiKey,
+                    Scheme = "Bearer"
+                };
+                setup.AddSecurityDefinition("Bearer", apiScheme);
+                setup.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference 
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "Bearer"
+                            },
+                            In = ParameterLocation.Header,
+                        }, new List<string>() 
+                    }
+                });
                 var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
                 setup.IncludeXmlComments(xmlPath);
-
             });
         }
 
