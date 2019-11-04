@@ -53,6 +53,17 @@ namespace Twitter.Services.Services
             return response;
         }
 
+        public async Task<ICollectionResponse<BaseUserDTO>> GetUsersAsync()
+        {
+            var response = new CollectionResponse<BaseUserDTO>();
+
+            var users = await _userRepository.GetAllAsync();
+
+            response.Models = _mapper.Map<IEnumerable<BaseUserDTO>>(users);
+
+            return response;
+        }
+
         public async Task<IBaseResponse> UnfollowUserAsync(int userId, FollowingRequest following)
         {
             var response = new BaseResponse();

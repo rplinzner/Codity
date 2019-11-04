@@ -21,6 +21,19 @@ namespace Twitter.WebApi.Controllers
             _userContext = userContext;
         }
 
+        [HttpGet]
+        public async Task<ActionResult> GetUsers()
+        {
+            var response = await _userService.GetUsersAsync();
+
+            if (response.IsError)
+            {
+                return BadRequest(response);
+            }
+
+            return Ok(response);
+        }
+
         [HttpGet("{id}")]
         public async Task<ActionResult> GetUser(int id)
         {
