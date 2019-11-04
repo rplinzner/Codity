@@ -20,6 +20,7 @@ namespace Twitter.WebApi
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            services.AddSwagger();
             services.AddDbContext(Configuration);
             services.AddAuthentication(Configuration);
             services.AddAndConfigureLocalization();
@@ -39,13 +40,10 @@ namespace Twitter.WebApi
             }
 
             app.UseAuthentication();
-
+            app.ConfigureSwagger();
             app.UseHttpsRedirection();
-
             app.UseRequestLocalization();
-
             app.UseRouting();
-
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

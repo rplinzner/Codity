@@ -3,6 +3,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Twitter.Services.Interfaces;
 using Twitter.Services.RequestModels.Authentication;
+using Twitter.Services.ResponseModels.DTOs.Authentication;
+using Twitter.Services.ResponseModels.Interfaces;
 
 namespace Twitter.WebApi.Controllers
 {
@@ -17,8 +19,13 @@ namespace Twitter.WebApi.Controllers
             _authenticationService = authenticationService;
         }
 
+        /// <summary>
+        /// Allows user to login to application using email and password
+        /// </summary>
+        /// <param name="model">email and password</param>
+        /// <returns>Id of an user and token</returns>
         [HttpPost]
-        public async Task<ActionResult> Login([FromBody] LoginRequest model)
+        public async Task<ActionResult<IResponse<AuthUserDTO>>> Login([FromBody] LoginRequest model)
         {
             if (!ModelState.IsValid)
             {
@@ -36,6 +43,12 @@ namespace Twitter.WebApi.Controllers
             }
         }
 
+        /// <summary>
+        /// Email confirmation
+        /// </summary>
+        /// <param name="id">Id of an user</param>
+        /// <param name="token">Confirmation token</param>
+        /// <returns>Redirect or BadRequest when exception is thrown</returns>
         [HttpGet]
         public async Task<ActionResult> ConfirmEmail(string id, string token)
         {
@@ -47,7 +60,7 @@ namespace Twitter.WebApi.Controllers
             try
             {
                 var response = await _authenticationService.ConfirmEmailAsync(id, token);
-                return Ok(response);
+                return Redirect(response);
             }
             catch (Exception exception)
             {
@@ -55,8 +68,13 @@ namespace Twitter.WebApi.Controllers
             }
         }
 
+        /// <summary>
+        /// Allows user to register to application via email and password
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns>Base response (sends email to user)</returns>
         [HttpPost]
-        public async Task<ActionResult> Register([FromBody] RegisterRequest model)
+        public async Task<ActionResult<IBaseResponse>> Register([FromBody] RegisterRequest model)
         {
             if (!ModelState.IsValid)
             {
