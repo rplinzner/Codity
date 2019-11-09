@@ -12,8 +12,10 @@ export default class extends Component<Props, State> {
 
   render() {
     return (
-      <Container maxWidth="sm">
+        <Container maxWidth="sm">
+            
         <Paper>
+            
           <form noValidate={false}>
             <TextField required={true} type="email" id="email" label="E-mail" />
             <TextField

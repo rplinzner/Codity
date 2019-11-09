@@ -1,6 +1,6 @@
 import React from 'react';
 import PrimarySearchAppBar from './components/layout/navbar';
-import { BrowserRouter, Switch } from 'react-router-dom';
+import { BrowserRouter, Switch, Route } from 'react-router-dom';
 import {
   MuiThemeProvider,
   createMuiTheme,
@@ -23,7 +23,7 @@ const App: React.FC = () => {
       <BrowserRouter>
         <PrimarySearchAppBar />
         <Switch>
-          <Login />
+          <Route path="/Login" component={Login} />
         </Switch>
       </BrowserRouter>
     </MuiThemeProvider>
