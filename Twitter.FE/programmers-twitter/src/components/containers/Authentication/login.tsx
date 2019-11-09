@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { TextField, Paper, Container } from '@material-ui/core';
+import { TextField, Paper, Container, Button } from '@material-ui/core';
 
 interface Props {}
 interface State {
@@ -7,21 +7,24 @@ interface State {
   //   password: string;
 }
 
-export default class Login extends Component<Props, State> {
+export default class extends Component<Props, State> {
   //   state = { email: '', password: '' };
 
   render() {
     return (
       <Container maxWidth="sm">
         <Paper>
-          <form noValidate={true}>
-            <TextField required={true} type="text" id="email" label="E-mail" />
+          <form noValidate={false}>
+            <TextField required={true} type="email" id="email" label="E-mail" />
             <TextField
               required={true}
               type="password"
               id="password"
               label="Password"
             />
+            <Button type="submit" variant="contained" color="primary">
+              Wyślij
+            </Button>
           </form>
         </Paper>
       </Container>
