@@ -33,7 +33,7 @@ class Login extends Component<Props, State> {
     const FormValue: string = event.currentTarget.value;
     const id: any = event.currentTarget.id;
     this.setState({ [id]: FormValue } as Pick<State, keyof State>);
-  }
+  };
 
   render() {
     const { classes } = this.props;
@@ -42,7 +42,7 @@ class Login extends Component<Props, State> {
         container={true}
         justify="center"
         alignItems="center"
-        style={{ height: '100vh' }}
+        style={{ height: '90vh' }} //TODO: Move to jss and account for different nav bar heights
       >
         <Grid item={true} xs={10} sm={6}>
           <Paper className={classes.root}>
@@ -70,7 +70,12 @@ class Login extends Component<Props, State> {
                 onChange={this.handleChange}
               />
               <br />
-              <Button style={{marginTop: "10px"}} type="submit" variant="contained" color="primary">
+              <Button
+                style={{ marginTop: '10px' }}
+                type="submit"
+                variant="contained"
+                color="primary"
+              >
                 Wyślij
               </Button>
             </form>
