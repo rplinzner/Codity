@@ -1,35 +1,84 @@
 import React, { Component } from 'react';
-import { TextField, Paper, Container, Button } from '@material-ui/core';
+import { TextField, Paper, Button, Grid } from '@material-ui/core';
+import { withStyles, Theme } from '@material-ui/core/styles';
 
-interface Props {}
+interface Props {
+  classes: {
+    root: string;
+    form: string;
+  };
+}
 interface State {
-  //   email: string;
-  //   password: string;
+  email: string;
+  password: string;
 }
 
-export default class extends Component<Props, State> {
-  //   state = { email: '', password: '' };
+const styles = (theme: Theme) => ({
+  root: {
+    padding: theme.spacing(3, 2),
+  },
+  form: {
+    margin: 'auto',
+    width: '100%',
+  },
+});
+
+class Login extends Component<Props, State> {
+  state: State = {
+    email: '',
+    password: '',
+  };
+
+  handleChange = (event: any) => {
+    const FormValue: string = event.currentTarget.value;
+    const id: any = event.currentTarget.id;
+    this.setState({ [id]: FormValue } as Pick<State, keyof State>);
+  }
 
   render() {
+    const { classes } = this.props;
     return (
-        <Container maxWidth="sm">
-            
-        <Paper>
-            
-          <form noValidate={false}>
-            <TextField required={true} type="email" id="email" label="E-mail" />
-            <TextField
-              required={true}
-              type="password"
-              id="password"
-              label="Password"
-            />
-            <Button type="submit" variant="contained" color="primary">
-              Wyślij
-            </Button>
-          </form>
-        </Paper>
-      </Container>
+      <Grid
+        container={true}
+        justify="center"
+        alignItems="center"
+        style={{ height: '100vh' }}
+      >
+        <Grid item={true} xs={10} sm={6}>
+          <Paper className={classes.root}>
+            <form noValidate={false} className={classes.form}>
+              <TextField
+                fullWidth={true}
+                required={true}
+                type="email"
+                id="email"
+                label="E-mail"
+                margin="normal"
+                value={this.state.email}
+                onChange={this.handleChange}
+              />
+
+              <br />
+              <TextField
+                fullWidth={true}
+                required={true}
+                type="password"
+                id="password"
+                label="Password"
+                margin="normal"
+                value={this.state.password}
+                onChange={this.handleChange}
+              />
+              <br />
+              <Button style={{marginTop: "10px"}} type="submit" variant="contained" color="primary">
+                Wyślij
+              </Button>
+            </form>
+          </Paper>
+        </Grid>
+      </Grid>
     );
   }
 }
+
+export default withStyles(styles, { withTheme: true })(Login);
