@@ -161,6 +161,9 @@ namespace Twitter.WebApi.ExtensionMethods
             services.AddTransient<ITokenProviderService, JwtTokenProviderService>();
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<IUserContext, UserContext>();
+            services.AddTransient<INotificationGeneratorService, NotificationGeneratorService>();
+            services.AddTransient<INotificationMapperService, NotificationMapperService>();
+            services.AddTransient<INotificationService, NotificationService>();
             services.AddTransient<DataSeeder>();
         }
 
@@ -170,6 +173,8 @@ namespace Twitter.WebApi.ExtensionMethods
             services.AddTransient<IBaseRepository<User>, BaseRepository<User>>();
             services.AddTransient<IBaseRepository<Language>, BaseRepository<Language>>();
             services.AddTransient<IBaseRepository<Gender>, BaseRepository<Gender>>();
+            services.AddTransient<IBaseRepository<Notification>, BaseRepository<Notification>>();
+            services.AddTransient<IBaseRepository<UserNotification>, BaseRepository<UserNotification>>();
         }
     }
 }
