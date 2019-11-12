@@ -1,6 +1,11 @@
 import React, { Component } from 'react';
-import { TextField, Paper, Button, Grid } from '@material-ui/core';
+import { TextField, Paper, Button, Grid, Link } from '@material-ui/core';
 import { withStyles, Theme } from '@material-ui/core/styles';
+import {
+  Link as RouterLink,
+  LinkProps as RouterLinkProps,
+} from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 interface Props {
   classes: {
@@ -23,6 +28,10 @@ const styles = (theme: Theme) => ({
   },
 });
 
+const Link1 = React.forwardRef<HTMLAnchorElement, RouterLinkProps>(
+  (props, ref) => <RouterLink innerRef={ref} {...props} />
+);
+
 class Login extends Component<Props, State> {
   state: State = {
     email: '',
@@ -36,6 +45,8 @@ class Login extends Component<Props, State> {
   };
 
   render() {
+    toast.success('🙌🎉 Hello friend!');
+    toast.error('🙌🎉 Have fun!');
     const { classes } = this.props;
     return (
       <Grid
@@ -79,6 +90,12 @@ class Login extends Component<Props, State> {
                 Wyślij
               </Button>
             </form>
+            <p>
+              New here? You can register by clicking{' '}
+              <Link component={Link1} to="/Register">
+                here
+              </Link>
+            </p>
           </Paper>
         </Grid>
       </Grid>

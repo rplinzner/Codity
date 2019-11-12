@@ -9,6 +9,8 @@ import {
 import themeDark from './themes/dark-theme';
 import { ThemeOptions } from '@material-ui/core/styles/createMuiTheme';
 import { LocalizeProvider } from 'react-localize-redux';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 import { Login } from './components/containers/Authentication/index';
 import { HomePage } from './components/containers/HomePage/index';
@@ -23,6 +25,7 @@ const App: React.FC = () => {
     <MuiThemeProvider theme={darkTheme}>
       <LocalizeProvider>
         <CssBaseline />
+        <ToastContainer />
         <BrowserRouter>
           <PrimarySearchAppBar />
           <Switch>
