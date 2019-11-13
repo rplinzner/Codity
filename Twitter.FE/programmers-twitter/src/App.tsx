@@ -17,7 +17,7 @@ import { HomePage } from './components/containers/HomePage/index';
 //import themeDark from './themes/dark-theme';
 import themeLight from './themes/light-theme';
 import { withLocalize, LocalizeContextProps } from 'react-localize-redux';
-import globalTranslations from './translations/global.json';
+import { globalTranslations } from './translations/index';
 
 //const darkTheme = createMuiTheme(themeDark as ThemeOptions);
 const lightTheme = createMuiTheme(themeLight as ThemeOptions);
@@ -35,6 +35,7 @@ class App extends Component<LocalizeContextProps> {
       options: {
         renderToStaticMarkup,
         renderInnerHtml: true,
+        defaultLanguage: 'pl',
       },
     });
   }

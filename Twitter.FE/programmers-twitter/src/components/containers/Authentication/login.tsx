@@ -5,9 +5,15 @@ import {
   Link as RouterLink,
   LinkProps as RouterLinkProps,
 } from 'react-router-dom';
-import { toast } from 'react-toastify';
+import {
+  withLocalize,
+  LocalizeContextProps,
+  Translate as T,
+} from 'react-localize-redux';
 
-interface Props {
+import { authTranslations } from '../../../translations/index';
+
+interface Props extends LocalizeContextProps {
   classes: {
     root: string;
     form: string;
@@ -33,6 +39,10 @@ const Link1 = React.forwardRef<HTMLAnchorElement, RouterLinkProps>(
 );
 
 class Login extends Component<Props, State> {
+  constructor(props: Props) {
+    super(props);
+    this.props.addTranslation(authTranslations);
+  }
   state: State = {
     email: '',
     password: '',
@@ -45,8 +55,6 @@ class Login extends Component<Props, State> {
   };
 
   render() {
-    toast.success('🙌🎉 Hello friend!');
-    toast.error('🙌🎉 Have fun!');
     const { classes } = this.props;
     return (
       <Grid
@@ -57,6 +65,9 @@ class Login extends Component<Props, State> {
       >
         <Grid item={true} xs={10} sm={6}>
           <Paper className={classes.root}>
+            <h3>
+              <T id="auth-credentials" />
+            </h3>
             <form noValidate={false} className={classes.form}>
               <TextField
                 fullWidth={true}
@@ -75,7 +86,7 @@ class Login extends Component<Props, State> {
                 required={true}
                 type="password"
                 id="password"
-                label="Password"
+                label={<T id="password" />}
                 margin="normal"
                 value={this.state.password}
                 onChange={this.handleChange}
@@ -87,14 +98,20 @@ class Login extends Component<Props, State> {
                 variant="contained"
                 color="primary"
               >
-                Wyślij
+                {<T id="sent" />}
               </Button>
             </form>
             <p>
-              New here? You can register by clicking{' '}
-              <Link component={Link1} to="/Register">
-                here
-              </Link>
+              <T
+                id="auth-newhere"
+                data={{
+                  link: (
+                    <Link component={Link1} to="/Register">
+                      <T id="here" />
+                    </Link>
+                  ),
+                }}
+              />
             </p>
           </Paper>
         </Grid>
@@ -103,4 +120,4 @@ class Login extends Component<Props, State> {
   }
 }
 
-export default withStyles(styles, { withTheme: true })(Login);
+export default withStyles(styles, { withTheme: true })(withLocalize(Login));
