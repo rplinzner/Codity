@@ -9,15 +9,17 @@ import {
 import { ThemeOptions } from '@material-ui/core/styles/createMuiTheme';
 import { ToastContainer } from 'react-toastify';
 import { renderToStaticMarkup } from 'react-dom/server';
+import { withLocalize, LocalizeContextProps } from 'react-localize-redux';
+import { globalTranslations } from './translations/index';
 
 import 'react-toastify/dist/ReactToastify.css';
 
-import { Login } from './components/containers/authentication/index';
+import * as authentication from './components/containers/authentication/index';
 import { HomePage } from './components/containers/HomePage/index';
+
 //import themeDark from './themes/dark-theme';
 import themeLight from './themes/light-theme';
-import { withLocalize, LocalizeContextProps } from 'react-localize-redux';
-import { globalTranslations } from './translations/index';
+
 
 //const darkTheme = createMuiTheme(themeDark as ThemeOptions);
 const lightTheme = createMuiTheme(themeLight as ThemeOptions);
@@ -50,7 +52,8 @@ class App extends Component<LocalizeContextProps> {
           <PrimarySearchAppBar />
           <Switch>
             <Route path="/" exact={true} component={HomePage} />
-            <Route path="/Login" component={Login} />
+            <Route path="/Login" component={authentication.Login} />
+            <Route path="/Register" component={authentication.Register} />
           </Switch>
         </BrowserRouter>
       </MuiThemeProvider>
