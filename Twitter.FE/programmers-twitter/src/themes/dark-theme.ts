@@ -1,3 +1,5 @@
+import red from '@material-ui/core/colors/red';
+
 export default {
   direction: 'ltr',
   palette: {
@@ -6,7 +8,7 @@ export default {
       main: '#4caf50',
     },
     secondary: {
-      main: '#f00',
+      main: red[400],
     },
   },
 };

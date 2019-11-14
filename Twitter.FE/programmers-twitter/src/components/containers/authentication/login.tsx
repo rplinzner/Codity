@@ -1,8 +1,19 @@
 import React, { Component } from 'react';
-import { TextField, Paper, Button, Grid } from '@material-ui/core';
+import { TextField, Paper, Button, Grid, Link } from '@material-ui/core';
 import { withStyles, Theme } from '@material-ui/core/styles';
+import {
+  Link as RouterLink,
+  LinkProps as RouterLinkProps,
+} from 'react-router-dom';
+import {
+  withLocalize,
+  LocalizeContextProps,
+  Translate as T,
+} from 'react-localize-redux';
 
-interface Props {
+import { authTranslations } from '../../../translations/index';
+
+interface Props extends LocalizeContextProps {
   classes: {
     root: string;
     form: string;
@@ -23,7 +34,15 @@ const styles = (theme: Theme) => ({
   },
 });
 
+const Link1 = React.forwardRef<HTMLAnchorElement, RouterLinkProps>(
+  (props, ref) => <RouterLink innerRef={ref} {...props} />
+);
+
 class Login extends Component<Props, State> {
+  constructor(props: Props) {
+    super(props);
+    this.props.addTranslation(authTranslations);
+  }
   state: State = {
     email: '',
     password: '',
@@ -44,8 +63,11 @@ class Login extends Component<Props, State> {
         alignItems="center"
         style={{ height: '90vh' }} //TODO: Move to jss and account for different nav bar heights
       >
-        <Grid item={true} xs={10} sm={6}>
+        <Grid item={true} xs={10} md={6}>
           <Paper className={classes.root}>
+            <h3>
+              <T id="auth-credentials" />
+            </h3>
             <form noValidate={false} className={classes.form}>
               <TextField
                 fullWidth={true}
@@ -64,7 +86,7 @@ class Login extends Component<Props, State> {
                 required={true}
                 type="password"
                 id="password"
-                label="Password"
+                label={<T id="password" />}
                 margin="normal"
                 value={this.state.password}
                 onChange={this.handleChange}
@@ -76,9 +98,21 @@ class Login extends Component<Props, State> {
                 variant="contained"
                 color="primary"
               >
-                Wyślij
+                {<T id="sent" />}
               </Button>
             </form>
+            <p>
+              <T
+                id="auth-newhere"
+                data={{
+                  link: (
+                    <Link component={Link1} to="/Register">
+                      <T id="here" />
+                    </Link>
+                  ),
+                }}
+              />
+            </p>
           </Paper>
         </Grid>
       </Grid>
@@ -86,4 +120,4 @@ class Login extends Component<Props, State> {
   }
 }
 
-export default withStyles(styles, { withTheme: true })(Login);
+export default withStyles(styles, { withTheme: true })(withLocalize(Login));
