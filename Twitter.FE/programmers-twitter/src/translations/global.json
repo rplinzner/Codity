@@ -3,7 +3,10 @@
     "Welcome to InzTwitter! To use our service you need to log in!",
     "Witaj w InzTwitter! Żeby korzystać z naszych serwisów musisz się zalogować!"
   ],
-  "password": ["Password", "Hasło"],
-  "sent": ["sent", "wyślij"],
-  "here": ["here", "tutaj"]
+  
+  "sent": ["Submit", "Wyślij"],
+  "here": ["Here", "Tutaj"],
+  "reset": ["Reset", "Wyczyść"],
+  "firstName" : ["First name", "Imię"],
+  "lastName" : ["Last name", "Nazwisko"]
 }
