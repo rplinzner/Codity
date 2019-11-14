@@ -63,7 +63,7 @@ class Login extends Component<Props, State> {
         alignItems="center"
         style={{ height: '90vh' }} //TODO: Move to jss and account for different nav bar heights
       >
-        <Grid item={true} xs={10} sm={6}>
+        <Grid item={true} xs={10} md={6}>
           <Paper className={classes.root}>
             <h3>
               <T id="auth-credentials" />
