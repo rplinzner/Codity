@@ -6,6 +6,7 @@ import {
   Grid,
   Link,
   Typography,
+  LinearProgress,
 } from '@material-ui/core';
 import { withStyles, Theme } from '@material-ui/core/styles';
 import {
@@ -19,6 +20,10 @@ import {
 } from 'react-localize-redux';
 
 import { authTranslations } from '../../../translations/index';
+import { AppState } from '../../../index';
+import { UserState } from '../../../store/user/user.types';
+import { login } from '../../../store/user/user.actions';
+import { connect } from 'react-redux';
 
 interface Props extends LocalizeContextProps {
   classes: {
@@ -26,6 +31,9 @@ interface Props extends LocalizeContextProps {
     form: string;
     container: string;
   };
+  user: UserState;
+  isLoggingIn: boolean;
+  loginAction: typeof login;
 }
 interface State {
   email: string;
@@ -65,7 +73,15 @@ class Login extends Component<Props, State> {
     this.setState({ [id]: FormValue } as Pick<State, keyof State>);
   };
 
+  handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    console.log('login started');
+
+    this.props.loginAction('rplinzner@;lasdfkj', 'lol');
+  };
+
   render() {
+    console.log(this.props.user);
     const { classes } = this.props;
     return (
       <Grid
@@ -84,7 +100,11 @@ class Login extends Component<Props, State> {
             <Typography variant="h5">
               <T id="auth-credentials" />
             </Typography>
-            <form noValidate={false} className={classes.form}>
+            <form
+              noValidate={false}
+              onSubmit={this.handleSubmit}
+              className={classes.form}
+            >
               <TextField
                 fullWidth={true}
                 required={true}
@@ -129,6 +149,7 @@ class Login extends Component<Props, State> {
                 }}
               />
             </p>
+            {this.props.isLoggingIn && <LinearProgress />}
           </Paper>
         </Grid>
       </Grid>
@@ -136,4 +157,19 @@ class Login extends Component<Props, State> {
   }
 }
 
-export default withStyles(styles, { withTheme: true })(withLocalize(Login));
+const mapStateToProps = (state: AppState) => ({
+  user: state.user,
+  isLoggingIn: state.user.loggingIn,
+});
+
+const mapDispatchToProps = (dispatch: any) => {
+  return {
+    loginAction: (email: string, password: string) =>
+      dispatch(login(email, password)),
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(withStyles(styles, { withTheme: true })(withLocalize(Login)));
