@@ -1,5 +1,13 @@
 import React, { Component } from 'react';
-import { TextField, Paper, Button, Grid, Link } from '@material-ui/core';
+import {
+  TextField,
+  Paper,
+  Button,
+  Grid,
+  Link,
+  Typography,
+  LinearProgress,
+} from '@material-ui/core';
 import { withStyles, Theme } from '@material-ui/core/styles';
 import {
   Link as RouterLink,
@@ -12,12 +20,20 @@ import {
 } from 'react-localize-redux';
 
 import { authTranslations } from '../../../translations/index';
+import { AppState } from '../../../index';
+import { UserState } from '../../../store/user/user.types';
+import { login } from '../../../store/user/user.actions';
+import { connect } from 'react-redux';
 
 interface Props extends LocalizeContextProps {
   classes: {
     root: string;
     form: string;
+    container: string;
   };
+  user: UserState;
+  isLoggingIn: boolean;
+  loginAction: typeof login;
 }
 interface State {
   email: string;
@@ -27,6 +43,9 @@ interface State {
 const styles = (theme: Theme) => ({
   root: {
     padding: theme.spacing(3, 2),
+  },
+  container: {
+    height: '90vh',
   },
   form: {
     margin: 'auto',
@@ -54,21 +73,37 @@ class Login extends Component<Props, State> {
     this.setState({ [id]: FormValue } as Pick<State, keyof State>);
   };
 
+  handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    this.props.loginAction(this.state.email, this.state.password);
+  };
+
   render() {
+    console.log(this.props.user);
     const { classes } = this.props;
     return (
       <Grid
         container={true}
         justify="center"
-        alignItems="center"
-        style={{ height: '90vh' }} //TODO: Move to jss and account for different nav bar heights
+        alignItems="flex-start"
+        className={classes.container}
       >
+        <Grid item className={classes.root}>
+          <Typography align="center" variant="h3">
+            <T id="greeting" />
+          </Typography>
+        </Grid>
         <Grid item={true} xs={10} md={6}>
           <Paper className={classes.root}>
-            <h3>
+            <Typography variant="h5">
               <T id="auth-credentials" />
-            </h3>
-            <form noValidate={false} className={classes.form}>
+            </Typography>
+            <form
+              noValidate={false}
+              onSubmit={this.handleSubmit}
+              className={classes.form}
+            >
               <TextField
                 fullWidth={true}
                 required={true}
@@ -113,6 +148,7 @@ class Login extends Component<Props, State> {
                 }}
               />
             </p>
+            {this.props.isLoggingIn && <LinearProgress />}
           </Paper>
         </Grid>
       </Grid>
@@ -120,4 +156,19 @@ class Login extends Component<Props, State> {
   }
 }
 
-export default withStyles(styles, { withTheme: true })(withLocalize(Login));
+const mapStateToProps = (state: AppState) => ({
+  user: state.user,
+  isLoggingIn: state.user.loggingIn,
+});
+
+const mapDispatchToProps = (dispatch: any) => {
+  return {
+    loginAction: (email: string, password: string) =>
+      dispatch(login(email, password)),
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(withStyles(styles, { withTheme: true })(withLocalize(Login)));

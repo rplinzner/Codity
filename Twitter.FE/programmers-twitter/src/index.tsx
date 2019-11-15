@@ -8,6 +8,7 @@ import { LocalizeProvider, localizeReducer } from 'react-localize-redux';
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
+import * as stores from './store/index';
 
 declare global {
   interface Window {
@@ -19,6 +20,7 @@ const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
 const rootReducer = combineReducers({
   localize: localizeReducer,
+  user: stores.userReducer,
 });
 
 export type AppState = ReturnType<typeof rootReducer>;

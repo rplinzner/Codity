@@ -1,5 +1,37 @@
+import User from '../../types/user';
+export interface UserState {
+  loggedIn: boolean;
+  loggingIn: boolean;
+  user: User | null;
+}
+
+export const LOGIN = 'USERS_LOGIN';
+export const LOGOUT = 'USERS_LOGOUT';
+
 export const LOGIN_REQUEST = 'USERS_LOGIN_REQUEST';
 export const LOGIN_SUCCESS = 'USERS_LOGIN_SUCCESS';
 export const LOGIN_FAILURE = 'USERS_LOGIN_FAILURE';
 
-export const LOGOUT = 'USERS_LOGOUT';
+interface LogoutAction {
+  type: typeof LOGOUT;
+}
+
+interface LoginRequestAction {
+  type: typeof LOGIN_REQUEST;
+  payload: User;
+}
+
+interface LoginSuccessAction {
+  type: typeof LOGIN_SUCCESS;
+  payload: User;
+}
+
+interface LoginFailureAction {
+  type: typeof LOGIN_FAILURE;
+}
+
+export type UserActionTypes =
+  | LoginRequestAction
+  | LoginSuccessAction
+  | LoginFailureAction
+  | LogoutAction;

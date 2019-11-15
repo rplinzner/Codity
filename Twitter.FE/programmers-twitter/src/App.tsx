@@ -5,6 +5,7 @@ import {
   MuiThemeProvider,
   createMuiTheme,
   CssBaseline,
+  responsiveFontSizes,
 } from '@material-ui/core';
 import { ThemeOptions } from '@material-ui/core/styles/createMuiTheme';
 import { ToastContainer } from 'react-toastify';
@@ -15,14 +16,13 @@ import { globalTranslations } from './translations/index';
 import 'react-toastify/dist/ReactToastify.css';
 
 import * as authentication from './components/containers/authentication/index';
-import { HomePage } from './components/containers/HomePage/index';
 
-//import themeDark from './themes/dark-theme';
-import themeLight from './themes/light-theme';
+import themeDark from './themes/dark-theme';
+// import themeLight from './themes/light-theme';
 
 
-//const darkTheme = createMuiTheme(themeDark as ThemeOptions);
-const lightTheme = createMuiTheme(themeLight as ThemeOptions);
+const darkTheme = responsiveFontSizes(createMuiTheme(themeDark as ThemeOptions));
+// const lightTheme = responsiveFontSizes(createMuiTheme(themeLight as ThemeOptions));
 
 // tslint:disable-next-line: typedef
 class App extends Component<LocalizeContextProps> {
@@ -37,7 +37,7 @@ class App extends Component<LocalizeContextProps> {
       options: {
         renderToStaticMarkup,
         renderInnerHtml: true,
-        defaultLanguage: 'pl',
+        defaultLanguage: 'en',
       },
     });
   }
@@ -45,13 +45,13 @@ class App extends Component<LocalizeContextProps> {
     // tslint:disable-next-line: no-console
     console.log('This app is in:', process.env.NODE_ENV, 'mode');
     return (
-      <MuiThemeProvider theme={lightTheme}>
+      <MuiThemeProvider theme={darkTheme}>
         <CssBaseline />
         <ToastContainer />
         <BrowserRouter>
           <PrimarySearchAppBar />
           <Switch>
-            <Route path="/" exact={true} component={HomePage} />
+            <Route path="/" exact={true} component={authentication.Login} />
             <Route path="/Login" component={authentication.Login} />
             <Route path="/Register" component={authentication.Register} />
           </Switch>
