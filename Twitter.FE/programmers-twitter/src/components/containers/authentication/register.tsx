@@ -135,6 +135,7 @@ class Register extends Component<Props, State> {
                     />
                     <br />
                     <ReCAPTCHA
+                      theme="dark" //TODO: Read the setting from redux in future
                       onChange={this.onCaptchaSubmitted}
                       sitekey={constants.RecaptchaSiteKey}
                     />
