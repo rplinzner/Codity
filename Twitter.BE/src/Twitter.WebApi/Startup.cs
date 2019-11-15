@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Twitter.Services.Helpers;
+using Twitter.Services.Hubs;
 using Twitter.WebApi.ExtensionMethods;
 
 namespace Twitter.WebApi
@@ -21,6 +22,7 @@ namespace Twitter.WebApi
         {
             services.AddControllers();
             services.AddSwagger();
+            services.AddSignalR();
             services.AddDbContext(Configuration);
             services.AddAuthentication(Configuration);
             services.AddAndConfigureLocalization();
@@ -37,6 +39,11 @@ namespace Twitter.WebApi
             {
                 app.UseDeveloperExceptionPage();
                 dataSeeder.EnsureSeedData();
+                app.UseCors(x => x
+                    .WithOrigins("http://localhost:3000")
+                    .AllowAnyMethod()
+                    .AllowCredentials()
+                    .AllowAnyHeader());
             }
 
             app.UseAuthentication();
@@ -49,6 +56,7 @@ namespace Twitter.WebApi
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHub<NotificationHub>("/notificationHub");
             });
         }
     }
