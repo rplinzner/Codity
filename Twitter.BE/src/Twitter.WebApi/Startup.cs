@@ -39,6 +39,11 @@ namespace Twitter.WebApi
             {
                 app.UseDeveloperExceptionPage();
                 dataSeeder.EnsureSeedData();
+                app.UseCors(x => x
+                    .WithOrigins("http://localhost:3000")
+                    .AllowAnyMethod()
+                    .AllowCredentials()
+                    .AllowAnyHeader());
             }
 
             app.UseAuthentication();
