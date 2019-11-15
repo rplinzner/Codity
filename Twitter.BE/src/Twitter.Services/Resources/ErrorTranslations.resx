@@ -188,4 +188,7 @@
   <data name="FollowingNotFound" xml:space="preserve">
     <value>User is not following anyone.</value>
   </data>
+  <data name="NotificationNotFound" xml:space="preserve">
+    <value>Notification does not exists.</value>
+  </data>
 </root>

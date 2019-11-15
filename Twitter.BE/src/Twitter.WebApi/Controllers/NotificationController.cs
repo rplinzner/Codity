@@ -28,11 +28,28 @@ namespace Twitter.WebApi.Controllers
         /// </summary>
         /// <returns>All Notifications for logged user</returns>
         [HttpGet]
-        public async Task<ActionResult<ICollectionResponse<NotificationDTO>>> GetUsers()
+        public async Task<ActionResult<ICollectionResponse<NotificationDTO>>> GetNotifications()
         {
             var userId = _userContext.GetUserId();
 
             var response = await _notificationService.GetAllNotifications(userId);
+
+            if (response.IsError)
+            {
+                return BadRequest(response);
+            }
+
+            return Ok(response);
+        }
+
+        /// <summary>
+        /// Fetch notification
+        /// </summary>
+        /// <returns>Notification</returns>
+        [HttpGet("{id}")]
+        public async Task<ActionResult<ICollectionResponse<NotificationDTO>>> GetNotification(int id)
+        {
+            var response = await _notificationService.GetNotification(id);
 
             if (response.IsError)
             {

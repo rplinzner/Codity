@@ -16,6 +16,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Threading.Tasks;
 using Twitter.Data.Context;
 using Twitter.Data.Model;
 using Twitter.Repositories.Interfaces;
@@ -140,6 +141,22 @@ namespace Twitter.WebApi.ExtensionMethods
                         ValidateIssuer = false,
                         ValidateAudience = false
                     };
+
+                    options.Events = new JwtBearerEvents
+                    {
+                        OnMessageReceived = context =>
+                        {
+                            var accessToken = context.Request.Query["access_token"];
+
+                            var path = context.HttpContext.Request.Path;
+                            if (!string.IsNullOrEmpty(accessToken) &&
+                                (path.StartsWithSegments("/notificationHub")))
+                            {
+                                context.Token = accessToken;
+                            }
+                            return Task.CompletedTask;
+                        }
+                    };
                 });
         }
 
@@ -164,6 +181,8 @@ namespace Twitter.WebApi.ExtensionMethods
             services.AddTransient<INotificationGeneratorService, NotificationGeneratorService>();
             services.AddTransient<INotificationMapperService, NotificationMapperService>();
             services.AddTransient<INotificationService, NotificationService>();
+            services.AddTransient<ISettingsService, SettingsService>();
+            services.AddTransient<ILanguageService, LanguageService>();
             services.AddTransient<DataSeeder>();
         }
 
@@ -172,6 +191,7 @@ namespace Twitter.WebApi.ExtensionMethods
             services.AddTransient<IBaseRepository<Follow>, BaseRepository<Follow>>();
             services.AddTransient<IBaseRepository<User>, BaseRepository<User>>();
             services.AddTransient<IBaseRepository<Language>, BaseRepository<Language>>();
+            services.AddTransient<IBaseRepository<Settings>, BaseRepository<Settings>>();
             services.AddTransient<IBaseRepository<Gender>, BaseRepository<Gender>>();
             services.AddTransient<IBaseRepository<Notification>, BaseRepository<Notification>>();
             services.AddTransient<IBaseRepository<UserNotification>, BaseRepository<UserNotification>>();

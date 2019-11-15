@@ -9,9 +9,10 @@ namespace Twitter.Services.Interfaces
 {
     public interface INotificationService
     {
-        Task SendNotification(int userId, NotificationDTO notification);
-        Task SendNotification(IEnumerable<int> userIds, IEnumerable<int> exceptUserIds, NotificationDTO notification);
+        Task SendNotification(int userId, int notificationId);
+        Task SendNotification(IEnumerable<int> userIds, IEnumerable<int> exceptUserIds, int notificationId);
 
+        Task<IResponse<NotificationDTO>> GetNotification(int notificationId);
         Task<ICollectionResponse<NotificationDTO>> GetAllNotifications(int userId);
         Task<IBaseResponse> MarkNotificationAsRead(int notificationId);
         Task<IBaseResponse> MarkAllNotificationsAsRead();

@@ -133,16 +133,5 @@ namespace Twitter.WebApi.Controllers
 
             return Ok(response);
         }
-
-        /// <summary>
-        /// NOT IMPLEMENTED
-        /// </summary>
-        /// <param name="settings"></param>
-        /// <returns></returns>
-        [HttpPut("settings")]
-        public Task<ActionResult> UpdateSettings([FromBody] SettingsRequest settings)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

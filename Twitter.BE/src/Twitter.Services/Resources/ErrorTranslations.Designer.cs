@@ -214,6 +214,15 @@ namespace Twitter.Services.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Notification does not exists..
+        /// </summary>
+        public static string NotificationNotFound {
+            get {
+                return ResourceManager.GetString("NotificationNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Incorrect password..
         /// </summary>
         public static string PasswordMismatch {

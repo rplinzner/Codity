@@ -110,12 +110,12 @@ namespace Twitter.Services.Services
 
             if (string.IsNullOrEmpty(likeNotificationParameters.TweetAuthorFullName))
             {
-                if (likeNotificationParameters.CommentsCount > 0)
+                if (likeNotificationParameters.LikesCount > 0)
                 {
                     dto.Label = string.Format(
                         NotificationTranslations.YoursNewLikes,
                         likeNotificationParameters.LikingUserFullName,
-                        likeNotificationParameters.CommentsCount);
+                        likeNotificationParameters.LikesCount);
                 }
                 else
                 {

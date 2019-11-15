@@ -87,15 +87,12 @@ namespace Twitter.Services.Services
                     UserId = tweetAuthor.Id
                 });
 
-                var tweetAuthorNotificationDTO = _notificationMapper.MapNotification(tweetAuthorNotification);
-                await _notificationService.SendNotification(tweetAuthor.Id, tweetAuthorNotificationDTO);
+                await _notificationService.SendNotification(tweetAuthor.Id, tweetAuthorNotification.Id);
             }
 
             await _userNotificationRepository.AddRangeAsync(userNotifications);
 
-            var notificationDTO = _notificationMapper.MapNotification(notification);
-
-            await _notificationService.SendNotification(followers, new[] { commentAuthor.Id, tweetAuthor.Id }, notificationDTO);
+            await _notificationService.SendNotification(followers, new[] { commentAuthor.Id, tweetAuthor.Id }, notification.Id);
         }
 
         public async Task CreateFollowNotification(User follower, User following)
@@ -146,14 +143,11 @@ namespace Twitter.Services.Services
                 UserId = following.Id
             });
 
-            var followingNotificationDTO = _notificationMapper.MapNotification(followingNotification);
-            await _notificationService.SendNotification(following.Id, followingNotificationDTO);
+            await _notificationService.SendNotification(following.Id, followingNotification.Id);
 
             await _userNotificationRepository.AddRangeAsync(userNotifications);
 
-            var notificationDTO = _notificationMapper.MapNotification(notification);
-
-            await _notificationService.SendNotification(followers, new[] { follower.Id, following.Id }, notificationDTO);
+            await _notificationService.SendNotification(followers, new[] { follower.Id, following.Id }, notification.Id);
         }
 
         public async Task CreateLikeNotification(Tweet tweet, User likeAuthor, User tweetAuthor)
@@ -166,21 +160,30 @@ namespace Twitter.Services.Services
                 .Distinct()
                 .Count();
 
-            var notification = new Notification();
+            var notification = await _notificationRepository
+                .GetByAsync(c => c.TweetId == tweet.Id && 
+                !string.IsNullOrEmpty(_notificationMapper.DeserializeNotificationParameters<LikeParameters>(c.Parameters).TweetAuthorFullName));
 
             var notificationParams = new LikeParameters()
             {
                 LikingUserFullName = likeAuthorFullName,
                 TweetAuthorFullName = tweetAuthorFullName,
-                CommentsCount = distinctLikesCount
+                LikesCount = distinctLikesCount
             };
 
             notification.Parameters = _notificationMapper.SerializeNotificationParameters(notificationParams);
-            notification.TweetId = tweet.Id;
-            notification.Type = NotificationType.Like;
             notification.CreatedTime = DateTime.Now;
 
-            await _notificationRepository.AddAsync(notification);
+            if (notification == null)
+            {
+                notification.TweetId = tweet.Id;
+                notification.Type = NotificationType.Like;
+                await _notificationRepository.AddAsync(notification);
+            }
+            else
+            {
+                await _notificationRepository.UpdateAsync(notification);
+            }
 
             var followers = (await _followRepository.GetAllByAsync(c => c.FollowingId == likeAuthor.Id)).Select(c => c.FollowerId);
 
@@ -196,18 +199,28 @@ namespace Twitter.Services.Services
 
             if (likeAuthor.Id != tweetAuthor.Id)
             {
-                var tweetAuthorNotification = new Notification();
+                var tweetAuthorNotification = await _notificationRepository
+                    .GetByAsync(c => c.TweetId == tweet.Id &&
+                    string.IsNullOrEmpty(_notificationMapper.DeserializeNotificationParameters<LikeParameters>(c.Parameters).TweetAuthorFullName));
+
                 var tweetAuthorNotificationParams = new LikeParameters()
                 {
                     LikingUserFullName = likeAuthorFullName,
-                    CommentsCount = distinctLikesCount
+                    LikesCount = distinctLikesCount
                 };
                 tweetAuthorNotification.Parameters = _notificationMapper.SerializeNotificationParameters(tweetAuthorNotificationParams);
-                tweetAuthorNotification.TweetId = tweet.Id;
-                tweetAuthorNotification.Type = NotificationType.Like;
                 tweetAuthorNotification.CreatedTime = DateTime.Now;
 
-                await _notificationRepository.AddAsync(tweetAuthorNotification);
+                if(tweetAuthorNotification==null)
+                {
+                    tweetAuthorNotification.TweetId = tweet.Id;
+                    tweetAuthorNotification.Type = NotificationType.Like;
+                    await _notificationRepository.AddAsync(tweetAuthorNotification);
+                }
+                else
+                {
+                    await _notificationRepository.UpdateAsync(tweetAuthorNotification);
+                }
 
                 userNotifications.Add(new UserNotification
                 {
@@ -216,15 +229,12 @@ namespace Twitter.Services.Services
 
                 });
 
-                var tweetAuthorNotificationDTO = _notificationMapper.MapNotification(tweetAuthorNotification);
-                await _notificationService.SendNotification(tweetAuthor.Id, tweetAuthorNotificationDTO);
+                await _notificationService.SendNotification(tweetAuthor.Id, tweetAuthorNotification.Id);
             }
 
             await _userNotificationRepository.AddRangeAsync(userNotifications);
 
-            var notificationDTO = _notificationMapper.MapNotification(notification);
-
-            await _notificationService.SendNotification(followers, new[] { likeAuthor.Id, tweetAuthor.Id }, notificationDTO);
+            await _notificationService.SendNotification(followers, new[] { likeAuthor.Id, tweetAuthor.Id }, notification.Id);
         }
 
         public async Task CreateTweetNotification(Tweet tweet, User tweetAuthor)
@@ -260,9 +270,7 @@ namespace Twitter.Services.Services
 
             await _userNotificationRepository.AddRangeAsync(userNotifications);
 
-            var notificationDTO = _notificationMapper.MapNotification(notification);
-
-            await _notificationService.SendNotification(followers, new[] { tweetAuthor.Id }, notificationDTO);
+            await _notificationService.SendNotification(followers, new[] { tweetAuthor.Id }, notification.Id);
         }
     }
 }
