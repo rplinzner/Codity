@@ -19,6 +19,6 @@ namespace Twitter.Data.Model
         public ICollection<Tweet> Tweets { get; set; }
         public ICollection<Follow> Followers { get; set; }
         public ICollection<Follow> Following { get; set; }
-        public ICollection<Notification> Notifications { get; set; }
+        public ICollection<UserNotification> Notifications { get; set; }
     }
 }

@@ -17,15 +17,18 @@ namespace Twitter.Services.Services
     {
         private readonly IBaseRepository<Follow> _followRepository;
         private readonly IBaseRepository<User> _userRepository;
+        private readonly INotificationGeneratorService _notificationGeneratorService;
         private readonly IMapper _mapper;
 
         public UserService(
             IBaseRepository<Follow> followRepository,
             IBaseRepository<User> userRepository,
+            INotificationGeneratorService notificationGeneratorService,
             IMapper mapper)
         {
             _followRepository = followRepository;
             _userRepository = userRepository;
+            _notificationGeneratorService = notificationGeneratorService;
             _mapper = mapper;
         }
 
@@ -89,6 +92,28 @@ namespace Twitter.Services.Services
         public async Task<IBaseResponse> FollowUserAsync(int userId, FollowingRequest following)
         {
             var response = new BaseResponse();
+            var followerUser = await _userRepository.GetAsync(userId);
+            var followingUser = await _userRepository.GetAsync(following.FollowingId);
+
+            if (followerUser == null)
+            {
+                response.AddError(new Error
+                {
+                    Message = ErrorTranslations.UserNotFound
+                });
+
+                return response;
+            }
+
+            if (followingUser == null)
+            {
+                response.AddError(new Error
+                {
+                    Message = ErrorTranslations.UserNotFound
+                });
+
+                return response;
+            }
 
             var follow = await _followRepository
                 .GetByAsync(c => c.FollowerId == userId && c.FollowingId == following.FollowingId);
@@ -110,6 +135,8 @@ namespace Twitter.Services.Services
             };
 
             await _followRepository.AddAsync(follow);
+
+            await _notificationGeneratorService.CreateFollowNotification(followerUser, followingUser);
 
             return response;
         }

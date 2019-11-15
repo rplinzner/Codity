@@ -1,4 +1,6 @@
-﻿namespace Twitter.Data.Model
+﻿using System;
+
+namespace Twitter.Data.Model
 {
     public class Comment : BaseEntity, IBaseEntity
     {
@@ -9,5 +11,6 @@
         public User Author { get; set; }
 
         public string Text { get; set; }
+        public DateTime CreationDate { get; set; }
     }
 }
