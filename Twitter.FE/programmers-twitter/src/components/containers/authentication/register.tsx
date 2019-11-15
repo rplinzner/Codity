@@ -19,7 +19,7 @@ import { withStyles } from '@material-ui/styles';
 interface Props extends LocalizeContextProps {
   classes: {
     button: string;
-  }
+  };
 }
 interface State {
   canSubmit: boolean;
@@ -47,12 +47,12 @@ class Register extends Component<Props, State> {
   state: State = { canSubmit: false };
 
   onSubmit = (values: FormValues): void => {
-    toast.success('onSubmit triggered');
-  };
+    toast.success(<T id="passwordsMustMatch" />);
+  }
 
   onCaptchaSubmitted = () => {
     this.setState({ canSubmit: true });
-  };
+  }
 
   getSchema = (translate: any) => {
     return Yup.object({
@@ -66,13 +66,13 @@ class Register extends Component<Props, State> {
         .oneOf([Yup.ref('password'), null], translate('passwordsMustMatch'))
         .required(translate('passwordConfirmRequired')),
     });
-  };
+  }
 
   render() {
     const { classes } = this.props;
     return (
-      <Grid container justify="center">
-        <Grid md={6} xs={10}>
+      <Grid container={true} justify="center">
+        <Grid item={true} xs={10} md={6} lg={5} xl={4}>
           <T>
             {({ translate }) => (
               <Formik
@@ -93,7 +93,7 @@ class Register extends Component<Props, State> {
                       label={<T id="firstName" />}
                       component={TextField}
                       margin="normal"
-                      fullWidth
+                      fullWidth={true}
                     />
                     <br />
                     <Field
@@ -102,7 +102,7 @@ class Register extends Component<Props, State> {
                       label={<T id="lastName" />}
                       component={TextField}
                       margin="normal"
-                      fullWidth
+                      fullWidth={true}
                     />
                     <br />
                     <Field
@@ -111,7 +111,7 @@ class Register extends Component<Props, State> {
                       label="Email"
                       component={TextField}
                       margin="normal"
-                      fullWidth
+                      fullWidth={true}
                     />
                     <br />
                     <Field
@@ -121,7 +121,7 @@ class Register extends Component<Props, State> {
                       autoComplete="new-password"
                       component={TextField}
                       margin="normal"
-                      fullWidth
+                      fullWidth={true}
                     />
                     <br />
                     <Field
@@ -131,7 +131,7 @@ class Register extends Component<Props, State> {
                       label={<T id="passwordConfirm" />}
                       component={TextField}
                       margin="normal"
-                      fullWidth
+                      fullWidth={true}
                     />
                     <br />
                     <ReCAPTCHA
@@ -146,7 +146,12 @@ class Register extends Component<Props, State> {
                     >
                       {<T id="sent" />}
                     </Button>
-                    <Button className={classes.button} variant="contained" color="secondary" type="reset">
+                    <Button
+                      className={classes.button}
+                      variant="contained"
+                      color="secondary"
+                      type="reset"
+                    >
                       {<T id="reset" />}
                     </Button>
                   </Form>

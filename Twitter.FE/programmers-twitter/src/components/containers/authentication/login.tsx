@@ -1,5 +1,12 @@
 import React, { Component } from 'react';
-import { TextField, Paper, Button, Grid, Link } from '@material-ui/core';
+import {
+  TextField,
+  Paper,
+  Button,
+  Grid,
+  Link,
+  Typography,
+} from '@material-ui/core';
 import { withStyles, Theme } from '@material-ui/core/styles';
 import {
   Link as RouterLink,
@@ -17,6 +24,7 @@ interface Props extends LocalizeContextProps {
   classes: {
     root: string;
     form: string;
+    container: string;
   };
 }
 interface State {
@@ -27,6 +35,9 @@ interface State {
 const styles = (theme: Theme) => ({
   root: {
     padding: theme.spacing(3, 2),
+  },
+  container: {
+    height: '90vh',
   },
   form: {
     margin: 'auto',
@@ -60,14 +71,19 @@ class Login extends Component<Props, State> {
       <Grid
         container={true}
         justify="center"
-        alignItems="center"
-        style={{ height: '90vh' }} //TODO: Move to jss and account for different nav bar heights
+        alignItems="flex-start"
+        className={classes.container}
       >
+        <Grid item className={classes.root}>
+          <Typography align="center" variant="h3">
+            <T id="greeting" />
+          </Typography>
+        </Grid>
         <Grid item={true} xs={10} md={6}>
           <Paper className={classes.root}>
-            <h3>
+            <Typography variant="h5">
               <T id="auth-credentials" />
-            </h3>
+            </Typography>
             <form noValidate={false} className={classes.form}>
               <TextField
                 fullWidth={true}
