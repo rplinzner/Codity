@@ -28,7 +28,6 @@ interface LoginSuccessAction {
 
 interface LoginFailureAction {
   type: typeof LOGIN_FAILURE;
-  payload: string[];
 }
 
 export type UserActionTypes =

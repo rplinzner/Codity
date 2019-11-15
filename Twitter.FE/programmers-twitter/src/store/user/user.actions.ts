@@ -4,8 +4,8 @@ import { Action } from 'redux';
 import * as types from './user.types';
 import User from '../../types/user';
 import { userService } from '../../services/authentication.service';
-import { toast } from 'react-toastify';
 import { AppState } from '../..';
+import displayErrors from '../../helpers/display-errors';
 
 export function login(
   email: string,
@@ -18,13 +18,9 @@ export function login(
       user => {
         dispatch(success(user as User));
       },
-      (error: string[]) => {
-        console.log(error);
-
-        dispatch(failure(error));
-        error.forEach((element: string) => {
-          toast.error(element);
-        });
+      (error: Error[]) => {
+        dispatch(failure());
+        displayErrors(error);
       }
     );
   };
@@ -41,10 +37,9 @@ export function login(
       payload: user,
     };
   }
-  function failure(error: string[]): types.UserActionTypes {
+  function failure(): types.UserActionTypes {
     return {
       type: 'USERS_LOGIN_FAILURE',
-      payload: error,
     };
   }
 }

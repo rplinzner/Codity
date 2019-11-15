@@ -75,9 +75,8 @@ class Login extends Component<Props, State> {
 
   handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    console.log('login started');
 
-    this.props.loginAction('rplinzner@;lasdfkj', 'lol');
+    this.props.loginAction(this.state.email, this.state.password);
   };
 
   render() {

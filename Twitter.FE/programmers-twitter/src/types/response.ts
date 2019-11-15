@@ -6,5 +6,9 @@ export interface ServerResponse {
   model: ResponseModel | null;
   message: string | null;
   isError: boolean;
-  errors: string[];
+  errors: Error[];
+}
+
+export interface Error {
+  message: string;
 }
