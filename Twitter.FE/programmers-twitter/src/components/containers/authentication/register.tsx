@@ -20,6 +20,7 @@ interface Props extends LocalizeContextProps {
   classes: {
     button: string;
   };
+  theme: Theme;
 }
 interface State {
   canSubmit: boolean;
@@ -69,7 +70,7 @@ class Register extends Component<Props, State> {
   }
 
   render() {
-    const { classes } = this.props;
+    const { classes, theme } = this.props;
     return (
       <Grid container={true} justify="center">
         <Grid item={true} xs={10} md={6} lg={5} xl={4}>
@@ -135,7 +136,7 @@ class Register extends Component<Props, State> {
                     />
                     <br />
                     <ReCAPTCHA
-                      theme="dark" //TODO: Read the setting from redux in future
+                      theme={theme.palette.type} //TODO: Read the setting from redux in future
                       onChange={this.onCaptchaSubmitted}
                       sitekey={constants.RecaptchaSiteKey}
                     />
