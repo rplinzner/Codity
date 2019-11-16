@@ -9,9 +9,11 @@ namespace Twitter.Services.Interfaces
     {
         Task<IResponse<UserDTO>> GetUserAsync(int userId);
         Task<ICollectionResponse<BaseUserDTO>> GetUsersAsync();
+        Task<IPagedResponse<BaseUserDTO>> GetUsersAsync(SearchUserRequest searchRequest);
         Task<ICollectionResponse<BaseUserDTO>> GetFollowersAsync(int userId);
         Task<ICollectionResponse<BaseUserDTO>> GetFollowingAsync(int userId);
         Task<IBaseResponse> FollowUserAsync(int userId, FollowingRequest following);
         Task<IBaseResponse> UnfollowUserAsync(int userId, FollowingRequest following);
+        Task<IBaseResponse> UpdateUserProfileAsync(int userId, UserProfileRequest userProfile);
     }
 }

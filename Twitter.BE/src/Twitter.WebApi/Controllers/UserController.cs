@@ -1,5 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Twitter.Services.Interfaces;
@@ -21,6 +20,24 @@ namespace Twitter.WebApi.Controllers
         {
             _userService = userService;
             _userContext = userContext;
+        }
+
+
+        /// <summary>
+        /// Search users
+        /// </summary>
+        /// <returns>Users</returns>
+        [HttpGet("search")]
+        public async Task<ActionResult<IPagedResponse<BaseUserDTO>>> SearchUsers([FromQuery] SearchUserRequest searchUserRequest)
+        {
+            var response = await _userService.GetUsersAsync(searchUserRequest);
+
+            if (response.IsError)
+            {
+                return BadRequest(response);
+            }
+
+            return Ok(response);
         }
 
         /// <summary>
@@ -125,6 +142,26 @@ namespace Twitter.WebApi.Controllers
             int userId = _userContext.GetUserId();
 
             var response = await _userService.UnfollowUserAsync(userId, following);
+
+            if (response.IsError)
+            {
+                return BadRequest(response);
+            }
+
+            return Ok(response);
+        }
+
+        /// <summary>
+        /// Update User Profile
+        /// </summary>
+        /// <param name="userProfile"></param>
+        /// <returns></returns>
+        [HttpPut("profile")]
+        public async Task<ActionResult<IBaseResponse>> UpdateUserProfile([FromBody] UserProfileRequest userProfile)
+        {
+            int userId = _userContext.GetUserId();
+
+            var response = await _userService.UpdateUserProfileAsync(userId, userProfile);
 
             if (response.IsError)
             {

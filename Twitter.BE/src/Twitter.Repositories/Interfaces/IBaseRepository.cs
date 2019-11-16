@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Twitter.Data.Model;
+using Twitter.Repositories.Helpers;
 
 namespace Twitter.Repositories.Interfaces
 {
@@ -28,6 +29,13 @@ namespace Twitter.Repositories.Interfaces
         Task<IEnumerable<T>> GetAllAsync(
             bool withTracking = false,
             params Expression<Func<T, object>>[] includes);
+
+        Task<PagedList<T>> GetAllByAsync(
+           Expression<Func<T, bool>> getBy,
+           int pageNumber,
+           int pageSize,
+           bool withTracking = false,
+           params Expression<Func<T, object>>[] includes);
 
         Task<IEnumerable<T>> GetAllByAsync(
             Expression<Func<T, bool>> getBy,

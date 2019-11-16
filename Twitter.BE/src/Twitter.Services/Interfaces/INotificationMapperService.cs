@@ -1,7 +1,5 @@
 ﻿using System.Collections.Generic;
-using System.Threading.Tasks;
 using Twitter.Data.Model;
-using Twitter.Services.Helpers.NotificationParameters;
 using Twitter.Services.ResponseModels.DTOs.Notification;
 
 namespace Twitter.Services.Interfaces

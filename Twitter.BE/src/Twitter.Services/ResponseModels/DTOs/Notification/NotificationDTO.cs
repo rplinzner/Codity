@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using Twitter.Services.ResponseModels.Interfaces;
 
 namespace Twitter.Services.ResponseModels.DTOs.Notification

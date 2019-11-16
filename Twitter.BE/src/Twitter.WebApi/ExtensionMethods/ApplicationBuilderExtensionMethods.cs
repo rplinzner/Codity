@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Builder;
-using Twitter.Services.Hubs;
 
 namespace Twitter.WebApi.ExtensionMethods
 {

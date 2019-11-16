@@ -6,6 +6,7 @@ using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Twitter.Data.Context;
 using Twitter.Data.Model;
+using Twitter.Repositories.Helpers;
 using Twitter.Repositories.Interfaces;
 
 namespace Twitter.Repositories.Repositories
@@ -69,19 +70,20 @@ namespace Twitter.Repositories.Repositories
             bool withTracking = false,
             params Expression<Func<T, object>>[] includes)
         {
-            var query = _dbContext.Set<T>() as IQueryable<T>;
+            return await GetAllByQuery(getBy, withTracking, includes)
+                .ToListAsync();
+        }
 
-            if (!withTracking)
-            {
-                query = query.AsNoTracking();
-            }
-
-            foreach (var include in includes)
-            {
-                query = query.Include(include);
-            }
-
-            return await query.Where(getBy).ToListAsync();
+        public virtual async Task<PagedList<T>> GetAllByAsync(
+           Expression<Func<T, bool>> getBy,
+           int pageNumber,
+           int pageSize,
+           bool withTracking = false,
+           params Expression<Func<T, object>>[] includes)
+        {
+            var query = GetAllByQuery(getBy, withTracking, includes);
+            
+            return await PagedList<T>.Create(query, pageNumber, pageSize);
         }
 
         public virtual async Task<T> GetAsync(
@@ -146,6 +148,26 @@ namespace Twitter.Repositories.Repositories
         {
             _dbContext.Set<T>().UpdateRange(entities);
             await _dbContext.SaveChangesAsync();
+        }
+
+        private IQueryable<T> GetAllByQuery(
+            Expression<Func<T, bool>> getBy,
+            bool withTracking = false,
+            params Expression<Func<T, object>>[] includes)
+        {
+            var query = _dbContext.Set<T>() as IQueryable<T>;
+
+            if (!withTracking)
+            {
+                query = query.AsNoTracking();
+            }
+
+            foreach (var include in includes)
+            {
+                query = query.Include(include);
+            }
+
+            return query.Where(getBy);
         }
     }
 }

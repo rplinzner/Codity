@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Twitter.Services.ResponseModels.DTOs.Notification;
 using Twitter.Services.ResponseModels.Interfaces;

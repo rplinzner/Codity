@@ -1,13 +1,14 @@
-﻿using System;
+﻿using Microsoft.Extensions.Options;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Twitter.Data.Model;
 using Twitter.Data.Model.Enums;
 using Twitter.Repositories.Interfaces;
 using Twitter.Services.Helpers.NotificationParameters;
 using Twitter.Services.Interfaces;
+using Twitter.Services.Options;
 
 namespace Twitter.Services.Services
 {
@@ -18,19 +19,22 @@ namespace Twitter.Services.Services
         private readonly IBaseRepository<Notification> _notificationRepository;
         private readonly IBaseRepository<UserNotification> _userNotificationRepository;
         private readonly IBaseRepository<Follow> _followRepository;
+        private readonly RedirectOptions _redirectOptions;
 
         public NotificationGeneratorService(
             INotificationMapperService notificationMapper,
             INotificationService notificationService,
             IBaseRepository<Notification> notificationRepository,
             IBaseRepository<UserNotification> userNotificationRepository,
-            IBaseRepository<Follow> followRepository)
+            IBaseRepository<Follow> followRepository,
+            IOptions<RedirectOptions> redirectOptions)
         {
             _notificationMapper = notificationMapper;
             _notificationService = notificationService;
             _notificationRepository = notificationRepository;
             _userNotificationRepository = userNotificationRepository;
             _followRepository = followRepository;
+            _redirectOptions = redirectOptions.Value;
         }
 
         public async Task CreateCommentNotification(Tweet tweet, User commentAuthor, User tweetAuthor, string comment)
@@ -51,6 +55,7 @@ namespace Twitter.Services.Services
             notification.Type = NotificationType.Comment;
             notification.Description = comment.Substring(0, 30);
             notification.CreatedTime = DateTime.Now;
+            notification.RedirectTo = string.Format(_redirectOptions.TweetUrl, tweet.Id);
 
             await _notificationRepository.AddAsync(notification);
 
@@ -78,6 +83,7 @@ namespace Twitter.Services.Services
                 tweetAuthorNotification.Type = NotificationType.Comment;
                 tweetAuthorNotification.Description = comment.Substring(0, 30);
                 tweetAuthorNotification.CreatedTime = DateTime.Now;
+                tweetAuthorNotification.RedirectTo = string.Format(_redirectOptions.TweetUrl, tweet.Id);
 
                 await _notificationRepository.AddAsync(tweetAuthorNotification);
 
@@ -111,6 +117,7 @@ namespace Twitter.Services.Services
             notification.Parameters = _notificationMapper.SerializeNotificationParameters(notificationParams);
             notification.Type = NotificationType.Follower;
             notification.CreatedTime = DateTime.Now;
+            notification.RedirectTo = string.Format(_redirectOptions.UserUrl, following.Id);
 
             await _notificationRepository.AddAsync(notification);
 
@@ -134,6 +141,7 @@ namespace Twitter.Services.Services
             followingNotification.Parameters = _notificationMapper.SerializeNotificationParameters(tweetAuthorNotificationParams);
             followingNotification.Type = NotificationType.Follower;
             followingNotification.CreatedTime = DateTime.Now;
+            followingNotification.RedirectTo = string.Format(_redirectOptions.UserUrl, follower.Id);
 
             await _notificationRepository.AddAsync(followingNotification);
 
@@ -161,7 +169,7 @@ namespace Twitter.Services.Services
                 .Count();
 
             var notification = await _notificationRepository
-                .GetByAsync(c => c.TweetId == tweet.Id && 
+                .GetByAsync(c => c.TweetId == tweet.Id &&
                 !string.IsNullOrEmpty(_notificationMapper.DeserializeNotificationParameters<LikeParameters>(c.Parameters).TweetAuthorFullName));
 
             var notificationParams = new LikeParameters()
@@ -178,6 +186,8 @@ namespace Twitter.Services.Services
             {
                 notification.TweetId = tweet.Id;
                 notification.Type = NotificationType.Like;
+                notification.RedirectTo = string.Format(_redirectOptions.TweetUrl, tweet.Id);
+
                 await _notificationRepository.AddAsync(notification);
             }
             else
@@ -211,10 +221,11 @@ namespace Twitter.Services.Services
                 tweetAuthorNotification.Parameters = _notificationMapper.SerializeNotificationParameters(tweetAuthorNotificationParams);
                 tweetAuthorNotification.CreatedTime = DateTime.Now;
 
-                if(tweetAuthorNotification==null)
+                if (tweetAuthorNotification == null)
                 {
                     tweetAuthorNotification.TweetId = tweet.Id;
                     tweetAuthorNotification.Type = NotificationType.Like;
+                    tweetAuthorNotification.RedirectTo = string.Format(_redirectOptions.TweetUrl, tweet.Id);
                     await _notificationRepository.AddAsync(tweetAuthorNotification);
                 }
                 else
@@ -253,6 +264,7 @@ namespace Twitter.Services.Services
             notification.Type = NotificationType.Tweet;
             notification.Description = tweet.Text.Substring(0, 30);
             notification.CreatedTime = DateTime.Now;
+            notification.RedirectTo = string.Format(_redirectOptions.TweetUrl, tweet.Id);
 
             await _notificationRepository.AddAsync(notification);
 

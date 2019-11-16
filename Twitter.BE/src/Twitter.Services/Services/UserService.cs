@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Twitter.Data.Model;
 using Twitter.Repositories.Interfaces;
@@ -185,6 +187,50 @@ namespace Twitter.Services.Services
             response.Models = _mapper.Map<IEnumerable<BaseUserDTO>>(following);
 
             return response;
+        }
+
+        public async Task<IPagedResponse<BaseUserDTO>> GetUsersAsync(SearchUserRequest searchRequest)
+        {
+            var response = new PagedResponse<BaseUserDTO>();
+
+            var searchExpression = CreateSearchExpression(searchRequest);
+            var users = await _userRepository.GetAllByAsync(
+                searchExpression,
+                searchRequest.PageNumber,
+                searchRequest.PageSize);
+
+            _mapper.Map(users, response);
+
+            return response;
+        }
+
+        public async Task<IBaseResponse> UpdateUserProfileAsync(int userId, UserProfileRequest userProfile)
+        {
+            var response = new BaseResponse();
+
+            var user = await _userRepository.GetAsync(userId);
+
+            _mapper.Map(userProfile, user);
+
+            await _userRepository.UpdateAsync(user);
+
+            return response;
+        }
+
+        private Expression<Func<User, bool>> CreateSearchExpression(SearchUserRequest searchRequest)
+        {
+            var query = searchRequest.Query.ToLower();
+
+            Expression<Func<User, bool>> searchExpression = c => true;
+
+            if (!string.IsNullOrEmpty(searchRequest.Query))
+            {
+                searchExpression = c => c.FirstName.ToLower().Contains(query) ||
+                  c.LastName.ToLower().Contains(query) ||
+                  c.AboutMe.ToLower().Contains(query);
+            }
+
+            return searchExpression;
         }
     }
 }

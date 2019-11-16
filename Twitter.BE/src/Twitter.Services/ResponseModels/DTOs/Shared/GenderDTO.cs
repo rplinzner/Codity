@@ -1,7 +1,10 @@
-﻿namespace Twitter.Services.ResponseModels.DTOs.Shared
+﻿using Twitter.Services.ResponseModels.Interfaces;
+
+namespace Twitter.Services.ResponseModels.DTOs.Shared
 {
-    public class GenderDTO
+    public class GenderDTO : IResponseDTO
     {
-        public string Name { get; set; }
+        public int GenderId { get; set; }
+        public string GenderName { get; set; }
     }
 }

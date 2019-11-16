@@ -8,7 +8,7 @@ namespace Twitter.Services.ResponseModels.DTOs.User
     {
         public string AboutMe { get; set; }
         public DateTime? BirthDay { get; set; }
-        public GenderDTO Gender { get; set; }
+        public string GenderName { get; set; }
         public int FollowersCount { get; set; }
         public int FollowingCount { get; set; }
     }
