@@ -48,7 +48,6 @@ class Register extends Component<Props, State> {
   state: State = { canSubmit: false };
 
   onSubmit = (values: FormValues): void => {
-    toast.success(<T id="passwordsMustMatch" />);
   }
 
   onCaptchaSubmitted = () => {
@@ -136,7 +135,7 @@ class Register extends Component<Props, State> {
                     />
                     <br />
                     <ReCAPTCHA
-                      theme={theme.palette.type} //TODO: Read the setting from redux in future
+                      theme={theme.palette.type}
                       onChange={this.onCaptchaSubmitted}
                       sitekey={constants.RecaptchaSiteKey}
                     />
