@@ -37,7 +37,7 @@ class App extends Component<LocalizeContextProps> {
       options: {
         renderToStaticMarkup,
         renderInnerHtml: true,
-        defaultLanguage: 'en',
+        defaultLanguage: 'pl',
       },
     });
   }

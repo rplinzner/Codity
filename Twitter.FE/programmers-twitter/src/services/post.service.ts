@@ -12,7 +12,9 @@ export default function post<T>(
   requestHeaders.set('Content-Type', 'application/json');
   if (isAuthorizationNeeded) {
     const header = authHeader();
-    requestHeaders.append(header.name, header.value);
+    if (header.name && header.value) {
+      requestHeaders.append(header.name, header.value);
+    }
   }
   // TODO: Add language header
   const requestOptions: RequestInit = {
