@@ -35,6 +35,12 @@ namespace Twitter.WebApi.Controllers
             try
             {
                 var response = await _authenticationService.LoginAsync(model);
+                
+                if( response.IsError)
+                {
+                    return BadRequest(response);
+                }
+
                 return Ok(response);
             }
             catch (Exception exception)
@@ -84,6 +90,12 @@ namespace Twitter.WebApi.Controllers
             try
             {
                 var response = await _authenticationService.RegisterAsync(model);
+
+                if (response.IsError)
+                {
+                    return BadRequest(response);
+                }
+
                 return Ok(response);
             }
             catch (Exception exception)
