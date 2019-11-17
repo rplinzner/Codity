@@ -25,7 +25,7 @@ export default function post<T>(
   return fetch(`${controller}${endpoint}`, requestOptions)
     .catch(() =>
       Promise.reject([
-        { message: 'Error ocurred while communicating with server' },
+        { message: 'Error ocurred while communicating with server' }, // TODO: Add language support
       ]),
     )
     .then(handleResponse)

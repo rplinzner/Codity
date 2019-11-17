@@ -54,7 +54,7 @@ const styles = (theme: Theme) => ({
 });
 
 const Link1 = React.forwardRef<HTMLAnchorElement, RouterLinkProps>(
-  (props, ref) => <RouterLink innerRef={ref} {...props} />
+  (props, ref) => <RouterLink innerRef={ref} {...props} />,
 );
 
 class Login extends Component<Props, State> {
@@ -80,7 +80,6 @@ class Login extends Component<Props, State> {
   };
 
   render() {
-    console.log(this.props.user);
     const { classes } = this.props;
     return (
       <Grid
@@ -170,5 +169,5 @@ const mapDispatchToProps = (dispatch: any) => {
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps
+  mapDispatchToProps,
 )(withStyles(styles, { withTheme: true })(withLocalize(Login)));

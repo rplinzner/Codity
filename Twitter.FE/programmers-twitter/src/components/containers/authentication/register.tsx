@@ -93,7 +93,7 @@ class Register extends Component<Props, State> {
       email: Yup.string()
         .email(translate('emailValid'))
         .required(translate('emailRequired')),
-      password: Yup.string().required(translate('passwordRequired')),
+      password: Yup.string().required(translate('passwordRequired')),//TODO: Add validation server-like
       passwordConfirm: Yup.string()
         .oneOf([Yup.ref('password'), null], translate('passwordsMustMatch'))
         .required(translate('passwordConfirmRequired')),
