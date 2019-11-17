@@ -17,12 +17,12 @@ import 'react-toastify/dist/ReactToastify.css';
 
 import * as authentication from './components/containers/authentication/index';
 
-import themeDark from './themes/dark-theme';
-// import themeLight from './themes/light-theme';
+// import themeDark from './themes/dark-theme';
+import themeLight from './themes/light-theme';
 
 
-const darkTheme = responsiveFontSizes(createMuiTheme(themeDark as ThemeOptions));
-// const lightTheme = responsiveFontSizes(createMuiTheme(themeLight as ThemeOptions));
+// const darkTheme = responsiveFontSizes(createMuiTheme(themeDark as ThemeOptions));
+const lightTheme = responsiveFontSizes(createMuiTheme(themeLight as ThemeOptions));
 
 // tslint:disable-next-line: typedef
 class App extends Component<LocalizeContextProps> {
@@ -37,7 +37,7 @@ class App extends Component<LocalizeContextProps> {
       options: {
         renderToStaticMarkup,
         renderInnerHtml: true,
-        defaultLanguage: 'en',
+        defaultLanguage: 'pl',
       },
     });
   }
@@ -45,7 +45,7 @@ class App extends Component<LocalizeContextProps> {
     // tslint:disable-next-line: no-console
     console.log('This app is in:', process.env.NODE_ENV, 'mode');
     return (
-      <MuiThemeProvider theme={darkTheme}>
+      <MuiThemeProvider theme={lightTheme}>
         <CssBaseline />
         <ToastContainer />
         <BrowserRouter>

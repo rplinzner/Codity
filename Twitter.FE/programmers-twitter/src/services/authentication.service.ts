@@ -18,7 +18,7 @@ function login(email: string, password: string) {
     .catch(() =>
       Promise.reject([
         { message: 'Error ocurred while communicating with server' },
-      ])
+      ]),
     )
     .then(handleResponse)
     .then(
@@ -27,7 +27,7 @@ function login(email: string, password: string) {
         localStorage.setItem('user', JSON.stringify(user.model));
         return user.model;
       },
-      (error: Error[]) => Promise.reject(error)
+      (error: Error[]) => Promise.reject(error),
     );
 }
 
