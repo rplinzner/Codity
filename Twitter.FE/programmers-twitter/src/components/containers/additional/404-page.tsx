@@ -11,7 +11,6 @@ import photo4 from '../../../assets/img/dog4.jpg';
 import photo5 from '../../../assets/img/dog5.jpg';
 import photo6 from '../../../assets/img/dog6.jpg';
 
-
 interface Props {}
 
 const data = [
@@ -42,7 +41,7 @@ const useStyles = makeStyles((theme: Theme) =>
       position: 'relative',
       left: '2%',
       top: '15%',
-      maxWidth: '70%',
+      maxWidth: '90%',
     },
     paper: {
       backgroundColor: 'rgba(255, 255, 255, 0.5)',
