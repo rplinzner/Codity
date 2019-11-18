@@ -1,6 +1,6 @@
 import React from 'react';
 import { makeStyles, createStyles } from '@material-ui/core/styles';
-import { Typography, Link, Paper } from '@material-ui/core';
+import { Typography, Link, Paper, Theme } from '@material-ui/core';
 import { Link as RouterLink } from 'react-router-dom';
 import { withLocalize, Translate as T } from 'react-localize-redux';
 
@@ -10,6 +10,7 @@ import photo3 from '../../../assets/img/dog3.jpg';
 import photo4 from '../../../assets/img/dog4.jpg';
 import photo5 from '../../../assets/img/dog5.jpg';
 import photo6 from '../../../assets/img/dog6.jpg';
+
 
 interface Props {}
 
@@ -21,21 +22,28 @@ const data = [
   { img: photo5 },
   { img: photo6 },
 ];
-const useStyles = makeStyles(() =>
+const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     img: {
       background: `url(${data[Math.floor(Math.random() * data.length)].img})`,
-      height: '94vh', // TODO: Remember to account for navbar height
       backgroundPosition: 'center',
       backgroundRepeat: 'no-repeat',
       backgroundSize: 'cover',
       color: 'black',
+      height: '96vh',
+      // [theme.breakpoints.up('md')]: {
+      //   height: 'calc(100%-64px)',
+      // },
+      // [theme.breakpoints.down('md')]: {
+      //   height: 'calc(100%-56px)',
+      // },
     },
     text: {
-      zIndex: 100,
-      position: 'absolute',
+      zIndex: 1,
+      position: 'relative',
       left: '2%',
       top: '15%',
+      maxWidth: '70%',
     },
     paper: {
       backgroundColor: 'rgba(255, 255, 255, 0.5)',
