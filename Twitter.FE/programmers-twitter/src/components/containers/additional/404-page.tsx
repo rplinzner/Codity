@@ -30,13 +30,12 @@ const useStyles = makeStyles((theme: Theme) =>
       backgroundRepeat: 'no-repeat',
       backgroundSize: 'cover',
       color: 'black',
-      height: '96vh',
-      // [theme.breakpoints.up('md')]: {
-      //   height: 'calc(100%-64px)',
-      // },
-      // [theme.breakpoints.down('md')]: {
-      //   height: 'calc(100%-56px)',
-      // },
+      [theme.breakpoints.up('md')]: {
+        height: 'calc(100vh - 64px)',
+      },
+      [theme.breakpoints.down('md')]: {
+        height: 'calc(100vh - 56px)',
+      },
     },
     text: {
       zIndex: 1,
