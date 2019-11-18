@@ -9,6 +9,8 @@ using Twitter.Services.ResponseModels.DTOs.Shared;
 using Twitter.Services.ResponseModels.DTOs.User;
 using Twitter.Services.ResponseModels;
 using System.Linq;
+using Twitter.Services.RequestModels.Tweet;
+using Twitter.Services.ResponseModels.DTOs.Tweet;
 
 namespace Twitter.Services.Mappings
 {
@@ -39,6 +41,24 @@ namespace Twitter.Services.Mappings
 
             CreateMap<SettingsRequest, Settings>();
             CreateMap<Settings, SettingsDTO>();
+
+            CreateMap<PagedList<User>, PagedResponse<BaseUserDTO>>()
+                .ForMember(d => d.Models, o => o.MapFrom(s => s.ToList()));
+            CreateMap<PagedList<Tweet>, PagedResponse<TweetDTO>>()
+                .ForMember(d => d.Models, o => o.MapFrom(s => s.ToList()));
+
+            CreateMap<TweetRequest, Tweet>();
+            CreateMap<UpdateTweetRequest, Tweet>();
+            CreateMap<CodeSnippetRequest, CodeSnippet>();
+
+            CreateMap<Tweet, TweetDTO>()
+               .ForMember(d => d.AuthorFirstName, o => o.MapFrom(s => s.Author.FirstName))
+               .ForMember(d => d.AuthorLastName, o => o.MapFrom(s => s.Author.LastName))
+               .ForMember(d => d.LikesCount, o => o.MapFrom(s => s.Likes.Count))
+               .ForMember(d => d.CommentsCount, o => o.MapFrom(s => s.Comments.Count));
+
+            CreateMap<CodeSnippet, CodeSnippetDTO>()
+               .ForMember(d => d.ProgrammingLanguageName, o => o.MapFrom(s => s.ProgrammingLanguage.Name));
 
             CreateMap<PagedList<User>, PagedResponse<BaseUserDTO>>()
                 .ForMember(d => d.Models, o => o.MapFrom(s => s.ToList()));

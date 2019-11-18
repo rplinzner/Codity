@@ -1,5 +1,4 @@
 ﻿using System;
-using Twitter.Services.ResponseModels.DTOs.Shared;
 using Twitter.Services.ResponseModels.Interfaces;
 
 namespace Twitter.Services.ResponseModels.DTOs.User

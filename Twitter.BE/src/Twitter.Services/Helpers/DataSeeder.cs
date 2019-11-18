@@ -13,17 +13,20 @@ namespace Twitter.Services.Helpers
         private readonly TwitterDbContext _dbContext;
         private readonly IBaseRepository<Language> _languageRepository;
         private readonly IBaseRepository<Gender> _genderRepository;
+        private readonly IBaseRepository<ProgrammingLanguage> _programmingLanguageRepository;
         private readonly UserManager<User> _userManager;
 
         public DataSeeder(
             TwitterDbContext dbContext,
             IBaseRepository<Language> languageRepository,
             IBaseRepository<Gender> genderRepository,
+            IBaseRepository<ProgrammingLanguage> programmingLanguageRepository,
             UserManager<User> userManager)
         {
             _dbContext = dbContext;
             _languageRepository = languageRepository;
             _genderRepository = genderRepository;
+            _programmingLanguageRepository = programmingLanguageRepository;
             _userManager = userManager;
         }
 
@@ -32,6 +35,7 @@ namespace Twitter.Services.Helpers
             SeedLanguages().Wait();
             SeedGender().Wait();
             SeedUsers().Wait();
+            SeedProgrammingLanguages().Wait();
         }
 
         private async Task SeedLanguages()
@@ -51,6 +55,26 @@ namespace Twitter.Services.Helpers
                 };
 
                 await _languageRepository.AddRangeAsync(languages);
+            }
+        }
+
+        private async Task SeedProgrammingLanguages()
+        {
+            if (!await _dbContext.ProgrammingLanguages.AnyAsync())
+            {
+                var languages = new ProgrammingLanguage[]
+                {
+                    new ProgrammingLanguage
+                    {
+                        Name="C#"
+                    },
+                    new ProgrammingLanguage
+                    {
+                        Name="Javascript"
+                    }
+                };
+
+                await _programmingLanguageRepository.AddRangeAsync(languages);
             }
         }
 

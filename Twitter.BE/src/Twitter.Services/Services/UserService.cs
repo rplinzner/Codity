@@ -51,6 +51,8 @@ namespace Twitter.Services.Services
                 {
                     Message = ErrorTranslations.UserNotFound
                 });
+
+                return response;
             }
 
             response.Model = _mapper.Map<UserDTO>(user);
