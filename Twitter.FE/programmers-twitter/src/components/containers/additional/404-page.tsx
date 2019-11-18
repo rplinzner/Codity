@@ -51,6 +51,7 @@ const useStyles = makeStyles((theme: Theme) =>
     typography: {
       marginTop: '7px',
       marginBottom: '7px',
+      color: 'black',
     },
   }),
 );
