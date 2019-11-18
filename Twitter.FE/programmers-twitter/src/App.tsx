@@ -16,13 +16,15 @@ import { globalTranslations } from './translations/index';
 import 'react-toastify/dist/ReactToastify.css';
 
 import * as authentication from './components/containers/authentication/index';
+import * as additional from './components/containers/additional/index';
 
 // import themeDark from './themes/dark-theme';
 import themeLight from './themes/light-theme';
 
-
 // const darkTheme = responsiveFontSizes(createMuiTheme(themeDark as ThemeOptions));
-const lightTheme = responsiveFontSizes(createMuiTheme(themeLight as ThemeOptions));
+const lightTheme = responsiveFontSizes(
+  createMuiTheme(themeLight as ThemeOptions),
+);
 
 // tslint:disable-next-line: typedef
 class App extends Component<LocalizeContextProps> {
@@ -54,6 +56,8 @@ class App extends Component<LocalizeContextProps> {
             <Route path="/" exact={true} component={authentication.Login} />
             <Route path="/Login" component={authentication.Login} />
             <Route path="/Register" component={authentication.Register} />
+            <Route path="/Verify/:type" component={additional.Verify} />
+            <Route component={additional.NotFound} />
           </Switch>
         </BrowserRouter>
       </MuiThemeProvider>

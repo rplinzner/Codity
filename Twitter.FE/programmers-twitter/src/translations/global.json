@@ -6,8 +6,25 @@
 
   "sent": ["Submit", "Wyślij"],
   "here": ["Here", "Tutaj"],
+  "clickHere": ["Click ${link} to go to login page", "Kliknij ${link} aby przejść do strony logowania"],
   "reset": ["Reset", "Wyczyść"],
   "firstName": ["First name", "Imię"],
   "lastName": ["Last name", "Nazwisko"],
-  "close": ["Close", "Zamknij"]
+  "close": ["Close", "Zamknij"],
+  "did404": ["You reached 404!", "Dotarłeś do 404!"],
+  "seemLost": ["You seem lost", "Wyglądasz na zagubionego"],
+  "doNotWorry": [
+    " Don't worry though, I've got some good boys for you",
+    "Nie martw się jednak, mam dla Ciebie troszkę dobrych chłopaków"
+  ],
+  "whenReady": [
+    "When you're ready just click",
+    "Gdy będziesz gotowy po prostu kliknij:"
+  ],
+  "mailSuccess": [
+    "Mail verified successfully!",
+    "Mail zweryfikowany poprawnie!"
+  ],
+  "mailFailed": ["Mail verification failed", "Mail nie został zweryfikowany"],
+  "somethingWrong": ["Something went wrong", "Coś poszło nie tak"]
 }
