@@ -149,6 +149,10 @@ function PrimarySearchAppBar(props: Props) {
     setMobileDrawerOpen(!mobileDrawerOpen);
   };
 
+  const handleDrawerClose = () => {
+    setMobileDrawerOpen(false);
+  };
+
   const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
@@ -313,8 +317,9 @@ function PrimarySearchAppBar(props: Props) {
       {renderMenu}
       <ResponsiveDrawer
         isOpen={mobileDrawerOpen}
-        onClose={handleDrawerToggle}
+        onDrawerChange={handleDrawerToggle}
         drawerWidth={drawerWidth}
+        onDrawerClose={handleDrawerClose}
       />
       <div className={classes.content}>{props.children}</div>
     </div>

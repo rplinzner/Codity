@@ -21,7 +21,8 @@ import { AppState } from '../..';
 
 interface Props extends RouteComponentProps<any> {
   isOpen: boolean;
-  onClose: () => void;
+  onDrawerChange: () => void;
+  onDrawerClose: () => void;
   drawerWidth: number;
   isLoggedIn: boolean;
 }
@@ -61,7 +62,8 @@ function ResponsiveDrawer(props: Props) {
   const {
     location: { pathname },
     isLoggedIn,
-    onClose
+    onDrawerClose,
+    onDrawerChange,
   } = props;
 
   const notLoggedMenu = (
@@ -71,7 +73,7 @@ function ResponsiveDrawer(props: Props) {
         component={Link}
         to="/"
         selected={'/' === pathname}
-        onClick={onClose}
+        onClick={onDrawerClose}
       >
         <ListItemIcon>
           <LockOpenIcon fontSize="small" />
@@ -84,7 +86,7 @@ function ResponsiveDrawer(props: Props) {
         component={Link}
         to="/Register"
         selected={'/Register' === pathname}
-        onClick={onClose}
+        onClick={onDrawerClose}
       >
         <ListItemIcon>
           <CreateIcon fontSize="small" />
@@ -123,7 +125,7 @@ function ResponsiveDrawer(props: Props) {
             variant="temporary"
             anchor={theme.direction === 'rtl' ? 'right' : 'left'}
             open={props.isOpen}
-            onClose={props.onClose}
+            onClose={onDrawerChange}
             classes={{
               paper: classes.drawerPaper,
             }}
