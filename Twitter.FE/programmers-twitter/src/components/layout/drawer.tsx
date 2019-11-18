@@ -2,28 +2,31 @@ import React from 'react';
 import Divider from '@material-ui/core/Divider';
 import Drawer from '@material-ui/core/Drawer';
 import Hidden from '@material-ui/core/Hidden';
-import InboxIcon from '@material-ui/icons/MoveToInbox';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
+
+import LockOpenIcon from '@material-ui/icons/LockOpen';
+import CreateIcon from '@material-ui/icons/Create';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-import MailIcon from '@material-ui/icons/Mail';
+
 import {
   makeStyles,
   useTheme,
   Theme,
   createStyles,
 } from '@material-ui/core/styles';
+import { MenuList, MenuItem, Typography } from '@material-ui/core';
+import { Link, withRouter, RouteComponentProps } from 'react-router-dom';
+import { connect } from 'react-redux';
 
+import { AppState } from '../..';
 
-
-interface Props {
+interface Props extends RouteComponentProps<any> {
   isOpen: boolean;
   onClose: () => void;
   drawerWidth: number;
+  isLoggedIn: boolean;
 }
 
-export default function ResponsiveDrawer(props: Props) {
+function ResponsiveDrawer(props: Props) {
   const useStyles = makeStyles((theme: Theme) =>
     createStyles({
       root: {
@@ -46,45 +49,76 @@ export default function ResponsiveDrawer(props: Props) {
       drawerPaper: {
         width: props.drawerWidth,
       },
+      menuItem: {
+        paddingTop: '10px',
+        paddingBottom: '10px',
+      },
     }),
   );
   const classes = useStyles();
   const theme = useTheme();
 
+  const {
+    location: { pathname },
+    isLoggedIn,
+    onClose
+  } = props;
+
+  const notLoggedMenu = (
+    <MenuList>
+      <MenuItem
+        className={classes.menuItem}
+        component={Link}
+        to="/"
+        selected={'/' === pathname}
+        onClick={onClose}
+      >
+        <ListItemIcon>
+          <LockOpenIcon fontSize="small" />
+        </ListItemIcon>
+        <Typography variant="inherit">Login</Typography>
+      </MenuItem>
+      <Divider />
+      <MenuItem
+        className={classes.menuItem}
+        component={Link}
+        to="/Register"
+        selected={'/Register' === pathname}
+        onClick={onClose}
+      >
+        <ListItemIcon>
+          <CreateIcon fontSize="small" />
+        </ListItemIcon>
+        <Typography variant="inherit">Register</Typography>
+      </MenuItem>
+    </MenuList>
+  );
+
+  const loggedInMenu = (
+    <MenuList>
+      <MenuItem className={classes.menuItem}>
+        <Typography variant="inherit">Empty 1</Typography>
+      </MenuItem>
+      <Divider />
+      <MenuItem className={classes.menuItem}>
+        <Typography variant="inherit">Empty 2</Typography>
+      </MenuItem>
+    </MenuList>
+  );
+
   const drawer = (
     <div>
-      <Hidden smDown>
+      <Hidden smDown={true}>
         <div className={classes.toolbar} />
       </Hidden>
-      <Divider />
-      <List>
-        {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-          <ListItem button key={text}>
-            <ListItemIcon>
-              {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-            </ListItemIcon>
-            <ListItemText primary={text} />
-          </ListItem>
-        ))}
-      </List>
-      <Divider />
-      <List>
-        {['All mail', 'Trash', 'Spam'].map((text, index) => (
-          <ListItem button key={text}>
-            <ListItemIcon>
-              {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-            </ListItemIcon>
-            <ListItemText primary={text} />
-          </ListItem>
-        ))}
-      </List>
+      {isLoggedIn ? loggedInMenu : notLoggedMenu}
     </div>
   );
 
   return (
     <div className={classes.root}>
       <nav className={classes.drawer} aria-label="mailbox folders">
-        <Hidden mdUp implementation="css">
+        <Hidden mdUp={true} implementation="css">
           <Drawer
             variant="temporary"
             anchor={theme.direction === 'rtl' ? 'right' : 'left'}
@@ -100,13 +134,14 @@ export default function ResponsiveDrawer(props: Props) {
             {drawer}
           </Drawer>
         </Hidden>
-         <Hidden smDown implementation="css">  {/* Big drawer*/}
+        <Hidden smDown={true} implementation="css">
+          {/* Big drawer*/}
           <Drawer
             classes={{
               paper: classes.drawerPaper,
             }}
             variant="permanent"
-            open
+            open={true}
           >
             {drawer}
           </Drawer>
@@ -115,3 +150,9 @@ export default function ResponsiveDrawer(props: Props) {
     </div>
   );
 }
+
+const mapStateToProps = (state: AppState) => ({
+  isLoggedIn: state.user.loggedIn,
+});
+
+export default connect(mapStateToProps)(withRouter(ResponsiveDrawer));
