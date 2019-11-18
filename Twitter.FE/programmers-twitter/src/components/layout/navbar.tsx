@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import {
   fade,
   makeStyles,
@@ -25,6 +25,10 @@ import {
 } from 'react-router-dom';
 import { Link } from '@material-ui/core';
 
+import ResponsiveDrawer from './drawer';
+
+const drawerWidth = 240;
+
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     grow: {
@@ -32,6 +36,9 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     menuButton: {
       marginRight: theme.spacing(2),
+      [theme.breakpoints.up('md')]: {
+        display: 'none',
+      },
     },
     title: {
       color: 'black',
@@ -97,14 +104,30 @@ const useStyles = makeStyles((theme: Theme) =>
         display: 'none',
       },
     },
-  })
+    appBar: {
+      zIndex: theme.zIndex.drawer + 1,
+    },
+    content: {
+      [theme.breakpoints.up('md')]: {
+        paddingTop: '64px',
+        paddingLeft: drawerWidth,
+      },
+      [theme.breakpoints.down('md')]: {
+        paddingTop: '56px',
+      },
+    },
+  }),
 );
 
 const Link1 = React.forwardRef<HTMLAnchorElement, RouterLinkProps>(
-  (props, ref) => <RouterLink innerRef={ref} {...props} />
+  (props, ref) => <RouterLink innerRef={ref} {...props} />,
 );
 
-export default function PrimarySearchAppBar() {
+interface Props {
+  children?: ReactNode;
+}
+
+export default function PrimarySearchAppBar(props: Props) {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [
@@ -114,6 +137,11 @@ export default function PrimarySearchAppBar() {
 
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
+  const [mobileDrawerOpen, setMobileDrawerOpen] = React.useState(false);
+
+  const handleDrawerToggle = () => {
+    setMobileDrawerOpen(!mobileDrawerOpen);
+  };
 
   const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -192,10 +220,11 @@ export default function PrimarySearchAppBar() {
 
   return (
     <div className={classes.grow}>
-      <AppBar position="static">
+      <AppBar className={classes.appBar} position="fixed">
         <Toolbar>
           <IconButton
             edge="start"
+            onClick={handleDrawerToggle}
             className={classes.menuButton}
             color="inherit"
             aria-label="open drawer"
@@ -258,6 +287,12 @@ export default function PrimarySearchAppBar() {
       </AppBar>
       {renderMobileMenu}
       {renderMenu}
+      <ResponsiveDrawer
+        isOpen={mobileDrawerOpen}
+        onClose={handleDrawerToggle}
+        drawerWidth={drawerWidth}
+      />
+      <div className={classes.content}>{props.children}</div>
     </div>
   );
 }

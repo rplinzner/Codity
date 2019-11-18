@@ -1,6 +1,6 @@
 import React from 'react';
 import { makeStyles, createStyles } from '@material-ui/core/styles';
-import { Typography, Link, Paper } from '@material-ui/core';
+import { Typography, Link, Paper, Theme } from '@material-ui/core';
 import { Link as RouterLink } from 'react-router-dom';
 import { withLocalize, Translate as T } from 'react-localize-redux';
 
@@ -21,21 +21,27 @@ const data = [
   { img: photo5 },
   { img: photo6 },
 ];
-const useStyles = makeStyles(() =>
+const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     img: {
       background: `url(${data[Math.floor(Math.random() * data.length)].img})`,
-      height: '94vh', // TODO: Remember to account for navbar height
       backgroundPosition: 'center',
       backgroundRepeat: 'no-repeat',
       backgroundSize: 'cover',
       color: 'black',
+      [theme.breakpoints.up('md')]: {
+        height: 'calc(100vh - 64px)',
+      },
+      [theme.breakpoints.down('md')]: {
+        height: 'calc(100vh - 56px)',
+      },
     },
     text: {
-      zIndex: 100,
-      position: 'absolute',
+      zIndex: 1,
+      position: 'relative',
       left: '2%',
       top: '15%',
+      maxWidth: '90%',
     },
     paper: {
       backgroundColor: 'rgba(255, 255, 255, 0.5)',
@@ -45,6 +51,7 @@ const useStyles = makeStyles(() =>
     typography: {
       marginTop: '7px',
       marginBottom: '7px',
+      color: 'black',
     },
   }),
 );

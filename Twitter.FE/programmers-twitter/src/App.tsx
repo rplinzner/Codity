@@ -51,14 +51,15 @@ class App extends Component<LocalizeContextProps> {
         <CssBaseline />
         <ToastContainer />
         <BrowserRouter>
-          <PrimarySearchAppBar />
+          <PrimarySearchAppBar>
           <Switch>
             <Route path="/" exact={true} component={authentication.Login} />
             <Route path="/Login" component={authentication.Login} />
             <Route path="/Register" component={authentication.Register} />
             <Route path="/Verify/:type" component={additional.Verify} />
             <Route component={additional.NotFound} />
-          </Switch>
+            </Switch>
+            </PrimarySearchAppBar>
         </BrowserRouter>
       </MuiThemeProvider>
     );
