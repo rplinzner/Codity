@@ -4,7 +4,7 @@ import Drawer from '@material-ui/core/Drawer';
 import Hidden from '@material-ui/core/Hidden';
 
 import LockOpenIcon from '@material-ui/icons/LockOpen';
-import CreateIcon from '@material-ui/icons/Create';
+import PersonAddIcon from '@material-ui/icons/PersonAdd';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 
 import {
@@ -89,7 +89,7 @@ function ResponsiveDrawer(props: Props) {
         onClick={onDrawerClose}
       >
         <ListItemIcon>
-          <CreateIcon fontSize="small" />
+          <PersonAddIcon fontSize="small" />
         </ListItemIcon>
         <Typography variant="inherit">Register</Typography>
       </MenuItem>
