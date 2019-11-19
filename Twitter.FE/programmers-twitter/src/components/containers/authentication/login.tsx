@@ -57,10 +57,10 @@ const styles = (theme: Theme) => ({
       top: '1vh',
     },
     [theme.breakpoints.up('sm')]: {
-      top: '10vh',
+      top: '5vh',
     },
     [theme.breakpoints.up('md')]: {
-      top: '12vh',
+      top: '7vh',
     },
   },
 });
