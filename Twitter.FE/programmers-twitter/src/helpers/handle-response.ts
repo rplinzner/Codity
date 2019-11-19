@@ -9,8 +9,6 @@ export default function handleResponse(response: Response) {
       if (response.status === 401) {
         // auto logout if 401 response returned from api
         userService.logout();
-        // eslint-disable-next-line no-restricted-globals
-        location.reload(true);
       }
 
       const error =

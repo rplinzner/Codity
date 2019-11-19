@@ -20,6 +20,7 @@ import * as additional from './components/containers/additional/index';
 
 // import themeDark from './themes/dark-theme';
 import themeLight from './themes/light-theme';
+import { PrivateRoute } from './components/containers/authentication/index';
 
 // const darkTheme = responsiveFontSizes(createMuiTheme(themeDark as ThemeOptions));
 const lightTheme = responsiveFontSizes(
@@ -52,14 +53,18 @@ class App extends Component<LocalizeContextProps> {
         <ToastContainer />
         <BrowserRouter>
           <PrimarySearchAppBar>
-          <Switch>
-            <Route path="/" exact={true} component={authentication.Login} />
-            <Route path="/Login" component={authentication.Login} />
-            <Route path="/Register" component={authentication.Register} />
-            <Route path="/Verify/:type" component={additional.Verify} />
-            <Route component={additional.NotFound} />
+            <Switch>
+              <Route path="/" exact={true} component={authentication.Login} />
+              <PrivateRoute
+                path="/testprivateroute"
+                component={additional.NotFound}
+              />
+              //TODO: Remove that
+              <Route path="/Register" component={authentication.Register} />
+              <Route path="/Verify/:type" component={additional.Verify} />
+              <Route component={additional.NotFound} />
             </Switch>
-            </PrimarySearchAppBar>
+          </PrimarySearchAppBar>
         </BrowserRouter>
       </MuiThemeProvider>
     );

@@ -24,8 +24,11 @@ import {
   LinkProps as RouterLinkProps,
 } from 'react-router-dom';
 import { Link } from '@material-ui/core';
+import { connect } from 'react-redux';
 
 import ResponsiveDrawer from './drawer';
+import { AppState } from '../..';
+import { logout } from '../../store/user/user.actions';
 
 const drawerWidth = 240;
 
@@ -80,15 +83,15 @@ const useStyles = makeStyles((theme: Theme) =>
       width: '100%',
 
       [theme.breakpoints.up('sm')]: {
-        width: 120,
+        width: 150,
         '&:focus': {
-          width: 200,
+          width: 220,
         },
       },
       [theme.breakpoints.up('md')]: {
-        width: 200,
+        width: 300,
         '&:focus': {
-          width: 300,
+          width: 400,
         },
       },
     },
@@ -125,9 +128,11 @@ const Link1 = React.forwardRef<HTMLAnchorElement, RouterLinkProps>(
 
 interface Props {
   children?: ReactNode;
+  isLoggedIn: boolean;
+  logOutAction: typeof logout;
 }
 
-export default function PrimarySearchAppBar(props: Props) {
+function PrimarySearchAppBar(props: Props) {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [
@@ -137,10 +142,15 @@ export default function PrimarySearchAppBar(props: Props) {
 
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
+
   const [mobileDrawerOpen, setMobileDrawerOpen] = React.useState(false);
 
   const handleDrawerToggle = () => {
     setMobileDrawerOpen(!mobileDrawerOpen);
+  };
+
+  const handleDrawerClose = () => {
+    setMobileDrawerOpen(false);
   };
 
   const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
@@ -160,22 +170,7 @@ export default function PrimarySearchAppBar(props: Props) {
     setMobileMoreAnchorEl(event.currentTarget);
   };
 
-  const menuId = 'primary-search-account-menu';
-  const renderMenu = (
-    <Menu
-      anchorEl={anchorEl}
-      anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-      id={menuId}
-      keepMounted={true}
-      transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-      open={isMenuOpen}
-      onClose={handleMenuClose}
-    >
-      <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-      <MenuItem onClick={handleMenuClose}>My account</MenuItem>
-      <MenuItem onClick={handleMenuClose}>Logout</MenuItem>
-    </Menu>
-  );
+  const { isLoggedIn, logOutAction } = props;
 
   const mobileMenuId = 'primary-search-account-menu-mobile';
   const renderMobileMenu = (
@@ -218,6 +213,30 @@ export default function PrimarySearchAppBar(props: Props) {
     </Menu>
   );
 
+  const menuId = 'primary-search-account-menu';
+  const renderMenu = (
+    <Menu
+      anchorEl={anchorEl}
+      anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+      id={menuId}
+      keepMounted={true}
+      transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+      open={isMenuOpen}
+      onClose={handleMenuClose}
+    >
+      <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
+      <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+      <MenuItem
+        onClick={() => {
+          handleMenuClose();
+          logOutAction();
+        }}
+      >
+        Logout
+      </MenuItem>
+    </Menu>
+  );
+
   return (
     <div className={classes.grow}>
       <AppBar className={classes.appBar} position="fixed">
@@ -250,49 +269,74 @@ export default function PrimarySearchAppBar(props: Props) {
             />
           </div>
           <div className={classes.grow} />
-          <div className={classes.sectionDesktop}>
-            <IconButton aria-label="show 4 new mails" color="inherit">
-              <Badge badgeContent={420} color="secondary">
-                <MailIcon />
-              </Badge>
-            </IconButton>
-            <IconButton aria-label="show 17 new notifications" color="inherit">
-              <Badge badgeContent={69} color="secondary">
-                <NotificationsIcon />
-              </Badge>
-            </IconButton>
-            <IconButton
-              edge="end"
-              aria-label="account of current user"
-              aria-controls={menuId}
-              aria-haspopup="true"
-              onClick={handleProfileMenuOpen}
-              color="inherit"
-            >
-              <AccountCircle />
-            </IconButton>
-          </div>
-          <div className={classes.sectionMobile}>
-            <IconButton
-              aria-label="show more"
-              aria-controls={mobileMenuId}
-              aria-haspopup="true"
-              onClick={handleMobileMenuOpen}
-              color="inherit"
-            >
-              <MoreIcon />
-            </IconButton>
-          </div>
+          {/* Normal menu */}
+          {isLoggedIn ? (
+            <div className={classes.sectionDesktop}>
+              <IconButton aria-label="show 4 new mails" color="inherit">
+                <Badge badgeContent={420} color="secondary">
+                  <MailIcon />
+                </Badge>
+              </IconButton>
+              <IconButton
+                aria-label="show 17 new notifications"
+                color="inherit"
+              >
+                <Badge badgeContent={69} color="secondary">
+                  <NotificationsIcon />
+                </Badge>
+              </IconButton>
+              <IconButton
+                edge="end"
+                aria-label="account of current user"
+                aria-controls={menuId}
+                aria-haspopup="true"
+                onClick={handleProfileMenuOpen}
+                color="inherit"
+              >
+                <AccountCircle />
+              </IconButton>
+            </div>
+          ) : null}
+          {/* End of normal menu */}
+          {isLoggedIn ? (
+            <div className={classes.sectionMobile}>
+              <IconButton
+                aria-label="show more"
+                aria-controls={mobileMenuId}
+                aria-haspopup="true"
+                onClick={handleMobileMenuOpen}
+                color="inherit"
+              >
+                <MoreIcon />
+              </IconButton>
+            </div>
+          ) : null}
         </Toolbar>
       </AppBar>
-      {renderMobileMenu}
+      {isLoggedIn ? renderMobileMenu : null}
       {renderMenu}
       <ResponsiveDrawer
         isOpen={mobileDrawerOpen}
-        onClose={handleDrawerToggle}
+        onDrawerChange={handleDrawerToggle}
         drawerWidth={drawerWidth}
+        onDrawerClose={handleDrawerClose}
       />
       <div className={classes.content}>{props.children}</div>
     </div>
   );
 }
+
+const mapStateToProps = (state: AppState) => ({
+  isLoggedIn: state.user.loggedIn,
+});
+
+const mapDispatchToProps = (dispatch: any) => {
+  return {
+    logOutAction: () => dispatch(logout()),
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(PrimarySearchAppBar);

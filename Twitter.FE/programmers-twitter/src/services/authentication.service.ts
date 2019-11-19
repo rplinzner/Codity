@@ -34,4 +34,6 @@ function login(email: string, password: string) {
 function logout() {
   // remove user from local storage to log user out
   localStorage.removeItem('user');
+  // eslint-disable-next-line no-restricted-globals
+  location.reload(true);
 }

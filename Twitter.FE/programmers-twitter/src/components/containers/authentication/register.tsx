@@ -30,6 +30,7 @@ interface Props extends LocalizeContextProps {
     button: string;
     modal: string;
     paper: string;
+    grid: string;
   };
   theme: Theme;
 }
@@ -60,6 +61,14 @@ const styles = (theme: Theme) => ({
     border: '2px solid #000',
     boxShadow: theme.shadows[5],
     padding: theme.spacing(2, 4, 3),
+  },
+  grid: {
+    [theme.breakpoints.up('md')]: {
+      height: 'calc(100vh - 64px)',
+    },
+    [theme.breakpoints.down('md')]: {
+      height: 'calc(100vh - 56px)',
+    },
   },
 });
 
@@ -93,7 +102,7 @@ class Register extends Component<Props, State> {
       email: Yup.string()
         .email(translate('emailValid'))
         .required(translate('emailRequired')),
-      password: Yup.string().required(translate('passwordRequired')),//TODO: Add validation server-like
+      password: Yup.string().required(translate('passwordRequired')), //TODO: Add validation server-like
       passwordConfirm: Yup.string()
         .oneOf([Yup.ref('password'), null], translate('passwordsMustMatch'))
         .required(translate('passwordConfirmRequired')),
@@ -108,8 +117,13 @@ class Register extends Component<Props, State> {
     const { classes, theme } = this.props;
     return (
       <>
-        <Grid container={true} justify="center">
-          <Grid item={true} xs={10} md={6} lg={5} xl={4}>
+        <Grid
+          className={classes.grid}
+          container={true}
+          alignItems="center"
+          justify="center"
+        >
+          <Grid item={true} xs={10} sm={8} md={6} lg={5} xl={4}>
             <T>
               {({ translate }) => (
                 <Formik
