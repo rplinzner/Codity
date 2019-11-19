@@ -25,6 +25,11 @@ import * as constants from '../../../constants/global.constats';
 import post from '../../../services/post.service';
 import displayErrors from '../../../helpers/display-errors';
 
+type PasswordCheck = {
+  title: string;
+  expression: RegExp;
+};
+
 interface Props extends LocalizeContextProps {
   classes: {
     button: string;
@@ -95,6 +100,29 @@ class Register extends Component<Props, State> {
     this.setState({ canSubmit: true });
   };
 
+  validatePassword = (value: string, translate: any): string => {
+    let error = '';
+    if (value.length < 5) {
+      error += translate('passAtLeast') + ' ';
+      error += translate('5chars');
+      return error;
+    }
+    const checks: PasswordCheck[] = [
+      { title: 'oneUpper', expression: RegExp('[A-Z]') },
+      { title: 'oneLower', expression: RegExp('[a-z]') },
+      { title: 'oneDigit', expression: RegExp('[0-9]') },
+      { title: 'specialSign', expression: RegExp('[!@#$%^&*()]') },
+    ];
+    checks.forEach(check => {
+      if (check.expression.test(value) === false) {
+        error = translate('passAtLeast') + ' ';
+        error += translate(check.title);
+      }
+    });
+
+    return error;
+  };
+
   getSchema = (translate: any) => {
     return Yup.object({
       firstName: Yup.string().required(translate('firstNameRequired')),
@@ -102,7 +130,7 @@ class Register extends Component<Props, State> {
       email: Yup.string()
         .email(translate('emailValid'))
         .required(translate('emailRequired')),
-      password: Yup.string().required(translate('passwordRequired')), //TODO: Add validation server-like
+      password: Yup.string().required(translate('passwordRequired')),
       passwordConfirm: Yup.string()
         .oneOf([Yup.ref('password'), null], translate('passwordsMustMatch'))
         .required(translate('passwordConfirmRequired')),
@@ -136,7 +164,7 @@ class Register extends Component<Props, State> {
                   }}
                   validationSchema={this.getSchema(translate)}
                   onSubmit={this.onSubmit}
-                  render={({ submitForm, handleSubmit }) => (
+                  render={({ submitForm, handleSubmit, values }) => (
                     <Form onSubmit={handleSubmit}>
                       <Field
                         name="firstName"
@@ -170,6 +198,9 @@ class Register extends Component<Props, State> {
                         type="password"
                         label={<T id="password" />}
                         autoComplete="new-password"
+                        validate={() =>
+                          this.validatePassword(values.password, translate)
+                        }
                         component={TextField}
                         margin="normal"
                         fullWidth={true}
