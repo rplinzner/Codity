@@ -30,6 +30,7 @@ interface Props extends LocalizeContextProps {
     root: string;
     form: string;
     container: string;
+    typo: string;
   };
   user: UserState;
   isLoggingIn: boolean;
@@ -50,6 +51,17 @@ const styles = (theme: Theme) => ({
   form: {
     margin: 'auto',
     width: '100%',
+  },
+  typo: {
+    [theme.breakpoints.down('xs')]: {
+      top: '1vh',
+    },
+    [theme.breakpoints.up('sm')]: {
+      top: '10vh',
+    },
+    [theme.breakpoints.up('md')]: {
+      top: '12vh',
+    },
   },
 });
 
@@ -89,7 +101,12 @@ class Login extends Component<Props, State> {
         className={classes.container}
       >
         <Grid item className={classes.root}>
-          <Typography align="center" variant="h3">
+          <Typography
+            style={{ position: 'relative' }}
+            className={classes.typo}
+            align="center"
+            variant="h3"
+          >
             <T id="greeting" />
           </Typography>
         </Grid>
