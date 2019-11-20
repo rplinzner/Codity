@@ -23,12 +23,18 @@ import {
   Link as RouterLink,
   LinkProps as RouterLinkProps,
 } from 'react-router-dom';
-import { Link } from '@material-ui/core';
+import { Link, Tooltip } from '@material-ui/core';
 import { connect } from 'react-redux';
+import {
+  Translate as T,
+  LocalizeContextProps,
+  withLocalize,
+} from 'react-localize-redux';
 
 import ResponsiveDrawer from './drawer';
 import { AppState } from '../..';
 import { logout } from '../../store/user/user.actions';
+import { layoutTranslations } from '../../translations/index';
 
 const drawerWidth = 240;
 
@@ -126,13 +132,14 @@ const Link1 = React.forwardRef<HTMLAnchorElement, RouterLinkProps>(
   (props, ref) => <RouterLink innerRef={ref} {...props} />,
 );
 
-interface Props {
+interface Props extends LocalizeContextProps {
   children?: ReactNode;
   isLoggedIn: boolean;
   logOutAction: typeof logout;
 }
 
 function PrimarySearchAppBar(props: Props) {
+  props.addTranslation(layoutTranslations);
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [
@@ -189,7 +196,9 @@ function PrimarySearchAppBar(props: Props) {
             <MailIcon />
           </Badge>
         </IconButton>
-        <p>Messages</p>
+        <p>
+          <T id="messages" />
+        </p>
       </MenuItem>
       <MenuItem>
         <IconButton aria-label="show 11 new notifications" color="inherit">
@@ -197,7 +206,9 @@ function PrimarySearchAppBar(props: Props) {
             <NotificationsIcon />
           </Badge>
         </IconButton>
-        <p>Notifications</p>
+        <p>
+          <T id="notifications" />
+        </p>
       </MenuItem>
       <MenuItem onClick={handleProfileMenuOpen}>
         <IconButton
@@ -208,7 +219,9 @@ function PrimarySearchAppBar(props: Props) {
         >
           <AccountCircle />
         </IconButton>
-        <p>Profile</p>
+        <p>
+          <T id="profile" />
+        </p>
       </MenuItem>
     </Menu>
   );
@@ -224,15 +237,19 @@ function PrimarySearchAppBar(props: Props) {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-      <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+      <MenuItem onClick={handleMenuClose}>
+        <T id="profile" />
+      </MenuItem>
+      <MenuItem onClick={handleMenuClose}>
+        <T id="myAccount" />
+      </MenuItem>
       <MenuItem
         onClick={() => {
           handleMenuClose();
           logOutAction();
         }}
       >
-        Logout
+        <T id="logout" />
       </MenuItem>
     </Menu>
   );
@@ -259,42 +276,52 @@ function PrimarySearchAppBar(props: Props) {
             <div className={classes.searchIcon}>
               <SearchIcon />
             </div>
-            <InputBase
-              placeholder="Search…"
-              classes={{
-                root: classes.inputRoot,
-                input: classes.inputInput,
-              }}
-              inputProps={{ 'aria-label': 'search' }}
-            />
+            <T>
+              {({ translate }) => (
+                <InputBase
+                  placeholder={translate('search') as string}
+                  classes={{
+                    root: classes.inputRoot,
+                    input: classes.inputInput,
+                  }}
+                  inputProps={{ 'aria-label': 'search' }}
+                />
+              )}
+            </T>
           </div>
           <div className={classes.grow} />
           {/* Normal menu */}
           {isLoggedIn ? (
             <div className={classes.sectionDesktop}>
-              <IconButton aria-label="show 4 new mails" color="inherit">
-                <Badge badgeContent={420} color="secondary">
-                  <MailIcon />
-                </Badge>
-              </IconButton>
-              <IconButton
-                aria-label="show 17 new notifications"
-                color="inherit"
-              >
-                <Badge badgeContent={69} color="secondary">
-                  <NotificationsIcon />
-                </Badge>
-              </IconButton>
-              <IconButton
-                edge="end"
-                aria-label="account of current user"
-                aria-controls={menuId}
-                aria-haspopup="true"
-                onClick={handleProfileMenuOpen}
-                color="inherit"
-              >
-                <AccountCircle />
-              </IconButton>
+              <Tooltip title={<T id="messages" />}>
+                <IconButton aria-label="show 4 new mails" color="inherit">
+                  <Badge badgeContent={420} color="secondary">
+                    <MailIcon />
+                  </Badge>
+                </IconButton>
+              </Tooltip>
+              <Tooltip title={<T id="notifications" />}>
+                <IconButton
+                  aria-label="show 17 new notifications"
+                  color="inherit"
+                >
+                  <Badge badgeContent={69} color="secondary">
+                    <NotificationsIcon />
+                  </Badge>
+                </IconButton>
+              </Tooltip>
+              <Tooltip title={<T id="profile" />}>
+                <IconButton
+                  edge="end"
+                  aria-label="account of current user"
+                  aria-controls={menuId}
+                  aria-haspopup="true"
+                  onClick={handleProfileMenuOpen}
+                  color="inherit"
+                >
+                  <AccountCircle />
+                </IconButton>
+              </Tooltip>
             </div>
           ) : null}
           {/* End of normal menu */}
@@ -339,4 +366,4 @@ const mapDispatchToProps = (dispatch: any) => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(PrimarySearchAppBar);
+)(withLocalize(PrimarySearchAppBar));

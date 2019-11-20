@@ -6,6 +6,8 @@ export default function post<T>(
   dataToPost: T,
   controller: string,
   endpoint: string,
+  language: string,
+  connectionErrorMessage: string,
   isAuthorizationNeeded: boolean = false,
 ) {
   const requestHeaders: HeadersInit = new Headers();
@@ -16,18 +18,14 @@ export default function post<T>(
       requestHeaders.append(header.name, header.value);
     }
   }
-  // TODO: Add language header
+  requestHeaders.append('Accept-Language', language);
   const requestOptions: RequestInit = {
     method: 'POST',
     headers: requestHeaders,
     body: JSON.stringify(dataToPost),
   };
   return fetch(`${controller}${endpoint}`, requestOptions)
-    .catch(() =>
-      Promise.reject([
-        { message: 'Error ocurred while communicating with server' }, // TODO: Add language support
-      ]),
-    )
+    .catch(() => Promise.reject([{ message: connectionErrorMessage }]))
     .then(handleResponse)
     .then(
       (response: ServerResponse) => {

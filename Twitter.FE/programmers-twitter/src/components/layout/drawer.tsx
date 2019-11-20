@@ -16,6 +16,11 @@ import {
 import { MenuList, MenuItem, Typography } from '@material-ui/core';
 import { Link, withRouter, RouteComponentProps } from 'react-router-dom';
 import { connect } from 'react-redux';
+import {
+  Translate as T,
+  withLocalize,
+  LocalizeContextProps,
+} from 'react-localize-redux';
 
 import { AppState } from '../..';
 
@@ -27,7 +32,7 @@ interface Props extends RouteComponentProps<any> {
   isLoggedIn: boolean;
 }
 
-function ResponsiveDrawer(props: Props) {
+function ResponsiveDrawer(props: Props & LocalizeContextProps) {
   const useStyles = makeStyles((theme: Theme) =>
     createStyles({
       root: {
@@ -78,9 +83,11 @@ function ResponsiveDrawer(props: Props) {
         <ListItemIcon>
           <LockOpenIcon fontSize="small" />
         </ListItemIcon>
-        <Typography variant="inherit">Login</Typography>
+        <Typography variant="inherit">
+          <T id="login" />
+        </Typography>
       </MenuItem>
-      <Divider />
+      <Divider variant="middle" />
       <MenuItem
         className={classes.menuItem}
         component={Link}
@@ -91,7 +98,9 @@ function ResponsiveDrawer(props: Props) {
         <ListItemIcon>
           <PersonAddIcon fontSize="small" />
         </ListItemIcon>
-        <Typography variant="inherit">Register</Typography>
+        <Typography variant="inherit">
+          <T id="register" />
+        </Typography>
       </MenuItem>
     </MenuList>
   );
@@ -157,4 +166,6 @@ const mapStateToProps = (state: AppState) => ({
   isLoggedIn: state.user.loggedIn,
 });
 
-export default connect(mapStateToProps)(withRouter(ResponsiveDrawer));
+export default connect(mapStateToProps)(
+  withLocalize(withRouter(ResponsiveDrawer)),
+);

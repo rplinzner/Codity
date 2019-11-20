@@ -1,0 +1,10 @@
+{
+  "messages": ["Messages", "Wiadomości"],
+  "notifications": ["Notifications", "Powiadomienia"],
+  "profile": ["Profile", "Profil"],
+  "myAccount": ["My account", "Moje konto"],
+  "logout": ["Logout", "Wyloguj"],
+  "search": ["Search...", "Szukaj..."],
+  "login": ["Login", "Logowanie"],
+  "register": ["Register", "Rejestracja"]
+}

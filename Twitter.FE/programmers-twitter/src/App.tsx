@@ -27,9 +27,13 @@ const lightTheme = responsiveFontSizes(
   createMuiTheme(themeLight as ThemeOptions),
 );
 
+interface Props extends LocalizeContextProps {
+  browserLanguage: string;
+}
+
 // tslint:disable-next-line: typedef
-class App extends Component<LocalizeContextProps> {
-  constructor(props: LocalizeContextProps) {
+class App extends Component<Props> {
+  constructor(props: Props) {
     super(props);
     this.props.initialize({
       languages: [
@@ -40,7 +44,7 @@ class App extends Component<LocalizeContextProps> {
       options: {
         renderToStaticMarkup,
         renderInnerHtml: true,
-        defaultLanguage: 'pl',
+        defaultLanguage: props.browserLanguage,
       },
     });
   }

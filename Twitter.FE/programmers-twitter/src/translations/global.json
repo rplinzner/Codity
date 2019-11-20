@@ -6,7 +6,10 @@
 
   "sent": ["Submit", "Wyślij"],
   "here": ["Here", "Tutaj"],
-  "clickHere": ["Click ${link} to go to login page", "Kliknij ${link} aby przejść do strony logowania"],
+  "clickHere": [
+    "Click ${link} to go to login page",
+    "Kliknij ${link} aby przejść do strony logowania"
+  ],
   "reset": ["Reset", "Wyczyść"],
   "firstName": ["First name", "Imię"],
   "lastName": ["Last name", "Nazwisko"],
@@ -26,5 +29,9 @@
     "Mail zweryfikowany poprawnie!"
   ],
   "mailFailed": ["Mail verification failed", "Mail nie został zweryfikowany"],
-  "somethingWrong": ["Something went wrong", "Coś poszło nie tak"]
+  "somethingWrong": ["Something went wrong", "Coś poszło nie tak"],
+  "errorConnection": [
+    "There was an error while communicating with server. Please try again later",
+    "Podczas komunikacji z serwerem wystapił błąd. Spróbuj ponownie później"
+  ]
 }

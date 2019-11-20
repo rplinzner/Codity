@@ -23,20 +23,22 @@ const rootReducer = combineReducers({
   user: stores.userReducer,
 });
 
+const language = navigator.language;
+
 export type AppState = ReturnType<typeof rootReducer>;
 
 const store = createStore(
   rootReducer,
-  composeEnhancers(applyMiddleware(thunk))
+  composeEnhancers(applyMiddleware(thunk)),
 );
 
 ReactDOM.render(
   <Provider store={store}>
     <LocalizeProvider store={store}>
-      <App />
+      <App browserLanguage={language.includes('pl') ? 'pl' : 'en'} />
     </LocalizeProvider>
   </Provider>,
-  document.getElementById('root')
+  document.getElementById('root'),
 );
 
 // If you want your app to work offline and load faster, you can change
