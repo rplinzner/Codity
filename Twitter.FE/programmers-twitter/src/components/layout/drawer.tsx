@@ -87,7 +87,7 @@ function ResponsiveDrawer(props: Props & LocalizeContextProps) {
           <T id="login" />
         </Typography>
       </MenuItem>
-      <Divider />
+      <Divider variant="middle" />
       <MenuItem
         className={classes.menuItem}
         component={Link}
