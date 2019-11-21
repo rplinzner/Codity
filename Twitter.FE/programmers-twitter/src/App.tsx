@@ -17,6 +17,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 import * as authentication from './components/containers/authentication/index';
 import * as additional from './components/containers/additional/index';
+import * as main from './components/containers/feed/index';
 
 // import themeDark from './themes/dark-theme';
 import themeLight from './themes/light-theme';
@@ -66,6 +67,7 @@ class App extends Component<Props> {
               //TODO: Remove that
               <Route path="/Register" component={authentication.Register} />
               <Route path="/Verify/:type" component={additional.Verify} />
+              <Route path="/MyFeed" component={main.Feed} />
               <Route component={additional.NotFound} />
             </Switch>
           </PrimarySearchAppBar>
