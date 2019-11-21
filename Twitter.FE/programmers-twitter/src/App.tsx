@@ -59,15 +59,13 @@ class App extends Component<Props> {
         <BrowserRouter>
           <PrimarySearchAppBar>
             <Switch>
-              <Route path="/" exact={true} component={authentication.Login} />
-              <PrivateRoute
-                path="/testprivateroute"
-                component={additional.NotFound}
-              />
-              //TODO: Remove that
+              {/* Routes */}
+              <Route path="/" exact={true} component={authentication.Login} />              
               <Route path="/Register" component={authentication.Register} />
               <Route path="/Verify/:type" component={additional.Verify} />
-              <Route path="/MyFeed" component={main.Feed} />
+              {/* Private Routes */}
+              <PrivateRoute path="/MyFeed" component={main.Feed} />
+              
               <Route component={additional.NotFound} />
             </Switch>
           </PrimarySearchAppBar>

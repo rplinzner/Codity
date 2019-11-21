@@ -267,7 +267,7 @@ function PrimarySearchAppBar(props: Props) {
           >
             <MenuIcon />
           </IconButton>
-          <Link component={Link1} to="/">
+          <Link component={Link1} to={isLoggedIn ? '/MyFeed' : '/'}>
             <Typography className={classes.title} variant="h6" noWrap={true}>
               InzTwitter
             </Typography>

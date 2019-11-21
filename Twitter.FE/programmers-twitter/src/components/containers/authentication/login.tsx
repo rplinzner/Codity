@@ -12,6 +12,8 @@ import { withStyles, Theme } from '@material-ui/core/styles';
 import {
   Link as RouterLink,
   LinkProps as RouterLinkProps,
+  withRouter,
+  RouteComponentProps
 } from 'react-router-dom';
 import {
   withLocalize,
@@ -35,6 +37,7 @@ interface Props extends LocalizeContextProps {
   user: UserState;
   isLoggingIn: boolean;
   loginAction: typeof login;
+  isLoggedIn: boolean;
 }
 interface State {
   email: string;
@@ -69,8 +72,8 @@ const Link1 = React.forwardRef<HTMLAnchorElement, RouterLinkProps>(
   (props, ref) => <RouterLink innerRef={ref} {...props} />,
 );
 
-class Login extends Component<Props, State> {
-  constructor(props: Props) {
+class Login extends Component<Props & RouteComponentProps<any>, State> {
+  constructor(props: Props & RouteComponentProps<any>) {
     super(props);
     this.props.addTranslation(authTranslations);
   }
@@ -92,7 +95,11 @@ class Login extends Component<Props, State> {
   };
 
   render() {
-    const { classes } = this.props;
+    const { classes, isLoggedIn, history } = this.props;
+    if (isLoggedIn) {
+      history.push('/MyFeed');
+      // TODO: Add Settings downloading
+    }
     return (
       <Grid
         container={true}
@@ -175,6 +182,7 @@ class Login extends Component<Props, State> {
 const mapStateToProps = (state: AppState) => ({
   user: state.user,
   isLoggingIn: state.user.loggingIn,
+  isLoggedIn: state.user.loggedIn,
 });
 
 const mapDispatchToProps = (dispatch: any) => {
@@ -187,4 +195,4 @@ const mapDispatchToProps = (dispatch: any) => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(withStyles(styles, { withTheme: true })(withLocalize(Login)));
+)(withStyles(styles, { withTheme: true })(withLocalize(withRouter(Login))));

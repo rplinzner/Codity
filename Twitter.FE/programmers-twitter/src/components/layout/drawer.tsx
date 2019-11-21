@@ -6,6 +6,7 @@ import Hidden from '@material-ui/core/Hidden';
 import LockOpenIcon from '@material-ui/icons/LockOpen';
 import PersonAddIcon from '@material-ui/icons/PersonAdd';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ViewStreamIcon from '@material-ui/icons/ViewStream';
 
 import {
   makeStyles,
@@ -107,13 +108,24 @@ function ResponsiveDrawer(props: Props & LocalizeContextProps) {
 
   const loggedInMenu = (
     <MenuList>
-      <MenuItem className={classes.menuItem}>
-        <Typography variant="inherit">Empty 1</Typography>
+      <MenuItem
+        className={classes.menuItem}
+        component={Link}
+        to="MyFeed"
+        selected={'/MyFeed' === pathname}
+        onClick={onDrawerClose}
+      >
+        <ListItemIcon>
+          <ViewStreamIcon fontSize="small" />
+        </ListItemIcon>
+        <Typography variant="inherit">My Feed</Typography>
+        {/* TODO: Add translation */}
       </MenuItem>
-      <Divider />
+      <Divider variant="middle" />
       <MenuItem className={classes.menuItem}>
         <Typography variant="inherit">Empty 2</Typography>
       </MenuItem>
+      <Divider variant="middle" />
     </MenuList>
   );
 
