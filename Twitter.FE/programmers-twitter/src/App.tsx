@@ -18,15 +18,18 @@ import 'react-toastify/dist/ReactToastify.css';
 import * as authentication from './components/containers/authentication/index';
 import * as additional from './components/containers/additional/index';
 import * as main from './components/containers/feed/index';
+import * as user from './components/containers/profile/index';
 
-// import themeDark from './themes/dark-theme';
-import themeLight from './themes/light-theme';
+import themeDark from './themes/dark-theme';
+// import themeLight from './themes/light-theme';
 import { PrivateRoute } from './components/containers/authentication/index';
 
-// const darkTheme = responsiveFontSizes(createMuiTheme(themeDark as ThemeOptions));
 const lightTheme = responsiveFontSizes(
-  createMuiTheme(themeLight as ThemeOptions),
+  createMuiTheme(themeDark as ThemeOptions),
 );
+// const lightTheme = responsiveFontSizes(
+//   createMuiTheme(themeLight as ThemeOptions),
+// );
 
 interface Props extends LocalizeContextProps {
   browserLanguage: string;
@@ -60,12 +63,13 @@ class App extends Component<Props> {
           <PrimarySearchAppBar>
             <Switch>
               {/* Routes */}
-              <Route path="/" exact={true} component={authentication.Login} />              
+              <Route path="/" exact={true} component={authentication.Login} />
               <Route path="/Register" component={authentication.Register} />
               <Route path="/Verify/:type" component={additional.Verify} />
               {/* Private Routes */}
               <PrivateRoute path="/MyFeed" component={main.Feed} />
-              
+              <PrivateRoute path="/Profile" component={user.Profile} />
+
               <Route component={additional.NotFound} />
             </Switch>
           </PrimarySearchAppBar>
