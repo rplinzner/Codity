@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Twitter.Data.Model;
 using Twitter.Data.Model.Enums;
 using Twitter.Repositories.Interfaces;
+using Twitter.Services.Helpers;
 using Twitter.Services.Helpers.NotificationParameters;
 using Twitter.Services.Interfaces;
 using Twitter.Services.Options;
@@ -53,7 +54,7 @@ namespace Twitter.Services.Services
             notification.Parameters = _notificationMapper.SerializeNotificationParameters(notificationParams);
             notification.TweetId = tweet.Id;
             notification.Type = NotificationType.Comment;
-            notification.Description = comment.Substring(0, 30);
+            notification.Description = comment.Truncate(30);
             notification.CreatedTime = DateTime.Now;
             notification.RedirectTo = string.Format(_redirectOptions.TweetUrl, tweet.Id);
 
@@ -81,7 +82,7 @@ namespace Twitter.Services.Services
                 tweetAuthorNotification.Parameters = _notificationMapper.SerializeNotificationParameters(tweetAuthorNotificationParams);
                 tweetAuthorNotification.TweetId = tweet.Id;
                 tweetAuthorNotification.Type = NotificationType.Comment;
-                tweetAuthorNotification.Description = comment.Substring(0, 30);
+                tweetAuthorNotification.Description = comment.Truncate(30);
                 tweetAuthorNotification.CreatedTime = DateTime.Now;
                 tweetAuthorNotification.RedirectTo = string.Format(_redirectOptions.TweetUrl, tweet.Id);
 
@@ -262,7 +263,7 @@ namespace Twitter.Services.Services
             notification.Parameters = _notificationMapper.SerializeNotificationParameters(notificationParams);
             notification.TweetId = tweet.Id;
             notification.Type = NotificationType.Tweet;
-            notification.Description = tweet.Text.Substring(0, 30);
+            notification.Description = tweet.Text.Truncate(30);
             notification.CreatedTime = DateTime.Now;
             notification.RedirectTo = string.Format(_redirectOptions.TweetUrl, tweet.Id);
 

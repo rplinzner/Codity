@@ -10,6 +10,7 @@ using Twitter.Services.Interfaces;
 using Twitter.Services.RequestModels.User;
 using Twitter.Services.Resources;
 using Twitter.Services.ResponseModels;
+using Twitter.Services.ResponseModels.DTOs.Tweet;
 using Twitter.Services.ResponseModels.DTOs.User;
 using Twitter.Services.ResponseModels.Interfaces;
 
@@ -43,7 +44,8 @@ namespace Twitter.Services.Services
                 false,
                 c => c.Gender,
                 c => c.Followers,
-                c => c.Following);
+                c => c.Following,
+                c => c.Tweets);
 
             if (user == null)
             {
@@ -51,20 +53,14 @@ namespace Twitter.Services.Services
                 {
                     Message = ErrorTranslations.UserNotFound
                 });
+
+                return response;
             }
 
-            response.Model = _mapper.Map<UserDTO>(user);
+            var userDTO = _mapper.Map<UserDTO>(user);
+            userDTO.LatestTweets = _mapper.Map<IEnumerable<TweetDTO>>(user.Tweets.Take(10));
 
-            return response;
-        }
-
-        public async Task<ICollectionResponse<BaseUserDTO>> GetUsersAsync()
-        {
-            var response = new CollectionResponse<BaseUserDTO>();
-
-            var users = await _userRepository.GetAllAsync();
-
-            response.Models = _mapper.Map<IEnumerable<BaseUserDTO>>(users);
+            response.Model = userDTO;
 
             return response;
         }
@@ -197,7 +193,9 @@ namespace Twitter.Services.Services
             var users = await _userRepository.GetAllByAsync(
                 searchExpression,
                 searchRequest.PageNumber,
-                searchRequest.PageSize);
+                searchRequest.PageSize,
+                false,
+                c => c.Followers);
 
             _mapper.Map(users, response);
 
@@ -226,8 +224,7 @@ namespace Twitter.Services.Services
             if (!string.IsNullOrEmpty(searchRequest.Query))
             {
                 searchExpression = c => c.FirstName.ToLower().Contains(query) ||
-                  c.LastName.ToLower().Contains(query) ||
-                  c.AboutMe.ToLower().Contains(query);
+                  c.LastName.ToLower().Contains(query);   
             }
 
             return searchExpression;
