@@ -37,7 +37,6 @@ const useStyles = makeStyles((theme: Theme) =>
       },
     },
     text: {
-      zIndex: 1,
       position: 'relative',
       left: '2%',
       top: '15%',

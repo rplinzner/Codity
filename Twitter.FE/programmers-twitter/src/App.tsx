@@ -19,6 +19,7 @@ import * as authentication from './components/containers/authentication/index';
 import * as additional from './components/containers/additional/index';
 import * as main from './components/containers/feed/index';
 import * as user from './components/containers/profile/index';
+import SearchResultSmall from './components/layout/search-result-small';
 
 import themeDark from './themes/dark-theme';
 // import themeLight from './themes/light-theme';
@@ -66,6 +67,7 @@ class App extends Component<Props> {
               <Route path="/" exact={true} component={authentication.Login} />
               <Route path="/Register" component={authentication.Register} />
               <Route path="/Verify/:type" component={additional.Verify} />
+              <Route path="/test" component={SearchResultSmall} />
               {/* Private Routes */}
               <PrivateRoute path="/MyFeed" component={main.Feed} />
               <PrivateRoute path="/Profile" component={user.Profile} />

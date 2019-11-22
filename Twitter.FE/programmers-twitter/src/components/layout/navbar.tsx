@@ -23,7 +23,7 @@ import {
   Link as RouterLink,
   LinkProps as RouterLinkProps,
 } from 'react-router-dom';
-import { Link, Tooltip } from '@material-ui/core';
+import { Link, Tooltip, Paper, ClickAwayListener } from '@material-ui/core';
 import { connect } from 'react-redux';
 import {
   Translate as T,
@@ -35,6 +35,8 @@ import ResponsiveDrawer from './drawer';
 import { AppState } from '../..';
 import { logout } from '../../store/user/user.actions';
 import { layoutTranslations } from '../../translations/index';
+import SearchResultSmall from './search-result-small';
+import Popper from '@material-ui/core/Popper';
 
 const drawerWidth = 240;
 
@@ -146,9 +148,12 @@ function PrimarySearchAppBar(props: Props) {
     mobileMoreAnchorEl,
     setMobileMoreAnchorEl,
   ] = React.useState<null | HTMLElement>(null);
+  const [searchAnchorEl, setSearchAnchorEl] = React.useState<any | null>(null);
 
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
+  const isSearchOpen = Boolean(searchAnchorEl);
+  const searchId = isSearchOpen ? 'search-popover' : undefined;
 
   const [mobileDrawerOpen, setMobileDrawerOpen] = React.useState(false);
 
@@ -175,6 +180,16 @@ function PrimarySearchAppBar(props: Props) {
 
   const handleMobileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setMobileMoreAnchorEl(event.currentTarget);
+  };
+
+  const handlePopoverOpen = (
+    event: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
+    setSearchAnchorEl(event.currentTarget);
+  };
+
+  const handlePopoverClose = () => {
+    setSearchAnchorEl(null);
   };
 
   const { isLoggedIn, logOutAction } = props;
@@ -278,14 +293,43 @@ function PrimarySearchAppBar(props: Props) {
             </div>
             <T>
               {({ translate }) => (
-                <InputBase
-                  placeholder={translate('search') as string}
-                  classes={{
-                    root: classes.inputRoot,
-                    input: classes.inputInput,
-                  }}
-                  inputProps={{ 'aria-label': 'search' }}
-                />
+                <>
+                  <ClickAwayListener onClickAway={handlePopoverClose}>
+                    <div>
+                      <InputBase
+                        placeholder={translate('search') as string}
+                        classes={{
+                          root: classes.inputRoot,
+                          input: classes.inputInput,
+                        }}
+                        inputProps={{ 'aria-label': 'search' }}
+                        onFocus={handlePopoverOpen}
+                        onKeyPress={e => {
+                          if (e.key === 'Enter') {
+                            alert('OK Boomer');
+                          }
+                        }}
+                      />
+                      <Popper
+                        id={searchId}
+                        open={isSearchOpen}
+                        anchorEl={searchAnchorEl}
+                      >
+                        <Paper style={{ width: '400px' }}>
+                          <div style={{ padding: '10px' }}>
+                            <SearchResultSmall />
+                          </div>
+                          <div style={{ padding: '10px' }}>
+                            <SearchResultSmall />
+                          </div>
+                          <div style={{ padding: '10px' }}>
+                            <SearchResultSmall />
+                          </div>
+                        </Paper>
+                      </Popper>
+                    </div>
+                  </ClickAwayListener>
+                </>
               )}
             </T>
           </div>
