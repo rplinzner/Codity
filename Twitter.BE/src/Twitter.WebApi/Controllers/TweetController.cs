@@ -41,23 +41,6 @@ namespace Twitter.WebApi.Controllers
         }
 
         /// <summary>
-        /// Fetch all tweets
-        /// </summary>
-        /// <returns>All Tweets in database</returns>
-        [HttpGet]
-        public async Task<ActionResult<ICollectionResponse<TweetDTO>>> GetTweets()
-        {
-            var response = await _tweetService.GetTweetsAsync();
-
-            if (response.IsError)
-            {
-                return BadRequest(response);
-            }
-
-            return Ok(response);
-        }
-
-        /// <summary>
         /// Fetch tweet by id
         /// </summary>
         /// <param name="tweetId">Id of a tweet</param>
@@ -146,7 +129,7 @@ namespace Twitter.WebApi.Controllers
         /// <param name="tweet">Updated tweet</param>
         /// <returns></returns>
         [HttpPut("{tweetId}")]
-        public async Task<ActionResult<IBaseResponse>> UpdateUserProfile(int tweetId, [FromBody] UpdateTweetRequest tweet)
+        public async Task<ActionResult<IBaseResponse>> UpdateTweet(int tweetId, [FromBody] UpdateTweetRequest tweet)
         {
             int userId = _userContext.GetUserId();
 

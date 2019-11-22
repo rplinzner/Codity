@@ -41,23 +41,6 @@ namespace Twitter.WebApi.Controllers
         }
 
         /// <summary>
-        /// Fetch all users
-        /// </summary>
-        /// <returns>All Users in database</returns>
-        [HttpGet]
-        public async Task<ActionResult<ICollectionResponse<BaseUserDTO>>> GetUsers()
-        {
-            var response = await _userService.GetUsersAsync();
-
-            if (response.IsError)
-            {
-                return BadRequest(response);
-            }
-
-            return Ok(response);
-        }
-
-        /// <summary>
         /// Fetch user by id
         /// </summary>
         /// <param name="id">Id of an user</param>

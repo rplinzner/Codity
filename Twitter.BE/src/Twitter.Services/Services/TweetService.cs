@@ -75,17 +75,6 @@ namespace Twitter.Services.Services
             return response;
         }
 
-        public async Task<ICollectionResponse<TweetDTO>> GetTweetsAsync()
-        {
-            var response = new CollectionResponse<TweetDTO>();
-
-            var tweets = await _tweetRepository.GetAllAsync();
-
-            response.Models = _mapper.Map<IEnumerable<TweetDTO>>(tweets);
-
-            return response;
-        }
-
         public async Task<IPagedResponse<TweetDTO>> GetTweetsAsync(SearchTweetRequest searchRequest)
         {
             var response = new PagedResponse<TweetDTO>();

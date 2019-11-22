@@ -180,7 +180,6 @@ namespace Twitter.WebApi.ExtensionMethods
             services.AddTransient<INotificationMapperService, NotificationMapperService>();
             services.AddTransient<INotificationService, NotificationService>();
             services.AddTransient<ISettingsService, SettingsService>();
-            services.AddTransient<ILanguageService, LanguageService>();
             services.AddTransient<IGenderService, GenderService>();
             services.AddTransient<ITweetService, TweetService>();
             services.AddTransient<DataSeeder>();

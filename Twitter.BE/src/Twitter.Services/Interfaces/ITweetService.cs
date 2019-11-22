@@ -8,7 +8,6 @@ namespace Twitter.Services.Interfaces
     public interface ITweetService
     {
         Task<IResponse<TweetDTO>> GetTweetAsync(int tweetId);
-        Task<ICollectionResponse<TweetDTO>> GetTweetsAsync();
         Task<IPagedResponse<TweetDTO>> GetTweetsAsync(SearchTweetRequest searchRequest);
         Task<IResponse<TweetDTO>> CreateTweetAsync(int userId, TweetRequest tweet);
         Task<IBaseResponse> UpdateTweetAsync(int userId, int tweetId, UpdateTweetRequest tweet);

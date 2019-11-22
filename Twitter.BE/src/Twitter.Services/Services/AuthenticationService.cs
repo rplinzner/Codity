@@ -94,12 +94,13 @@ namespace Twitter.Services.Services
         {
             var response = new BaseResponse();
             var user = _mapper.Map<User>(model);
-            
-            var language = await _languageRepository.GetAllAsync();
+
+            var language = await _languageRepository.GetByAsync(c => c.Code == model.LanguageCode);
+
             user.Settings = new Settings
             {
-                IsDarkTheme = true,
-                LanguageId = language.First().Id
+                IsDarkTheme = model.IsDarkTheme,
+                LanguageId = language.Id
             };
 
             var result = await _userManager.CreateAsync(user, model.Password);

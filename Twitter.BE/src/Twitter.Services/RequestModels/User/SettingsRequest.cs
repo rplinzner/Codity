@@ -7,6 +7,6 @@ namespace Twitter.Services.RequestModels.User
         [Required]
         public bool IsDarkTheme { get; set; }
         [Required]
-        public int LanguageId { get; set; }
+        public string LanguageCode { get; set; }
     }
 }

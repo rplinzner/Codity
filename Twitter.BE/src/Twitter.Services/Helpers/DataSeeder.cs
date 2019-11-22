@@ -46,11 +46,13 @@ namespace Twitter.Services.Helpers
                 {
                     new Language
                     {
-                        Name="English"
+                        Name="English",
+                        Code="en"
                     },
                     new Language
                     {
-                        Name="Polish"
+                        Name="Polish",
+                        Code="pl"
                     }
                 };
 
