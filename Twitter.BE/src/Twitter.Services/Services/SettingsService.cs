@@ -13,13 +13,16 @@ namespace Twitter.Services.Services
     public class SettingsService : ISettingsService
     {
         private readonly IBaseRepository<Settings> _settingsRepository;
+        private readonly IBaseRepository<Language> _languageRepository;
         private readonly IMapper _mapper;
 
         public SettingsService(
             IBaseRepository<Settings> settingsRepository,
+            IBaseRepository<Language> languageRepository,
             IMapper mapper)
         {
             _settingsRepository = settingsRepository;
+            _languageRepository = languageRepository;
             _mapper = mapper;
         }
 
@@ -38,11 +41,28 @@ namespace Twitter.Services.Services
         {
             var response = new BaseResponse();
 
+            var language = await _languageRepository.GetByAsync(c => c.Code == settingsRequest.LanguageCode);
+
             var settings = await _settingsRepository.GetByAsync(c => c.UserId == userId);
 
-            _mapper.Map(settingsRequest, settings);
+            if (settings == null)
+            {
+                settings = new Settings
+                {
+                    IsDarkTheme = settingsRequest.IsDarkTheme,
+                    LanguageId = language.Id,
+                    UserId = userId
+                };
 
-            await _settingsRepository.UpdateAsync(settings);
+                await _settingsRepository.AddAsync(settings);
+            }
+            else
+            {
+                settings.IsDarkTheme = settingsRequest.IsDarkTheme;
+                settings.LanguageId = language.Id;
+
+                await _settingsRepository.UpdateAsync(settings);
+            }
 
             return response;
         }

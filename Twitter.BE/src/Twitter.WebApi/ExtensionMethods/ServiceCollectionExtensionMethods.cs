@@ -54,13 +54,13 @@ namespace Twitter.WebApi.ExtensionMethods
                     {
                         new OpenApiSecurityScheme
                         {
-                            Reference = new OpenApiReference 
+                            Reference = new OpenApiReference
                             {
                                 Type = ReferenceType.SecurityScheme,
                                 Id = "Bearer"
                             },
                             In = ParameterLocation.Header,
-                        }, new List<string>() 
+                        }, new List<string>()
                     }
                 });
                 var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
@@ -180,8 +180,8 @@ namespace Twitter.WebApi.ExtensionMethods
             services.AddTransient<INotificationMapperService, NotificationMapperService>();
             services.AddTransient<INotificationService, NotificationService>();
             services.AddTransient<ISettingsService, SettingsService>();
-            services.AddTransient<ILanguageService, LanguageService>();
             services.AddTransient<IGenderService, GenderService>();
+            services.AddTransient<ITweetService, TweetService>();
             services.AddTransient<DataSeeder>();
         }
 
@@ -194,6 +194,8 @@ namespace Twitter.WebApi.ExtensionMethods
             services.AddTransient<IBaseRepository<Gender>, BaseRepository<Gender>>();
             services.AddTransient<IBaseRepository<Notification>, BaseRepository<Notification>>();
             services.AddTransient<IBaseRepository<UserNotification>, BaseRepository<UserNotification>>();
+            services.AddTransient<IBaseRepository<ProgrammingLanguage>, BaseRepository<ProgrammingLanguage>>();
+            services.AddTransient<ITweetRepository, TweetRepository>();
         }
     }
 }

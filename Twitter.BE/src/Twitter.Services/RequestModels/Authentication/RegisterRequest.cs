@@ -13,5 +13,11 @@ namespace Twitter.Services.RequestModels.Authentication
         public string Email { get; set; }
         [Required]
         public string Password { get; set; }
+
+        [Required]
+        public bool IsDarkTheme { get; set; }
+        [Required]
+        public string LanguageCode { get; set; }
+
     }
 }

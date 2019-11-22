@@ -8,7 +8,6 @@ namespace Twitter.Services.Interfaces
     public interface IUserService
     {
         Task<IResponse<UserDTO>> GetUserAsync(int userId);
-        Task<ICollectionResponse<BaseUserDTO>> GetUsersAsync();
         Task<IPagedResponse<BaseUserDTO>> GetUsersAsync(SearchUserRequest searchRequest);
         Task<ICollectionResponse<BaseUserDTO>> GetFollowersAsync(int userId);
         Task<ICollectionResponse<BaseUserDTO>> GetFollowingAsync(int userId);
