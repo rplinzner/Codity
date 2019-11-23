@@ -103,6 +103,18 @@ const useStyles = makeStyles((theme: Theme) =>
         },
       },
     },
+    searchPopper: {
+      zIndex: theme.zIndex.modal,
+      marginTop: 5,
+    },
+    searchPaper: {
+      [theme.breakpoints.up('sm')]: {
+        width: 220,
+      },
+      [theme.breakpoints.up('md')]: {
+        width: 400,
+      },
+    },
     sectionDesktop: {
       display: 'none',
       [theme.breakpoints.up('md')]: {
@@ -314,8 +326,9 @@ function PrimarySearchAppBar(props: Props) {
                         id={searchId}
                         open={isSearchOpen}
                         anchorEl={searchAnchorEl}
+                        className={classes.searchPopper}
                       >
-                        <Paper style={{ width: '400px' }}>
+                        <Paper className={classes.searchPaper}>
                           <div style={{ padding: '10px' }}>
                             <SearchResultSmall />
                           </div>
