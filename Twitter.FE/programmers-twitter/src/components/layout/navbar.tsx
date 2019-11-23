@@ -11,8 +11,6 @@ import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import InputBase from '@material-ui/core/InputBase';
 import Badge from '@material-ui/core/Badge';
-import MenuItem from '@material-ui/core/MenuItem';
-import Menu from '@material-ui/core/Menu';
 import MenuIcon from '@material-ui/icons/Menu';
 import SearchIcon from '@material-ui/icons/Search';
 import AccountCircle from '@material-ui/icons/AccountCircle';
@@ -23,7 +21,7 @@ import {
   Link as RouterLink,
   LinkProps as RouterLinkProps,
   withRouter,
-  RouteComponentProps
+  RouteComponentProps,
 } from 'react-router-dom';
 import { Link, Tooltip, Paper, ClickAwayListener } from '@material-ui/core';
 import { connect } from 'react-redux';
@@ -32,13 +30,15 @@ import {
   LocalizeContextProps,
   withLocalize,
 } from 'react-localize-redux';
+import Popper from '@material-ui/core/Popper';
 
 import ResponsiveDrawer from './drawer';
-import { AppState } from '../..';
 import { logout } from '../../store/user/user.actions';
 import { layoutTranslations } from '../../translations/index';
 import SearchResultCard from './search-result-card';
-import Popper from '@material-ui/core/Popper';
+import MobileAccountMenu from './mobile-account-menu';
+import AccountMenu from './account-menu';
+import { AppState } from '../..';
 
 const drawerWidth = 240;
 
@@ -157,15 +157,18 @@ interface Props extends LocalizeContextProps {
 function PrimarySearchAppBar(props: Props & RouteComponentProps) {
   props.addTranslation(layoutTranslations);
   const classes = useStyles();
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [
-    mobileMoreAnchorEl,
-    setMobileMoreAnchorEl,
+    primaryAccountMenuAnchorEl,
+    setPrimaryAccountMenuAnchorEl,
+  ] = React.useState<null | HTMLElement>(null);
+  const [
+    mobileAccountMenuAnchorEl,
+    setMobileAccountMenuAnchorEl,
   ] = React.useState<null | HTMLElement>(null);
   const [searchAnchorEl, setSearchAnchorEl] = React.useState<any | null>(null);
 
-  const isMenuOpen = Boolean(anchorEl);
-  const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
+  const isMenuOpen = Boolean(primaryAccountMenuAnchorEl);
+  const isMobileAccountMenuOpen = Boolean(mobileAccountMenuAnchorEl);
   const isSearchOpen = Boolean(searchAnchorEl);
   const searchId = isSearchOpen ? 'search-popover' : undefined;
 
@@ -179,21 +182,23 @@ function PrimarySearchAppBar(props: Props & RouteComponentProps) {
     setMobileDrawerOpen(false);
   };
 
-  const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget);
+  const handleMobileAccountMenuOpen = (
+    event: React.MouseEvent<HTMLElement>,
+  ) => {
+    setPrimaryAccountMenuAnchorEl(event.currentTarget);
   };
 
-  const handleMobileMenuClose = () => {
-    setMobileMoreAnchorEl(null);
+  const handleMobileAccountMenuClose = () => {
+    setMobileAccountMenuAnchorEl(null);
   };
 
   const handleMenuClose = () => {
-    setAnchorEl(null);
-    handleMobileMenuClose();
+    setPrimaryAccountMenuAnchorEl(null);
+    handleMobileAccountMenuClose();
   };
 
   const handleMobileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
-    setMobileMoreAnchorEl(event.currentTarget);
+    setMobileAccountMenuAnchorEl(event.currentTarget);
   };
 
   const handlePopoverOpen = (
@@ -208,80 +213,8 @@ function PrimarySearchAppBar(props: Props & RouteComponentProps) {
 
   const { isLoggedIn, logOutAction } = props;
 
-  const mobileMenuId = 'primary-search-account-menu-mobile';
-  const renderMobileMenu = (
-    <Menu
-      anchorEl={mobileMoreAnchorEl}
-      anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-      id={mobileMenuId}
-      keepMounted={true}
-      transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-      open={isMobileMenuOpen}
-      onClose={handleMobileMenuClose}
-    >
-      <MenuItem>
-        <IconButton aria-label="show 4 new mails" color="inherit">
-          <Badge badgeContent={420} color="secondary">
-            <MailIcon />
-          </Badge>
-        </IconButton>
-        <p>
-          <T id="messages" />
-        </p>
-      </MenuItem>
-      <MenuItem>
-        <IconButton aria-label="show 11 new notifications" color="inherit">
-          <Badge badgeContent={69} color="secondary">
-            <NotificationsIcon />
-          </Badge>
-        </IconButton>
-        <p>
-          <T id="notifications" />
-        </p>
-      </MenuItem>
-      <MenuItem onClick={handleProfileMenuOpen}>
-        <IconButton
-          aria-label="account of current user"
-          aria-controls="primary-search-account-menu"
-          aria-haspopup="true"
-          color="inherit"
-        >
-          <AccountCircle />
-        </IconButton>
-        <p>
-          <T id="profile" />
-        </p>
-      </MenuItem>
-    </Menu>
-  );
-
+  const mobileAccountMenuId = 'primary-search-account-menu-mobile';
   const menuId = 'primary-search-account-menu';
-  const renderMenu = (
-    <Menu
-      anchorEl={anchorEl}
-      anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-      id={menuId}
-      keepMounted={true}
-      transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-      open={isMenuOpen}
-      onClose={handleMenuClose}
-    >
-      <MenuItem onClick={handleMenuClose}>
-        <T id="profile" />
-      </MenuItem>
-      <MenuItem onClick={handleMenuClose}>
-        <T id="myAccount" />
-      </MenuItem>
-      <MenuItem
-        onClick={() => {
-          handleMenuClose();
-          logOutAction();
-        }}
-      >
-        <T id="logout" />
-      </MenuItem>
-    </Menu>
-  );
 
   return (
     <div className={classes.grow}>
@@ -308,45 +241,43 @@ function PrimarySearchAppBar(props: Props & RouteComponentProps) {
               </div>
               <T>
                 {({ translate }) => (
-                  <>
-                    <ClickAwayListener onClickAway={handlePopoverClose}>
-                      <div>
-                        <InputBase
-                          placeholder={translate('search') as string}
-                          classes={{
-                            root: classes.inputRoot,
-                            input: classes.inputInput,
-                          }}
-                          inputProps={{ 'aria-label': 'search' }}
-                          onFocus={handlePopoverOpen}
-                          onKeyPress={e => {
-                            if (e.key === 'Enter') {
-                              handlePopoverClose();
-                              props.history.push('/SearchResults');
-                            }
-                          }}
-                        />
-                        <Popper
-                          id={searchId}
-                          open={isSearchOpen}
-                          anchorEl={searchAnchorEl}
-                          className={classes.searchPopper}
-                        >
-                          <Paper className={classes.searchPaper}>
-                            <div style={{ padding: '10px' }}>
-                              <SearchResultCard />
-                            </div>
-                            <div style={{ padding: '10px' }}>
-                              <SearchResultCard />
-                            </div>
-                            <div style={{ padding: '10px' }}>
-                              <SearchResultCard />
-                            </div>
-                          </Paper>
-                        </Popper>
-                      </div>
-                    </ClickAwayListener>
-                  </>
+                  <ClickAwayListener onClickAway={handlePopoverClose}>
+                    <div>
+                      <InputBase
+                        placeholder={translate('search') as string}
+                        classes={{
+                          root: classes.inputRoot,
+                          input: classes.inputInput,
+                        }}
+                        inputProps={{ 'aria-label': 'search' }}
+                        onFocus={handlePopoverOpen}
+                        onKeyPress={e => {
+                          if (e.key === 'Enter') {
+                            handlePopoverClose();
+                            props.history.push('/SearchResults');
+                          }
+                        }}
+                      />
+                      <Popper
+                        id={searchId}
+                        open={isSearchOpen}
+                        anchorEl={searchAnchorEl}
+                        className={classes.searchPopper}
+                      >
+                        <Paper className={classes.searchPaper}>
+                          <div style={{ padding: '10px' }}>
+                            <SearchResultCard />
+                          </div>
+                          <div style={{ padding: '10px' }}>
+                            <SearchResultCard />
+                          </div>
+                          <div style={{ padding: '10px' }}>
+                            <SearchResultCard />
+                          </div>
+                        </Paper>
+                      </Popper>
+                    </div>
+                  </ClickAwayListener>
                 )}
               </T>
             </div>
@@ -379,7 +310,7 @@ function PrimarySearchAppBar(props: Props & RouteComponentProps) {
                   aria-label="account of current user"
                   aria-controls={menuId}
                   aria-haspopup="true"
-                  onClick={handleProfileMenuOpen}
+                  onClick={handleMobileAccountMenuOpen}
                   color="inherit"
                 >
                   <AccountCircle />
@@ -392,7 +323,7 @@ function PrimarySearchAppBar(props: Props & RouteComponentProps) {
             <div className={classes.sectionMobile}>
               <IconButton
                 aria-label="show more"
-                aria-controls={mobileMenuId}
+                aria-controls={mobileAccountMenuId}
                 aria-haspopup="true"
                 onClick={handleMobileMenuOpen}
                 color="inherit"
@@ -403,8 +334,22 @@ function PrimarySearchAppBar(props: Props & RouteComponentProps) {
           ) : null}
         </Toolbar>
       </AppBar>
-      {isLoggedIn ? renderMobileMenu : null}
-      {renderMenu}
+      {isLoggedIn ? (
+        <MobileAccountMenu
+          anchorEl={mobileAccountMenuAnchorEl}
+          id={mobileAccountMenuId}
+          isOpen={isMobileAccountMenuOpen}
+          onClose={handleMobileAccountMenuClose}
+          handleOpen={handleMobileAccountMenuOpen}
+        />
+      ) : null}
+      <AccountMenu
+        anchorEl={primaryAccountMenuAnchorEl}
+        id={menuId}
+        isOpen={isMenuOpen}
+        onClose={handleMenuClose}
+        logOutAction={logOutAction}
+      />
       <ResponsiveDrawer
         isOpen={mobileDrawerOpen}
         onDrawerChange={handleDrawerToggle}

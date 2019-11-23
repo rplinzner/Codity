@@ -13,7 +13,7 @@ import {
   Link as RouterLink,
   LinkProps as RouterLinkProps,
   withRouter,
-  RouteComponentProps
+  RouteComponentProps,
 } from 'react-router-dom';
 import {
   withLocalize,
@@ -98,6 +98,8 @@ class Login extends Component<Props & RouteComponentProps<any>, State> {
     const { classes, isLoggedIn, history } = this.props;
     if (isLoggedIn) {
       history.push('/MyFeed');
+      // eslint-disable-next-line no-restricted-globals
+      location.reload(true);
       // TODO: Add Settings downloading
     }
     return (
