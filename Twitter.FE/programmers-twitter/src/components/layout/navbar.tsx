@@ -22,6 +22,8 @@ import MoreIcon from '@material-ui/icons/MoreVert';
 import {
   Link as RouterLink,
   LinkProps as RouterLinkProps,
+  withRouter,
+  RouteComponentProps
 } from 'react-router-dom';
 import { Link, Tooltip, Paper, ClickAwayListener } from '@material-ui/core';
 import { connect } from 'react-redux';
@@ -35,7 +37,7 @@ import ResponsiveDrawer from './drawer';
 import { AppState } from '../..';
 import { logout } from '../../store/user/user.actions';
 import { layoutTranslations } from '../../translations/index';
-import SearchResultSmall from './search-result-small';
+import SearchResultCard from './search-result-card';
 import Popper from '@material-ui/core/Popper';
 
 const drawerWidth = 240;
@@ -152,7 +154,7 @@ interface Props extends LocalizeContextProps {
   logOutAction: typeof logout;
 }
 
-function PrimarySearchAppBar(props: Props) {
+function PrimarySearchAppBar(props: Props & RouteComponentProps) {
   props.addTranslation(layoutTranslations);
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -299,53 +301,57 @@ function PrimarySearchAppBar(props: Props) {
               InzTwitter
             </Typography>
           </Link>
-          <div className={classes.search}>
-            <div className={classes.searchIcon}>
-              <SearchIcon />
+          {isLoggedIn ? (
+            <div className={classes.search}>
+              <div className={classes.searchIcon}>
+                <SearchIcon />
+              </div>
+              <T>
+                {({ translate }) => (
+                  <>
+                    <ClickAwayListener onClickAway={handlePopoverClose}>
+                      <div>
+                        <InputBase
+                          placeholder={translate('search') as string}
+                          classes={{
+                            root: classes.inputRoot,
+                            input: classes.inputInput,
+                          }}
+                          inputProps={{ 'aria-label': 'search' }}
+                          onFocus={handlePopoverOpen}
+                          onKeyPress={e => {
+                            if (e.key === 'Enter') {
+                              handlePopoverClose();
+                              props.history.push('/SearchResults');
+                            }
+                          }}
+                        />
+                        <Popper
+                          id={searchId}
+                          open={isSearchOpen}
+                          anchorEl={searchAnchorEl}
+                          className={classes.searchPopper}
+                        >
+                          <Paper className={classes.searchPaper}>
+                            <div style={{ padding: '10px' }}>
+                              <SearchResultCard />
+                            </div>
+                            <div style={{ padding: '10px' }}>
+                              <SearchResultCard />
+                            </div>
+                            <div style={{ padding: '10px' }}>
+                              <SearchResultCard />
+                            </div>
+                          </Paper>
+                        </Popper>
+                      </div>
+                    </ClickAwayListener>
+                  </>
+                )}
+              </T>
             </div>
-            <T>
-              {({ translate }) => (
-                <>
-                  <ClickAwayListener onClickAway={handlePopoverClose}>
-                    <div>
-                      <InputBase
-                        placeholder={translate('search') as string}
-                        classes={{
-                          root: classes.inputRoot,
-                          input: classes.inputInput,
-                        }}
-                        inputProps={{ 'aria-label': 'search' }}
-                        onFocus={handlePopoverOpen}
-                        onKeyPress={e => {
-                          if (e.key === 'Enter') {
-                            alert('OK Boomer');
-                          }
-                        }}
-                      />
-                      <Popper
-                        id={searchId}
-                        open={isSearchOpen}
-                        anchorEl={searchAnchorEl}
-                        className={classes.searchPopper}
-                      >
-                        <Paper className={classes.searchPaper}>
-                          <div style={{ padding: '10px' }}>
-                            <SearchResultSmall />
-                          </div>
-                          <div style={{ padding: '10px' }}>
-                            <SearchResultSmall />
-                          </div>
-                          <div style={{ padding: '10px' }}>
-                            <SearchResultSmall />
-                          </div>
-                        </Paper>
-                      </Popper>
-                    </div>
-                  </ClickAwayListener>
-                </>
-              )}
-            </T>
-          </div>
+          ) : null}
+
           <div className={classes.grow} />
           {/* Normal menu */}
           {isLoggedIn ? (
@@ -423,4 +429,4 @@ const mapDispatchToProps = (dispatch: any) => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(withLocalize(PrimarySearchAppBar));
+)(withLocalize(withRouter(PrimarySearchAppBar)));

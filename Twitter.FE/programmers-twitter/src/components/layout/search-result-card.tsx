@@ -3,7 +3,7 @@ import { Card, Avatar, CardHeader, CardActionArea } from '@material-ui/core';
 
 interface Props {}
 
-const SearchResultSmall: React.FC<Props> = () => {
+const SearchResultCard: React.FC<Props> = () => {
   const avatar = <Avatar aria-label="person">MU</Avatar>;
 
   return (
@@ -19,4 +19,4 @@ const SearchResultSmall: React.FC<Props> = () => {
   );
 };
 
-export default SearchResultSmall;
+export default SearchResultCard;
