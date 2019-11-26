@@ -39,6 +39,7 @@ import SearchResultCard from './search-result-card';
 import MobileAccountMenu from './mobile-account-menu';
 import AccountMenu from './account-menu';
 import { AppState } from '../..';
+import ThemeSwitch from './theme-switch';
 
 const drawerWidth = 240;
 
@@ -331,7 +332,7 @@ function PrimarySearchAppBar(props: Props & RouteComponentProps) {
                 <MoreIcon />
               </IconButton>
             </div>
-          ) : null}
+          ) : <ThemeSwitch />}
         </Toolbar>
       </AppBar>
       {isLoggedIn ? (

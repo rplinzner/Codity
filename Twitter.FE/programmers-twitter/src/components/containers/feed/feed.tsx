@@ -48,7 +48,6 @@ class Feed extends Component<Props, State> {
     return (
       <>
         {sketeton}
-        {sketeton}
       </>
     );
   }

@@ -21,6 +21,7 @@ const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 const rootReducer = combineReducers({
   localize: localizeReducer,
   user: stores.userReducer,
+  settings: stores.settingsReducer
 });
 
 const language = navigator.language;

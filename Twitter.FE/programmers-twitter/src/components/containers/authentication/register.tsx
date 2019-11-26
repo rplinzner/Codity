@@ -86,9 +86,10 @@ class Register extends Component<Props, State> {
   state: State = { canSubmit: false, isOpen: false, isSubmitting: false };
 
   onSubmit = (values: FormValues, translate: any): void => {
+    const form = {...values, isDarkTheme: true, languageCode: "pl"}
     this.setState({ isSubmitting: true });
     post(
-      values,
+      form,
       `${constants.server}/api/authentication`,
       '/register',
       this.props.activeLanguage.code,

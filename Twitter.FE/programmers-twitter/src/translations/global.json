@@ -33,5 +33,6 @@
   "errorConnection": [
     "There was an error while communicating with server. Please try again later",
     "Podczas komunikacji z serwerem wystapił błąd. Spróbuj ponownie później"
-  ]
+  ],
+  "darkTheme": ["Dark theme", "Ciemny motyw"]
 }

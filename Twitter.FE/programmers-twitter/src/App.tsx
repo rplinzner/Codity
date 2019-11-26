@@ -22,18 +22,21 @@ import * as user from './components/containers/profile/index';
 import SearchResultCard from './components/layout/search-result-card';
 
 import themeDark from './themes/dark-theme';
-// import themeLight from './themes/light-theme';
+import themeLight from './themes/light-theme';
 import { PrivateRoute } from './components/containers/authentication/index';
+import { connect } from 'react-redux';
+import { AppState } from '.';
 
-const lightTheme = responsiveFontSizes(
+const darkTheme = responsiveFontSizes(
   createMuiTheme(themeDark as ThemeOptions),
 );
-// const lightTheme = responsiveFontSizes(
-//   createMuiTheme(themeLight as ThemeOptions),
-// );
+const lightTheme = responsiveFontSizes(
+  createMuiTheme(themeLight as ThemeOptions),
+);
 
 interface Props extends LocalizeContextProps {
   browserLanguage: string;
+  isDarkTheme: boolean;
 }
 
 // tslint:disable-next-line: typedef
@@ -57,7 +60,7 @@ class App extends Component<Props> {
     // tslint:disable-next-line: no-console
     console.log('This app is in:', process.env.NODE_ENV, 'mode');
     return (
-      <MuiThemeProvider theme={lightTheme}>
+      <MuiThemeProvider theme={this.props.isDarkTheme ? darkTheme : lightTheme}>
         <CssBaseline />
         <ToastContainer />
         <BrowserRouter>
@@ -82,4 +85,8 @@ class App extends Component<Props> {
   }
 }
 
-export default withLocalize(App);
+const mapStateToProps = (state: AppState) => ({
+  isDarkTheme: state.settings.isDarkTheme,
+})
+
+export default connect(mapStateToProps)(withLocalize(App));
