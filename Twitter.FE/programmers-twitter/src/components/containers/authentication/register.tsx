@@ -24,6 +24,8 @@ import * as constants from '../../../constants/global.constats';
 
 import post from '../../../services/post.service';
 import displayErrors from '../../../helpers/display-errors';
+import { AppState } from '../../..';
+import { connect } from 'react-redux';
 
 type PasswordCheck = {
   title: string;
@@ -38,6 +40,7 @@ interface Props extends LocalizeContextProps {
     grid: string;
   };
   theme: Theme;
+  isDarkTheme: boolean;
 }
 interface State {
   canSubmit: boolean;
@@ -86,7 +89,7 @@ class Register extends Component<Props, State> {
   state: State = { canSubmit: false, isOpen: false, isSubmitting: false };
 
   onSubmit = (values: FormValues, translate: any): void => {
-    const form = {...values, isDarkTheme: true, languageCode: "pl"}
+    const form = { ...values, isDarkTheme: this.props.isDarkTheme, languageCode: 'pl' };
     this.setState({ isSubmitting: true });
     post(
       form,
@@ -289,4 +292,10 @@ class Register extends Component<Props, State> {
   }
 }
 
-export default withStyles(styles, { withTheme: true })(withLocalize(Register));
+const mapStateToProps = (state: AppState) => ({
+  isDarkTheme: state.settings.isDarkTheme,
+});
+
+export default connect(mapStateToProps)(
+  withStyles(styles, { withTheme: true })(withLocalize(Register)),
+);
