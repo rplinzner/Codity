@@ -14,4 +14,5 @@ export interface SearchModel {
   lastName: string;
   image: string | null;
   followersCount: number;
+  isFollowing: boolean;
 }

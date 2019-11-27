@@ -56,7 +56,7 @@ const SearchResult: React.FC<Props> = (props: Props) => {
   }, [props.location.search]);
 
   return (
-    <Container style={{ textAlign: 'center' }}>
+    <Container>
       {profiles && profiles.models && profiles.models.length > 0 ? (
         profiles.models.map((
           profile, //TODO: Add pagination
@@ -70,7 +70,9 @@ const SearchResult: React.FC<Props> = (props: Props) => {
           />
         ))
       ) : (
-        <Typography variant="h5">No data to show</Typography>
+        <div style={{ textAlign: 'center' }}>
+          <Typography variant="h5">No data to show</Typography>
+        </div>
       )}
       {isLoading && <LinearProgress style={{ marginTop: '8px' }} />}
     </Container>
