@@ -41,6 +41,10 @@ import AccountMenu from './account-menu';
 import { AppState } from '../..';
 import ThemeSwitch from './theme-switch';
 import LanguageSelector from './language-selector';
+import SearchResponse from '../../types/search-response';
+import * as constants from '../../constants/global.constats';
+import displayErrors from '../../helpers/display-errors';
+import get from '../../services/get.service';
 
 const drawerWidth = 240;
 
@@ -214,10 +218,43 @@ function PrimarySearchAppBar(props: Props & RouteComponentProps) {
     setSearchAnchorEl(null);
   };
 
+  const [typingTimeout, setTypingTimout] = React.useState();
+  const [userProfiles, setUserProfiles] = React.useState<SearchResponse | null>(
+    null,
+  );
+
+  const getUsers = (searchQuery: string): void => {
+    if (searchQuery !== '') {
+      get<SearchResponse>(
+        `${constants.server}/api/User`,
+        `/search?query=${searchQuery}&pageSize=3`,
+        'pl',
+        'lol',
+        true,
+      ).then(
+        resp => {
+          setUserProfiles(resp);
+        },
+        error => {
+          displayErrors(error);
+        },
+      );
+    }
+  };
+
   const handleSearchFieldChange = (
     event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>,
   ) => {
+    if (typingTimeout) {
+      clearTimeout(typingTimeout);
+    }
+    event.persist();
     setSearchField(event.target.value);
+    setTypingTimout(
+      setTimeout(() => {
+        getUsers(event.target.value);
+      }, 500),
+    );
   };
 
   const { isLoggedIn, logOutAction } = props;
@@ -264,6 +301,9 @@ function PrimarySearchAppBar(props: Props & RouteComponentProps) {
                         onFocus={handlePopoverOpen}
                         onKeyPress={e => {
                           if (e.key === 'Enter') {
+                            if (typingTimeout) {
+                              clearTimeout(typingTimeout);
+                            }
                             handlePopoverClose();
                             props.history.push(
                               `/SearchResults?search=${searchField}`,
@@ -271,24 +311,28 @@ function PrimarySearchAppBar(props: Props & RouteComponentProps) {
                           }
                         }}
                       />
-                      <Popper
-                        id={searchId}
-                        open={isSearchOpen}
-                        anchorEl={searchAnchorEl}
-                        className={classes.searchPopper}
-                      >
-                        <Paper className={classes.searchPaper}>
-                          <div style={{ padding: '10px' }}>
-                            <SearchResultCard />
-                          </div>
-                          <div style={{ padding: '10px' }}>
-                            <SearchResultCard />
-                          </div>
-                          <div style={{ padding: '10px' }}>
-                            <SearchResultCard />
-                          </div>
-                        </Paper>
-                      </Popper>
+                      {userProfiles && userProfiles.models.length > 0 && (
+                        <Popper
+                          id={searchId}
+                          open={isSearchOpen}
+                          anchorEl={searchAnchorEl}
+                          className={classes.searchPopper}
+                        >
+                          <Paper className={classes.searchPaper}>
+                            {userProfiles.models.map(profile => (
+                              <div style={{ padding: '10px' }}>
+                                <SearchResultCard
+                                  key={profile.id}
+                                  firstName={profile.firstName}
+                                  lastName={profile.lastName}
+                                  photo={profile.image}
+                                  followers={profile.followersCount}
+                                />
+                              </div>
+                            ))}
+                          </Paper>
+                        </Popper>
+                      )}
                     </div>
                   </ClickAwayListener>
                 )}
