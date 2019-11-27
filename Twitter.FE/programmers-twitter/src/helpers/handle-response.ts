@@ -1,9 +1,9 @@
 import { userService } from '../services/authentication.service';
-import { ServerResponse } from '../types/response';
+import { BaseResponse } from '../types/base-response';
 
-export default function handleResponse(response: Response) {
+export default function handleResponse<T extends BaseResponse>(response: Response) {
   return response.text().then(text => {
-    const data = (text && JSON.parse(text)) as ServerResponse;
+    const data = (text && JSON.parse(text)) as T;
 
     if (!response.ok) {
       if (response.status === 401) {

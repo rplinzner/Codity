@@ -1,9 +1,8 @@
 import authHeader from '../helpers/auth-header';
 import handleResponse from '../helpers/handle-response';
-import { Error, BaseResponse } from '../types/base-response';
+import { BaseResponse } from '../types/base-response';
 
-export default function post<T extends BaseResponse, D>(
-  dataToPost: D,
+export default function get<T extends BaseResponse>(
   controller: string,
   endpoint: string,
   language: string,
@@ -11,7 +10,6 @@ export default function post<T extends BaseResponse, D>(
   isAuthorizationNeeded: boolean = false,
 ) {
   const requestHeaders: HeadersInit = new Headers();
-  requestHeaders.set('Content-Type', 'application/json');
   if (isAuthorizationNeeded) {
     const header = authHeader();
     if (header.name && header.value) {
@@ -20,9 +18,8 @@ export default function post<T extends BaseResponse, D>(
   }
   requestHeaders.append('Accept-Language', language);
   const requestOptions: RequestInit = {
-    method: 'POST',
+    method: 'GET',
     headers: requestHeaders,
-    body: JSON.stringify(dataToPost),
   };
   return fetch(`${controller}${endpoint}`, requestOptions)
     .catch(() => Promise.reject([{ message: connectionErrorMessage }]))

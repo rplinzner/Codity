@@ -136,11 +136,11 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     content: {
       [theme.breakpoints.up('md')]: {
-        paddingTop: '64px',
+        paddingTop: '80px', // Added 16px for spacing
         paddingLeft: drawerWidth,
       },
       [theme.breakpoints.down('md')]: {
-        paddingTop: '56px',
+        paddingTop: '72px', // Added 16px for spacing
       },
     },
   }),
@@ -168,6 +168,7 @@ function PrimarySearchAppBar(props: Props & RouteComponentProps) {
     setMobileAccountMenuAnchorEl,
   ] = React.useState<null | HTMLElement>(null);
   const [searchAnchorEl, setSearchAnchorEl] = React.useState<any | null>(null);
+  const [searchField, setSearchField] = React.useState<string | null>('');
 
   const isMenuOpen = Boolean(primaryAccountMenuAnchorEl);
   const isMobileAccountMenuOpen = Boolean(mobileAccountMenuAnchorEl);
@@ -213,6 +214,12 @@ function PrimarySearchAppBar(props: Props & RouteComponentProps) {
     setSearchAnchorEl(null);
   };
 
+  const handleSearchFieldChange = (
+    event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>,
+  ) => {
+    setSearchField(event.target.value);
+  };
+
   const { isLoggedIn, logOutAction } = props;
 
   const mobileAccountMenuId = 'primary-search-account-menu-mobile';
@@ -246,6 +253,8 @@ function PrimarySearchAppBar(props: Props & RouteComponentProps) {
                   <ClickAwayListener onClickAway={handlePopoverClose}>
                     <div>
                       <InputBase
+                        onChange={handleSearchFieldChange}
+                        value={searchField}
                         placeholder={translate('search') as string}
                         classes={{
                           root: classes.inputRoot,
@@ -256,7 +265,9 @@ function PrimarySearchAppBar(props: Props & RouteComponentProps) {
                         onKeyPress={e => {
                           if (e.key === 'Enter') {
                             handlePopoverClose();
-                            props.history.push('/SearchResults');
+                            props.history.push(
+                              `/SearchResults?search=${searchField}`,
+                            );
                           }
                         }}
                       />

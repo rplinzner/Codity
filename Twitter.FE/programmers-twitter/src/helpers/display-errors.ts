@@ -1,4 +1,4 @@
-import { Error } from '../types/response';
+import { Error } from '../types/base-response';
 import { toast } from 'react-toastify';
 
 export default function displayErrors(errors: Error[]): void {
