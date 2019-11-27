@@ -70,7 +70,9 @@ namespace Twitter.WebApi.Controllers
         [HttpGet("{id}/followers")]
         public async Task<ActionResult<ICollectionResponse<BaseUserDTO>>> GetFollowers(int id)
         {
-            var response = await _userService.GetFollowersAsync(id);
+            int userId = _userContext.GetUserId();
+
+            var response = await _userService.GetFollowersAsync(id, userId);
 
             if (response.IsError)
             {
@@ -88,7 +90,9 @@ namespace Twitter.WebApi.Controllers
         [HttpGet("{id}/following")]
         public async Task<ActionResult<ICollectionResponse<BaseUserDTO>>> GetFollowing(int id)
         {
-            var response = await _userService.GetFollowingAsync(id);
+            int userId = _userContext.GetUserId();
+
+            var response = await _userService.GetFollowingAsync(id, userId);
 
             if (response.IsError)
             {
