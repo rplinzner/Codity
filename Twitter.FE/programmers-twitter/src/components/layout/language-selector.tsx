@@ -10,7 +10,6 @@ import {
 import {
   withLocalize,
   LocalizeContextProps,
-  Translate as T,
 } from 'react-localize-redux';
 
 interface Props extends LocalizeContextProps {}
@@ -40,8 +39,8 @@ const LanguageSelector: React.FC<Props> = (props: Props) => {
 
   return (
     <FormControl className={classes.formControl}>
-      <InputLabel ref={inputLabel} id="demo-simple-select-outlined-label">
-        <T id="language" />
+      <InputLabel ref={inputLabel} id="language-select">
+        Language
       </InputLabel>
       <Select
         labelId="demo-simple-select-outlined-label"

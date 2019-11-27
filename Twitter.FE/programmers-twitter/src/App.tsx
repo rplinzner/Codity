@@ -46,7 +46,7 @@ class App extends Component<Props> {
     this.props.initialize({
       languages: [
         { name: 'English', code: 'en' },
-        { name: 'Polish', code: 'pl' },
+        { name: 'Polski', code: 'pl' },
       ],
       translation: globalTranslations,
       options: {
