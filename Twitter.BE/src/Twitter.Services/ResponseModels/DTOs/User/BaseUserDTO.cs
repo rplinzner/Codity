@@ -8,6 +8,7 @@ namespace Twitter.Services.ResponseModels.DTOs.User
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Image { get; set; }
+        public bool IsFollowing { get; set; }
         public int FollowersCount { get; set; }
     }
 }

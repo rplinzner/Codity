@@ -30,7 +30,9 @@ namespace Twitter.WebApi.Controllers
         [HttpGet("search")]
         public async Task<ActionResult<IPagedResponse<BaseUserDTO>>> SearchUsers([FromQuery] SearchUserRequest searchUserRequest)
         {
-            var response = await _userService.GetUsersAsync(searchUserRequest);
+            int userId = _userContext.GetUserId();
+
+            var response = await _userService.GetUsersAsync(searchUserRequest, userId);
 
             if (response.IsError)
             {
@@ -48,7 +50,9 @@ namespace Twitter.WebApi.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<IResponse<UserDTO>>> GetUser(int id)
         {
-            var response = await _userService.GetUserAsync(id);
+            int userId = _userContext.GetUserId();
+
+            var response = await _userService.GetUserAsync(id, userId);
 
             if (response.IsError)
             {
