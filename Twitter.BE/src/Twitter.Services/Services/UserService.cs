@@ -35,7 +35,7 @@ namespace Twitter.Services.Services
             _mapper = mapper;
         }
 
-        public async Task<IResponse<UserDTO>> GetUserAsync(int userId)
+        public async Task<IResponse<UserDTO>> GetUserAsync(int userId, int currentUserId)
         {
             var response = new Response<UserDTO>();
 
@@ -58,7 +58,9 @@ namespace Twitter.Services.Services
             }
 
             var userDTO = _mapper.Map<UserDTO>(user);
+            
             userDTO.LatestTweets = _mapper.Map<IEnumerable<TweetDTO>>(user.Tweets.Take(10));
+            userDTO.IsFollowing = await _followRepository.ExistAsync(c => c.FollowerId == currentUserId && c.FollowingId == userId);
 
             response.Model = userDTO;
 
@@ -185,7 +187,7 @@ namespace Twitter.Services.Services
             return response;
         }
 
-        public async Task<IPagedResponse<BaseUserDTO>> GetUsersAsync(SearchUserRequest searchRequest)
+        public async Task<IPagedResponse<BaseUserDTO>> GetUsersAsync(SearchUserRequest searchRequest, int currentUserId)
         {
             var response = new PagedResponse<BaseUserDTO>();
 
@@ -198,6 +200,12 @@ namespace Twitter.Services.Services
                 c => c.Followers);
 
             _mapper.Map(users, response);
+
+            var following = await _followRepository.GetAllByAsync(c => users.Any(d => d.Id == c.FollowingId) && c.FollowerId == currentUserId);
+            foreach (var model in response.Models)
+            {
+                model.IsFollowing = following.Any(c => c.FollowingId == model.Id);
+            }
 
             return response;
         }
@@ -224,7 +232,7 @@ namespace Twitter.Services.Services
             if (!string.IsNullOrEmpty(searchRequest.Query))
             {
                 searchExpression = c => c.FirstName.ToLower().Contains(query) ||
-                  c.LastName.ToLower().Contains(query);   
+                  c.LastName.ToLower().Contains(query);
             }
 
             return searchExpression;
