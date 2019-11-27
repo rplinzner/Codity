@@ -51,6 +51,7 @@ const SearchResult: React.FC<Props> = (props: Props) => {
             firstName={profile.firstName}
             lastName={profile.lastName}
             followers={profile.followersCount}
+            photo={profile.image}
           />
         ))
       ) : (

@@ -10,23 +10,15 @@ import {
   createStyles,
   makeStyles,
   Theme,
-  Avatar,
 } from '@material-ui/core';
+import { UserAvatar } from '../profile/index';
 
 interface Props {
   firstName: string;
   lastName: string;
   followers: number;
+  photo: string | null;
 }
-
-const avatar = (firstName: string, lastName: string) =>(
-  <Avatar
-    style={{ margin: '0px 10px', width: '60px', height: '60px' }}
-    aria-label="person"
-  >
-    {firstName[0].toLocaleUpperCase() + lastName[0].toLocaleUpperCase()}
-  </Avatar>
-);
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -44,7 +36,9 @@ const SearchCard: React.FC<Props> = (props: Props) => {
         <CardActionArea onClick={() => alert('you clicked')}>
           <CardContent>
             <Grid container alignItems="center">
-              <Grid item>{avatar(props.firstName, props.lastName)}</Grid>
+              <Grid item>
+                <UserAvatar firstName={props.firstName} lastName={props.lastName} photo={props.photo} />
+              </Grid>
               <Grid item>
                 <Typography gutterBottom variant="h5" component="h2">
                   {props.firstName + ' ' + props.lastName}
