@@ -89,7 +89,11 @@ class Register extends Component<Props, State> {
   state: State = { canSubmit: false, isOpen: false, isSubmitting: false };
 
   onSubmit = (values: FormValues, translate: any): void => {
-    const form = { ...values, isDarkTheme: this.props.isDarkTheme, languageCode: 'pl' };
+    const form = {
+      ...values,
+      isDarkTheme: this.props.isDarkTheme,
+      languageCode: this.props.activeLanguage.code,
+    };
     this.setState({ isSubmitting: true });
     post(
       form,

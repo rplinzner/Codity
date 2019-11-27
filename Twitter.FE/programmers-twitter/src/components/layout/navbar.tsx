@@ -40,6 +40,7 @@ import MobileAccountMenu from './mobile-account-menu';
 import AccountMenu from './account-menu';
 import { AppState } from '../..';
 import ThemeSwitch from './theme-switch';
+import LanguageSelector from './language-selector';
 
 const drawerWidth = 240;
 
@@ -332,7 +333,12 @@ function PrimarySearchAppBar(props: Props & RouteComponentProps) {
                 <MoreIcon />
               </IconButton>
             </div>
-          ) : <ThemeSwitch />}
+          ) : (
+            <>
+              <ThemeSwitch />
+              <LanguageSelector />
+            </>
+          )}
         </Toolbar>
       </AppBar>
       {isLoggedIn ? (
