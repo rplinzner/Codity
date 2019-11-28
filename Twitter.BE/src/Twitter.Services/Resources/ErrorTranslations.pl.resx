@@ -176,10 +176,10 @@
     <value>Wystąpił błąd podczas wysyłania maila.</value>
   </data>
   <data name="FollowNotFound" xml:space="preserve">
-    <value>Follow nie istnieje.</value>
+    <value>Nie followujesz podanego użytkownika.</value>
   </data>
   <data name="FollowAlreadyExists" xml:space="preserve">
-    <value>Follow już istnieje.</value>
+    <value>Już followujesz podanego użutkownika.</value>
   </data>
   <data name="FollowersNotFound" xml:space="preserve">
     <value>Użytkownik nie posiada followerów.</value>

@@ -167,7 +167,7 @@
     <value>Email or password are incorrect.</value>
   </data>
   <data name="UserNotFound" xml:space="preserve">
-    <value>User does not exists.</value>
+    <value>User does not exist.</value>
   </data>
   <data name="ConfirmationTokenNotValid" xml:space="preserve">
     <value>Confirmation token is not valid.</value>
@@ -176,10 +176,10 @@
     <value>There was an error sending an email.</value>
   </data>
   <data name="FollowNotFound" xml:space="preserve">
-    <value>Follow does not exists.</value>
+    <value>You are not following the user.</value>
   </data>
   <data name="FollowAlreadyExists" xml:space="preserve">
-    <value>Follow already exists.</value>
+    <value>You are already following the user.</value>
   </data>
   <data name="FollowersNotFound" xml:space="preserve">
     <value>There is no followers for given user.</value>
@@ -188,6 +188,6 @@
     <value>User is not following anyone.</value>
   </data>
   <data name="NotificationNotFound" xml:space="preserve">
-    <value>Notification does not exists.</value>
+    <value>Notification does not exist.</value>
   </data>
 </root>
