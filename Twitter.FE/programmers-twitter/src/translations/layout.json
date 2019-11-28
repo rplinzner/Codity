@@ -1,10 +1,11 @@
 {
+  "login": ["Login", "Logowanie"],
+  "logout": ["Logout", "Wyloguj"],
   "messages": ["Messages", "Wiadomości"],
+  "myAccount": ["My account", "Moje konto"],
   "notifications": ["Notifications", "Powiadomienia"],
   "profile": ["Profile", "Profil"],
-  "myAccount": ["My account", "Moje konto"],
-  "logout": ["Logout", "Wyloguj"],
+  "register": ["Register", "Rejestracja"],
   "search": ["Search...", "Szukaj..."],
-  "login": ["Login", "Logowanie"],
-  "register": ["Register", "Rejestracja"]
+  "myFeed": ["My feed", "Mój feed"]
 }

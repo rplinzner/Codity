@@ -1,37 +1,42 @@
 {
-  "greeting": [
-    "Welcome to InzTwitter! To use our service you need to log in!",
-    "Witaj w InzTwitter! Żeby korzystać z naszych serwisów musisz się zalogować!"
-  ],
-
-  "sent": ["Submit", "Wyślij"],
-  "here": ["Here", "Tutaj"],
   "clickHere": [
     "Click ${link} to go to login page",
     "Kliknij ${link} aby przejść do strony logowania"
   ],
-  "reset": ["Reset", "Wyczyść"],
-  "firstName": ["First name", "Imię"],
-  "lastName": ["Last name", "Nazwisko"],
   "close": ["Close", "Zamknij"],
+  "darkTheme": ["Dark theme", "Ciemny motyw"],
   "did404": ["You reached 404!", "Dotarłeś do 404!"],
-  "seemLost": ["You seem lost", "Wyglądasz na zagubionego"],
   "doNotWorry": [
     " Don't worry though, I've got some good boys for you",
     "Nie martw się jednak, mam dla Ciebie troszkę dobrych chłopaków"
   ],
-  "whenReady": [
-    "When you're ready just click",
-    "Gdy będziesz gotowy po prostu kliknij:"
+  "errorConnection": [
+    "There was an error while communicating with server. Please try again later",
+    "Podczas komunikacji z serwerem wystapił błąd. Spróbuj ponownie później"
   ],
+  "firstName": ["First name", "Imię"],
+  "greeting": [
+    "Welcome to InzTwitter! To use our service you need to log in!",
+    "Witaj w InzTwitter! Żeby korzystać z naszych serwisów musisz się zalogować!"
+  ],
+  "here": ["Here", "Tutaj"],
+  "language": ["Language", "Język"],
+  "lastName": ["Last name", "Nazwisko"],
+  "mailFailed": ["Mail verification failed", "Mail nie został zweryfikowany"],
   "mailSuccess": [
     "Mail verified successfully!",
     "Mail zweryfikowany poprawnie!"
   ],
-  "mailFailed": ["Mail verification failed", "Mail nie został zweryfikowany"],
+  "noData": ["No data to display", "Brak danych do wyświetlenia"],
+  "reset": ["Reset", "Wyczyść"],
+  "seemLost": ["You seem lost", "Wyglądasz na zagubionego"],
+  "sent": ["Submit", "Wyślij"],
   "somethingWrong": ["Something went wrong", "Coś poszło nie tak"],
-  "errorConnection": [
-    "There was an error while communicating with server. Please try again later",
-    "Podczas komunikacji z serwerem wystapił błąd. Spróbuj ponownie później"
-  ]
+  "whenReady": [
+    "When you're ready just click",
+    "Gdy będziesz gotowy po prostu kliknij:"
+  ],
+  "followers": ["Followers", "Obserwujących"],
+  "follow": ["Follow", "Obserwuj"],
+  "unfollow": ["Unfollow", "Przestań obserwować"]
 }
