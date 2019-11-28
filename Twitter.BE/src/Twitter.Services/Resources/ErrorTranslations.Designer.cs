@@ -124,7 +124,7 @@ namespace Twitter.Services.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Follow already exists..
+        ///   Looks up a localized string similar to You are already following the user..
         /// </summary>
         public static string FollowAlreadyExists {
             get {
@@ -151,7 +151,7 @@ namespace Twitter.Services.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Follow does not exists..
+        ///   Looks up a localized string similar to You are not following the user..
         /// </summary>
         public static string FollowNotFound {
             get {
@@ -214,7 +214,7 @@ namespace Twitter.Services.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Notification does not exists..
+        ///   Looks up a localized string similar to Notification does not exist..
         /// </summary>
         public static string NotificationNotFound {
             get {
@@ -322,7 +322,7 @@ namespace Twitter.Services.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to User does not exists..
+        ///   Looks up a localized string similar to User does not exist..
         /// </summary>
         public static string UserNotFound {
             get {
