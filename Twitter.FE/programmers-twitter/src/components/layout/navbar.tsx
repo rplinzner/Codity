@@ -226,10 +226,10 @@ function PrimarySearchAppBar(props: Props & RouteComponentProps) {
   const getUsers = (searchQuery: string): void => {
     if (searchQuery !== '') {
       get<SearchResponse>(
-        `${constants.server}/api/User`,
+        constants.usersController,
         `/search?query=${searchQuery}&pageSize=3`,
-        'pl',
-        'lol',
+        props.activeLanguage.code,
+        <T id="errorConnection" />,
         true,
       ).then(
         resp => {
@@ -320,7 +320,7 @@ function PrimarySearchAppBar(props: Props & RouteComponentProps) {
                         >
                           <Paper className={classes.searchPaper}>
                             {userProfiles.models.map(profile => (
-                              <div style={{ padding: '10px' }}>
+                              <div key={profile.id} style={{ padding: '10px' }}>
                                 <SearchResultCard
                                   key={profile.id}
                                   firstName={profile.firstName}

@@ -6,7 +6,7 @@ export default function get<T extends BaseResponse>(
   controller: string,
   endpoint: string,
   language: string,
-  connectionErrorMessage: string,
+  connectionErrorMessage: string | any,
   isAuthorizationNeeded: boolean = false,
 ) {
   const requestHeaders: HeadersInit = new Headers();

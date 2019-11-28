@@ -1,15 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Typography, LinearProgress } from '@material-ui/core';
 import { withRouter, RouteComponentProps } from 'react-router';
+import {
+  withLocalize,
+  LocalizeContextProps,
+  Translate as T,
+} from 'react-localize-redux';
 
 import SearchResponse from '../../../types/search-response';
 import get from '../../../services/get.service';
 import * as constants from '../../../constants/global.constats';
 import SearchCard from './search-card';
 import displayErrors from '../../../helpers/display-errors';
+
 interface Props extends RouteComponentProps {}
 
-const SearchResult: React.FC<Props> = (props: Props) => {
+const SearchResult: React.FC<Props & LocalizeContextProps> = (
+  props: Props & LocalizeContextProps,
+) => {
   const [profiles, setProfiles] = useState<SearchResponse | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
@@ -26,13 +34,18 @@ const SearchResult: React.FC<Props> = (props: Props) => {
   };
 
   const getUsers = (): void => {
+    let lang = 'en';
+    if (props.activeLanguage) {
+      lang = props.activeLanguage.code;
+    }
     const query = getNameSearchValue();
+
     if (query !== '') {
       get<SearchResponse>(
-        `${constants.server}/api/User`,
+        `${constants.usersController}`,
         `/search?query=${query}`,
-        'pl',
-        'lol',
+        lang,
+        <T id="errorConnection" />,
         true,
       ).then(
         resp => {
@@ -67,15 +80,18 @@ const SearchResult: React.FC<Props> = (props: Props) => {
             lastName={profile.lastName}
             followers={profile.followersCount}
             photo={profile.image}
+            isFollowing={profile.isFollowing}
           />
         ))
       ) : (
         <div style={{ textAlign: 'center' }}>
-          <Typography variant="h5">No data to show</Typography>
+          <Typography variant="h5">
+            <T id="noData" />
+          </Typography>
         </div>
       )}
       {isLoading && <LinearProgress style={{ marginTop: '8px' }} />}
     </Container>
   );
 };
-export default withRouter(SearchResult);
+export default withLocalize(withRouter(SearchResult));

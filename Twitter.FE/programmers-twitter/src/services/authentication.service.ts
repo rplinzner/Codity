@@ -8,7 +8,7 @@ export const userService = {
   logout,
 };
 
-function login(email: string, password: string) {
+function login(email: string, password: string) { // TODO: Add error message translation
   const requestOptions: RequestInit = {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },

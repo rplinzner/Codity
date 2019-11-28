@@ -88,7 +88,7 @@ class Register extends Component<Props, State> {
 
   state: State = { canSubmit: false, isOpen: false, isSubmitting: false };
 
-  onSubmit = (values: FormValues, translate: any): void => {
+  onSubmit = (values: FormValues): void => {
     const form = {
       ...values,
       isDarkTheme: this.props.isDarkTheme,
@@ -97,10 +97,10 @@ class Register extends Component<Props, State> {
     this.setState({ isSubmitting: true });
     post(
       form,
-      `${constants.server}/api/authentication`,
+      constants.authController,
       '/register',
       this.props.activeLanguage.code,
-      translate('errorConnection'),
+      <T id="errorConnection" />,
     ).then(
       () => this.setState({ isOpen: true, isSubmitting: false }),
       error => {
@@ -177,7 +177,7 @@ class Register extends Component<Props, State> {
                     passwordConfirm: '',
                   }}
                   validationSchema={this.getSchema(translate)}
-                  onSubmit={values => this.onSubmit(values, translate)}
+                  onSubmit={this.onSubmit}
                   render={({ submitForm, handleSubmit, values }) => (
                     <Form onSubmit={handleSubmit}>
                       <Field
