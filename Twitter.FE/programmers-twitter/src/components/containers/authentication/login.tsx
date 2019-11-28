@@ -100,7 +100,6 @@ class Login extends Component<Props & RouteComponentProps<any>, State> {
       history.push('/MyFeed');
       // eslint-disable-next-line no-restricted-globals
       location.reload(true);
-      // TODO: Add Settings downloading
     }
     return (
       <Grid

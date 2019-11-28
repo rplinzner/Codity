@@ -1,17 +1,38 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Typography, LinearProgress } from '@material-ui/core';
+import {
+  Container,
+  Typography,
+  LinearProgress,
+  makeStyles,
+  createStyles,
+  Theme,
+} from '@material-ui/core';
 import { withRouter, RouteComponentProps } from 'react-router';
 import {
   withLocalize,
   LocalizeContextProps,
   Translate as T,
 } from 'react-localize-redux';
+import Pagination from 'material-ui-flat-pagination';
+import ArrowBack from '@material-ui/icons/ArrowBack';
+import ArrowForward from '@material-ui/icons/ArrowForward';
 
 import SearchResponse from '../../../types/search-response';
 import get from '../../../services/get.service';
 import * as constants from '../../../constants/global.constats';
 import SearchCard from './search-card';
 import displayErrors from '../../../helpers/display-errors';
+
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    container: {
+      marginBottom: theme.spacing(2),
+    },
+    progress: {
+      marginTop: theme.spacing(1),
+    },
+  }),
+);
 
 interface Props extends RouteComponentProps {}
 
@@ -20,6 +41,7 @@ const SearchResult: React.FC<Props & LocalizeContextProps> = (
 ) => {
   const [profiles, setProfiles] = useState<SearchResponse | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [currentPage, setCurrentPage] = useState<number>(1);
 
   const getUrlParams = (): URLSearchParams => {
     if (!props.location.search) {
@@ -33,17 +55,23 @@ const SearchResult: React.FC<Props & LocalizeContextProps> = (
     return search.get('search') || '';
   };
 
-  const getUsers = (): void => {
+  const pageSize = 6;
+
+  const getUsers = (page: number = 0): void => {
     let lang = 'en';
     if (props.activeLanguage) {
       lang = props.activeLanguage.code;
     }
+    let current = page;
     const query = getNameSearchValue();
+    if (page === 0) {
+      current = currentPage;
+    }
 
     if (query !== '') {
       get<SearchResponse>(
         `${constants.usersController}`,
-        `/search?query=${query}`,
+        `/search?query=${query}&pageNumber=${current}&pageSize=${pageSize}`,
         lang,
         <T id="errorConnection" />,
         true,
@@ -68,12 +96,11 @@ const SearchResult: React.FC<Props & LocalizeContextProps> = (
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.location.search]);
 
+  const classes = useStyles();
   return (
-    <Container>
+    <Container className={classes.container}>
       {profiles && profiles.models && profiles.models.length > 0 ? (
-        profiles.models.map((
-          profile, //TODO: Add pagination
-        ) => (
+        profiles.models.map(profile => (
           <SearchCard
             key={profile.id}
             firstName={profile.firstName}
@@ -92,7 +119,23 @@ const SearchResult: React.FC<Props & LocalizeContextProps> = (
           </Typography>
         </div>
       )}
-      {isLoading && <LinearProgress style={{ marginTop: '8px' }} />}
+      {isLoading && <LinearProgress className={classes.progress} />}
+      {profiles && profiles.totalPages && profiles.totalPages > 1 && (
+        <div className={classes.progress}>
+          <Pagination
+            limit={1}
+            offset={currentPage - 1}
+            total={profiles.totalPages}
+            onClick={(e, o, page) => {
+              setCurrentPage(page);
+              getUsers(page);
+            }}
+            nextPageLabel={<ArrowForward fontSize="inherit" />}
+            previousPageLabel={<ArrowBack fontSize="inherit" />}
+            size="large"
+          />
+        </div>
+      )}
     </Container>
   );
 };
