@@ -17,6 +17,10 @@ import {
   withLocalize,
   Translate as T,
 } from 'react-localize-redux';
+import post from '../../../services/post.service';
+import del from '../../../services/delete.service';
+import { usersController } from '../../../constants/global.constats';
+import displayErrors from '../../../helpers/display-errors';
 
 interface Props extends LocalizeContextProps {
   firstName: string;
@@ -24,6 +28,8 @@ interface Props extends LocalizeContextProps {
   followers: number;
   photo: string | null;
   isFollowing: boolean;
+  userId: number;
+  updateSearch: () => void;
 }
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -36,6 +42,39 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const SearchCard: React.FC<Props> = (props: Props) => {
   const classes = useStyles();
+
+  const handleFollow = () => {
+    if (props.isFollowing) {
+      del(
+        { followingId: props.userId },
+        usersController,
+        '/following',
+        props.activeLanguage.code,
+        <T id="errorConnection" />,
+        true,
+      ).then(
+        () => {
+          props.updateSearch();
+        },
+        error => displayErrors(error),
+      );
+    } else {
+      post(
+        { followingId: props.userId },
+        usersController,
+        '/following',
+        props.activeLanguage.code,
+        <T id="errorConnection" />,
+        true,
+      ).then(
+        () => {
+          props.updateSearch();
+        },
+        error => displayErrors(error),
+      );
+    }
+  };
+
   return (
     <div className={classes.root}>
       <Card>
@@ -61,7 +100,12 @@ const SearchCard: React.FC<Props> = (props: Props) => {
           </CardContent>
         </CardActionArea>
         <CardActions>
-          <Button style={{ marginLeft: '10px' }} size="small" color="primary">
+          <Button
+            onClick={handleFollow}
+            style={{ marginLeft: '10px' }}
+            size="small"
+            color="primary"
+          >
             {props.isFollowing ? <T id="unfollow" /> : <T id="follow" />}
           </Button>
         </CardActions>

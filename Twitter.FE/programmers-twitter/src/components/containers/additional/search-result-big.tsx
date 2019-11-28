@@ -81,6 +81,8 @@ const SearchResult: React.FC<Props & LocalizeContextProps> = (
             followers={profile.followersCount}
             photo={profile.image}
             isFollowing={profile.isFollowing}
+            userId={profile.id}
+            updateSearch={getUsers}
           />
         ))
       ) : (
