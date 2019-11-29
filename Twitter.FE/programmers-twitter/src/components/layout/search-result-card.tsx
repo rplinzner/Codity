@@ -14,6 +14,7 @@ interface Props extends LocalizeContextProps {
   followers: number;
 }
 
+
 const SearchResultCard: React.FC<Props> = (props: Props) => {
   return (
     <Card>

@@ -37,6 +37,11 @@ const useStyles = makeStyles((theme: Theme) =>
     root: {
       padding: theme.spacing(1, 0, 0, 1),
     },
+    avatar: {
+      margin: theme.spacing(0, 1),
+      width: 60,
+      height: 60,
+    },
   }),
 );
 
@@ -86,6 +91,7 @@ const SearchCard: React.FC<Props> = (props: Props) => {
                   firstName={props.firstName}
                   lastName={props.lastName}
                   photo={props.photo}
+                  className={classes.avatar}
                 />
               </Grid>
               <Grid item>
