@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,13 +20,13 @@ namespace Twitter.Services.Services
     public class UserService : IUserService
     {
         private readonly IBaseRepository<Follow> _followRepository;
-        private readonly IBaseRepository<User> _userRepository;
+        private readonly IUserRepository _userRepository;
         private readonly INotificationGeneratorService _notificationGeneratorService;
         private readonly IMapper _mapper;
 
         public UserService(
             IBaseRepository<Follow> followRepository,
-            IBaseRepository<User> userRepository,
+            IUserRepository userRepository,
             INotificationGeneratorService notificationGeneratorService,
             IMapper mapper)
         {
@@ -208,12 +209,10 @@ namespace Twitter.Services.Services
             var response = new PagedResponse<BaseUserDTO>();
 
             var searchExpression = CreateSearchExpression(searchRequest);
-            var users = await _userRepository.GetAllByAsync(
-                searchExpression,
+            var users = await _userRepository.SearchAsync(
+                searchRequest.Query,
                 searchRequest.PageNumber,
-                searchRequest.PageSize,
-                false,
-                c => c.Followers);
+                searchRequest.PageSize);
 
             _mapper.Map(users, response);
 
@@ -248,9 +247,7 @@ namespace Twitter.Services.Services
             if (!string.IsNullOrEmpty(searchRequest.Query))
             {
                 var query = searchRequest.Query.ToLower();
-
-                searchExpression = c => c.FirstName.ToLower().Contains(query) ||
-                  c.LastName.ToLower().Contains(query);
+                searchExpression = c => EF.Functions.Contains(c.FirstName, query) || EF.Functions.Contains(c.LastName, query) || EF.Functions.Contains(c.AboutMe, query);
             }
 
             return searchExpression;

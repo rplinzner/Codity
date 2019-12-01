@@ -115,7 +115,7 @@ namespace Twitter.Services.Helpers
 
                 foreach (var user in users)
                 {
-                    var result = await _userManager.CreateAsync(user, "Password");
+                    var result = await _userManager.CreateAsync(user, "P@ssw0rd");
                     var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     await _userManager.ConfirmEmailAsync(user, token);
                 }
