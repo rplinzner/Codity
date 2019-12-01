@@ -118,8 +118,9 @@ function ResponsiveDrawer(props: Props & LocalizeContextProps) {
         <ListItemIcon>
           <ViewStreamIcon fontSize="small" />
         </ListItemIcon>
-        <Typography variant="inherit">My Feed</Typography>
-        {/* TODO: Add translation */}
+        <Typography variant="inherit">
+          <T id="myFeed" />
+        </Typography>
       </MenuItem>
       <Divider variant="middle" />
       <MenuItem className={classes.menuItem}>

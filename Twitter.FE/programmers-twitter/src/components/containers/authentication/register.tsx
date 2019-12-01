@@ -24,6 +24,8 @@ import * as constants from '../../../constants/global.constats';
 
 import post from '../../../services/post.service';
 import displayErrors from '../../../helpers/display-errors';
+import { AppState } from '../../..';
+import { connect } from 'react-redux';
 
 type PasswordCheck = {
   title: string;
@@ -38,6 +40,7 @@ interface Props extends LocalizeContextProps {
     grid: string;
   };
   theme: Theme;
+  isDarkTheme: boolean;
 }
 interface State {
   canSubmit: boolean;
@@ -85,14 +88,19 @@ class Register extends Component<Props, State> {
 
   state: State = { canSubmit: false, isOpen: false, isSubmitting: false };
 
-  onSubmit = (values: FormValues, translate: any): void => {
+  onSubmit = (values: FormValues): void => {
+    const form = {
+      ...values,
+      isDarkTheme: this.props.isDarkTheme,
+      languageCode: this.props.activeLanguage.code,
+    };
     this.setState({ isSubmitting: true });
     post(
-      values,
-      `${constants.server}/api/authentication`,
+      form,
+      constants.authController,
       '/register',
       this.props.activeLanguage.code,
-      translate('errorConnection'),
+      <T id="errorConnection" />,
     ).then(
       () => this.setState({ isOpen: true, isSubmitting: false }),
       error => {
@@ -169,7 +177,7 @@ class Register extends Component<Props, State> {
                     passwordConfirm: '',
                   }}
                   validationSchema={this.getSchema(translate)}
-                  onSubmit={values => this.onSubmit(values, translate)}
+                  onSubmit={this.onSubmit}
                   render={({ submitForm, handleSubmit, values }) => (
                     <Form onSubmit={handleSubmit}>
                       <Field
@@ -288,4 +296,10 @@ class Register extends Component<Props, State> {
   }
 }
 
-export default withStyles(styles, { withTheme: true })(withLocalize(Register));
+const mapStateToProps = (state: AppState) => ({
+  isDarkTheme: state.settings.isDarkTheme,
+});
+
+export default connect(mapStateToProps)(
+  withStyles(styles, { withTheme: true })(withLocalize(Register)),
+);

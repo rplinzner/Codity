@@ -27,7 +27,7 @@ class Feed extends Component<Props, State> {
     const { classes } = this.props;
     const sketeton = (
       <Grid container justify="center">
-        <Grid item sm={9}>
+        <Grid item sm={8} xs={12} md={6}>
           <Card className={classes.card}>
             <CardHeader
               avatar={<Skeleton variant="circle" width={40} height={40} />}
@@ -47,7 +47,6 @@ class Feed extends Component<Props, State> {
     );
     return (
       <>
-        {sketeton}
         {sketeton}
       </>
     );

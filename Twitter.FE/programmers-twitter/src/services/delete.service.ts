@@ -2,8 +2,8 @@ import authHeader from '../helpers/auth-header';
 import handleResponse from '../helpers/handle-response';
 import { Error, BaseResponse } from '../types/base-response';
 
-export default function post<T extends BaseResponse, D>(
-  dataToPost: D,
+export default function deleteRequest<D>(
+  body: D,
   controller: string,
   endpoint: string,
   language: string,
@@ -20,15 +20,15 @@ export default function post<T extends BaseResponse, D>(
   }
   requestHeaders.append('Accept-Language', language);
   const requestOptions: RequestInit = {
-    method: 'POST',
+    method: 'DELETE',
     headers: requestHeaders,
-    body: JSON.stringify(dataToPost),
+    body: JSON.stringify(body),
   };
   return fetch(`${controller}${endpoint}`, requestOptions)
     .catch(() => Promise.reject([{ message: connectionErrorMessage }]))
-    .then((response) => handleResponse<T>(response))
+    .then(response => handleResponse<BaseResponse>(response))
     .then(
-      (response: T) => {
+      (response: BaseResponse) => {
         return response;
       },
       (error: Error[]) => Promise.reject(error),

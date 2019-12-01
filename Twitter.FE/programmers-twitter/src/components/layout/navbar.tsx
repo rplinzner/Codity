@@ -11,8 +11,6 @@ import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import InputBase from '@material-ui/core/InputBase';
 import Badge from '@material-ui/core/Badge';
-import MenuItem from '@material-ui/core/MenuItem';
-import Menu from '@material-ui/core/Menu';
 import MenuIcon from '@material-ui/icons/Menu';
 import SearchIcon from '@material-ui/icons/Search';
 import AccountCircle from '@material-ui/icons/AccountCircle';
@@ -22,19 +20,31 @@ import MoreIcon from '@material-ui/icons/MoreVert';
 import {
   Link as RouterLink,
   LinkProps as RouterLinkProps,
+  withRouter,
+  RouteComponentProps,
 } from 'react-router-dom';
-import { Link, Tooltip } from '@material-ui/core';
+import { Link, Tooltip, Paper, ClickAwayListener } from '@material-ui/core';
 import { connect } from 'react-redux';
 import {
   Translate as T,
   LocalizeContextProps,
   withLocalize,
 } from 'react-localize-redux';
+import Popper from '@material-ui/core/Popper';
 
 import ResponsiveDrawer from './drawer';
-import { AppState } from '../..';
 import { logout } from '../../store/user/user.actions';
 import { layoutTranslations } from '../../translations/index';
+import SearchResultCard from './search-result-card';
+import MobileAccountMenu from './mobile-account-menu';
+import AccountMenu from './account-menu';
+import { AppState } from '../..';
+import ThemeSwitch from './theme-switch';
+import LanguageSelector from './language-selector';
+import SearchResponse from '../../types/search-response';
+import * as constants from '../../constants/global.constats';
+import displayErrors from '../../helpers/display-errors';
+import get from '../../services/get.service';
 
 const drawerWidth = 240;
 
@@ -101,6 +111,18 @@ const useStyles = makeStyles((theme: Theme) =>
         },
       },
     },
+    searchPopper: {
+      zIndex: theme.zIndex.modal,
+      marginTop: 5,
+    },
+    searchPaper: {
+      [theme.breakpoints.up('sm')]: {
+        width: 220,
+      },
+      [theme.breakpoints.up('md')]: {
+        width: 400,
+      },
+    },
     sectionDesktop: {
       display: 'none',
       [theme.breakpoints.up('md')]: {
@@ -118,11 +140,11 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     content: {
       [theme.breakpoints.up('md')]: {
-        paddingTop: '64px',
+        paddingTop: '80px', // Added 16px for spacing
         paddingLeft: drawerWidth,
       },
       [theme.breakpoints.down('md')]: {
-        paddingTop: '56px',
+        paddingTop: '72px', // Added 16px for spacing
       },
     },
   }),
@@ -138,17 +160,24 @@ interface Props extends LocalizeContextProps {
   logOutAction: typeof logout;
 }
 
-function PrimarySearchAppBar(props: Props) {
+function PrimarySearchAppBar(props: Props & RouteComponentProps) {
   props.addTranslation(layoutTranslations);
   const classes = useStyles();
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [
-    mobileMoreAnchorEl,
-    setMobileMoreAnchorEl,
+    primaryAccountMenuAnchorEl,
+    setPrimaryAccountMenuAnchorEl,
   ] = React.useState<null | HTMLElement>(null);
+  const [
+    mobileAccountMenuAnchorEl,
+    setMobileAccountMenuAnchorEl,
+  ] = React.useState<null | HTMLElement>(null);
+  const [searchAnchorEl, setSearchAnchorEl] = React.useState<any | null>(null);
+  const [searchField, setSearchField] = React.useState<string | null>('');
 
-  const isMenuOpen = Boolean(anchorEl);
-  const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
+  const isMenuOpen = Boolean(primaryAccountMenuAnchorEl);
+  const isMobileAccountMenuOpen = Boolean(mobileAccountMenuAnchorEl);
+  const isSearchOpen = Boolean(searchAnchorEl);
+  const searchId = isSearchOpen ? 'search-popover' : undefined;
 
   const [mobileDrawerOpen, setMobileDrawerOpen] = React.useState(false);
 
@@ -160,99 +189,78 @@ function PrimarySearchAppBar(props: Props) {
     setMobileDrawerOpen(false);
   };
 
-  const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget);
+  const handleMobileAccountMenuOpen = (
+    event: React.MouseEvent<HTMLElement>,
+  ) => {
+    setPrimaryAccountMenuAnchorEl(event.currentTarget);
   };
 
-  const handleMobileMenuClose = () => {
-    setMobileMoreAnchorEl(null);
+  const handleMobileAccountMenuClose = () => {
+    setMobileAccountMenuAnchorEl(null);
   };
 
   const handleMenuClose = () => {
-    setAnchorEl(null);
-    handleMobileMenuClose();
+    setPrimaryAccountMenuAnchorEl(null);
+    handleMobileAccountMenuClose();
   };
 
   const handleMobileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
-    setMobileMoreAnchorEl(event.currentTarget);
+    setMobileAccountMenuAnchorEl(event.currentTarget);
+  };
+
+  const handlePopoverOpen = (
+    event: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
+    setSearchAnchorEl(event.currentTarget);
+  };
+
+  const handlePopoverClose = () => {
+    setSearchAnchorEl(null);
+  };
+
+  const [typingTimeout, setTypingTimout] = React.useState();
+  const [userProfiles, setUserProfiles] = React.useState<SearchResponse | null>(
+    null,
+  );
+
+  const getUsers = (searchQuery: string): void => {
+    if (searchQuery !== '') {
+      get<SearchResponse>(
+        constants.usersController,
+        `/search?query=${searchQuery}&pageSize=3`,
+        props.activeLanguage.code,
+        <T id="errorConnection" />,
+        true,
+      ).then(
+        resp => {
+          setUserProfiles(resp);
+        },
+        error => {
+          displayErrors(error);
+        },
+      );
+    }
+  };
+
+  const handleSearchFieldChange = (
+    event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>,
+  ) => {
+    if (typingTimeout) {
+      clearTimeout(typingTimeout);
+    }
+    event.persist();
+    setSearchField(event.target.value);
+    setTypingTimout(
+      setTimeout(() => {
+        getUsers(event.target.value);
+      }, 500),
+    );
   };
 
   const { isLoggedIn, logOutAction } = props;
 
-  const mobileMenuId = 'primary-search-account-menu-mobile';
-  const renderMobileMenu = (
-    <Menu
-      anchorEl={mobileMoreAnchorEl}
-      anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-      id={mobileMenuId}
-      keepMounted={true}
-      transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-      open={isMobileMenuOpen}
-      onClose={handleMobileMenuClose}
-    >
-      <MenuItem>
-        <IconButton aria-label="show 4 new mails" color="inherit">
-          <Badge badgeContent={420} color="secondary">
-            <MailIcon />
-          </Badge>
-        </IconButton>
-        <p>
-          <T id="messages" />
-        </p>
-      </MenuItem>
-      <MenuItem>
-        <IconButton aria-label="show 11 new notifications" color="inherit">
-          <Badge badgeContent={69} color="secondary">
-            <NotificationsIcon />
-          </Badge>
-        </IconButton>
-        <p>
-          <T id="notifications" />
-        </p>
-      </MenuItem>
-      <MenuItem onClick={handleProfileMenuOpen}>
-        <IconButton
-          aria-label="account of current user"
-          aria-controls="primary-search-account-menu"
-          aria-haspopup="true"
-          color="inherit"
-        >
-          <AccountCircle />
-        </IconButton>
-        <p>
-          <T id="profile" />
-        </p>
-      </MenuItem>
-    </Menu>
-  );
-
+  const mobileAccountMenuId = 'primary-search-account-menu-mobile';
   const menuId = 'primary-search-account-menu';
-  const renderMenu = (
-    <Menu
-      anchorEl={anchorEl}
-      anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-      id={menuId}
-      keepMounted={true}
-      transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-      open={isMenuOpen}
-      onClose={handleMenuClose}
-    >
-      <MenuItem onClick={handleMenuClose}>
-        <T id="profile" />
-      </MenuItem>
-      <MenuItem onClick={handleMenuClose}>
-        <T id="myAccount" />
-      </MenuItem>
-      <MenuItem
-        onClick={() => {
-          handleMenuClose();
-          logOutAction();
-        }}
-      >
-        <T id="logout" />
-      </MenuItem>
-    </Menu>
-  );
 
   return (
     <div className={classes.grow}>
@@ -272,23 +280,66 @@ function PrimarySearchAppBar(props: Props) {
               InzTwitter
             </Typography>
           </Link>
-          <div className={classes.search}>
-            <div className={classes.searchIcon}>
-              <SearchIcon />
+          {isLoggedIn ? (
+            <div className={classes.search}>
+              <div className={classes.searchIcon}>
+                <SearchIcon />
+              </div>
+              <T>
+                {({ translate }) => (
+                  <ClickAwayListener onClickAway={handlePopoverClose}>
+                    <div>
+                      <InputBase
+                        onChange={handleSearchFieldChange}
+                        value={searchField}
+                        placeholder={translate('search') as string}
+                        classes={{
+                          root: classes.inputRoot,
+                          input: classes.inputInput,
+                        }}
+                        inputProps={{ 'aria-label': 'search' }}
+                        onFocus={handlePopoverOpen}
+                        onKeyPress={e => {
+                          if (e.key === 'Enter') {
+                            if (typingTimeout) {
+                              clearTimeout(typingTimeout);
+                            }
+                            handlePopoverClose();
+                            props.history.push(
+                              `/SearchResults?search=${searchField}`,
+                            );
+                          }
+                        }}
+                      />
+                      {userProfiles && userProfiles.models.length > 0 && (
+                        <Popper
+                          id={searchId}
+                          open={isSearchOpen}
+                          anchorEl={searchAnchorEl}
+                          className={classes.searchPopper}
+                        >
+                          <Paper className={classes.searchPaper}>
+                            {userProfiles.models.map(profile => (
+                              <div key={profile.id} style={{ padding: '10px' }}>
+                                <SearchResultCard
+                                  key={profile.id}
+                                  firstName={profile.firstName}
+                                  lastName={profile.lastName}
+                                  photo={profile.image}
+                                  followers={profile.followersCount}
+                                />
+                              </div>
+                            ))}
+                          </Paper>
+                        </Popper>
+                      )}
+                    </div>
+                  </ClickAwayListener>
+                )}
+              </T>
             </div>
-            <T>
-              {({ translate }) => (
-                <InputBase
-                  placeholder={translate('search') as string}
-                  classes={{
-                    root: classes.inputRoot,
-                    input: classes.inputInput,
-                  }}
-                  inputProps={{ 'aria-label': 'search' }}
-                />
-              )}
-            </T>
-          </div>
+          ) : null}
+
           <div className={classes.grow} />
           {/* Normal menu */}
           {isLoggedIn ? (
@@ -316,7 +367,7 @@ function PrimarySearchAppBar(props: Props) {
                   aria-label="account of current user"
                   aria-controls={menuId}
                   aria-haspopup="true"
-                  onClick={handleProfileMenuOpen}
+                  onClick={handleMobileAccountMenuOpen}
                   color="inherit"
                 >
                   <AccountCircle />
@@ -329,7 +380,7 @@ function PrimarySearchAppBar(props: Props) {
             <div className={classes.sectionMobile}>
               <IconButton
                 aria-label="show more"
-                aria-controls={mobileMenuId}
+                aria-controls={mobileAccountMenuId}
                 aria-haspopup="true"
                 onClick={handleMobileMenuOpen}
                 color="inherit"
@@ -337,11 +388,30 @@ function PrimarySearchAppBar(props: Props) {
                 <MoreIcon />
               </IconButton>
             </div>
-          ) : null}
+          ) : (
+            <>
+              <ThemeSwitch />
+              <LanguageSelector />
+            </>
+          )}
         </Toolbar>
       </AppBar>
-      {isLoggedIn ? renderMobileMenu : null}
-      {renderMenu}
+      {isLoggedIn ? (
+        <MobileAccountMenu
+          anchorEl={mobileAccountMenuAnchorEl}
+          id={mobileAccountMenuId}
+          isOpen={isMobileAccountMenuOpen}
+          onClose={handleMobileAccountMenuClose}
+          handleOpen={handleMobileAccountMenuOpen}
+        />
+      ) : null}
+      <AccountMenu
+        anchorEl={primaryAccountMenuAnchorEl}
+        id={menuId}
+        isOpen={isMenuOpen}
+        onClose={handleMenuClose}
+        logOutAction={logOutAction}
+      />
       <ResponsiveDrawer
         isOpen={mobileDrawerOpen}
         onDrawerChange={handleDrawerToggle}
@@ -366,4 +436,4 @@ const mapDispatchToProps = (dispatch: any) => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(withLocalize(PrimarySearchAppBar));
+)(withLocalize(withRouter(PrimarySearchAppBar)));
