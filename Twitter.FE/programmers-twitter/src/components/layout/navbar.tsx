@@ -327,6 +327,7 @@ function PrimarySearchAppBar(props: Props & RouteComponentProps) {
                                   lastName={profile.lastName}
                                   photo={profile.image}
                                   followers={profile.followersCount}
+                                  userId={profile.id}
                                 />
                               </div>
                             ))}

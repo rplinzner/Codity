@@ -28,8 +28,10 @@ interface Props extends RouteComponentProps {}
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     avatar: {
-      width: 200,
-      height: 200,
+      width: '100%',
+      height: 'auto',
+      maxHeight: 250,
+      maxWidth: 250,
       margin: '0 auto',
     },
     element: {
@@ -43,6 +45,12 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     icon: {
       marginRight: theme.spacing(1),
+    },
+    userDescription: {
+      [theme.breakpoints.down('xs')]: {
+        textAlign: 'center',
+        paddingTop: theme.spacing(1),
+      },
     },
   }),
 );
@@ -112,7 +120,7 @@ const UserProfile: React.FC<Props & LocalizeContextProps> = (
           justify="center"
           alignItems="center"
         >
-          <Grid item sm={4} style={{ textAlign: 'center' }}>
+          <Grid item xs={10} sm={6} lg={3} style={{ textAlign: 'center' }}>
             <UserAvatar
               firstName={userProfile.model.firstName}
               lastName={userProfile.model.lastName}
@@ -144,7 +152,8 @@ const UserProfile: React.FC<Props & LocalizeContextProps> = (
               userId={userProfile.model.id}
             />
           </Grid>
-          <Grid item sm={5}>
+
+          <Grid item xs={10} sm={6} lg={3} className={classes.userDescription}>
             <Typography className={classes.element} variant="h4">
               {userProfile.model.firstName + ' ' + userProfile.model.lastName}
             </Typography>
@@ -160,6 +169,10 @@ const UserProfile: React.FC<Props & LocalizeContextProps> = (
             <Typography variant="body1">
               {userProfile.model.aboutMe || <T id="notWrittenYet" />}
             </Typography>
+          </Grid>
+
+          <Grid item xs={10} sm={10} lg={10} style={{ textAlign: 'center' }}>
+            No recent posts
           </Grid>
         </Grid>
       ) : (
