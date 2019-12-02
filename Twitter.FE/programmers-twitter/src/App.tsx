@@ -67,6 +67,7 @@ class App extends Component<Props> {
       },
     });
   }
+
   downloadSettings = () => {
     get<SettingsResponse>(
       settingsController,
@@ -82,11 +83,13 @@ class App extends Component<Props> {
       error => displayErrors(error),
     );
   };
-
-  render() {
+  componentDidMount() {
     if (this.props.isLoggedIn) {
       this.downloadSettings();
     }
+  }
+
+  render() {
     // tslint:disable-next-line: no-console
     console.log('This app is in:', process.env.NODE_ENV, 'mode');
     return (

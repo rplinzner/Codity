@@ -21,6 +21,7 @@ import post from '../../../services/post.service';
 import del from '../../../services/delete.service';
 import { usersController } from '../../../constants/global.constats';
 import displayErrors from '../../../helpers/display-errors';
+import { withRouter, RouteComponentProps } from 'react-router-dom';
 
 interface Props extends LocalizeContextProps {
   firstName: string;
@@ -45,7 +46,9 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-const SearchCard: React.FC<Props> = (props: Props) => {
+const SearchCard: React.FC<Props & RouteComponentProps> = (
+  props: Props & RouteComponentProps,
+) => {
   const classes = useStyles();
 
   const handleFollow = () => {
@@ -83,7 +86,9 @@ const SearchCard: React.FC<Props> = (props: Props) => {
   return (
     <div className={classes.root}>
       <Card>
-        <CardActionArea onClick={() => alert('you clicked')}>
+        <CardActionArea
+          onClick={() => props.history.push(`/profile/?userId=${props.userId}`)}
+        >
           <CardContent>
             <Grid container alignItems="center">
               <Grid item>
@@ -120,4 +125,4 @@ const SearchCard: React.FC<Props> = (props: Props) => {
   );
 };
 
-export default withLocalize(SearchCard);
+export default withLocalize(withRouter(SearchCard));
