@@ -6,6 +6,7 @@ import {
   Theme,
   createStyles,
   Divider,
+  LinearProgress,
 } from '@material-ui/core';
 import { withRouter, RouteComponentProps } from 'react-router';
 
@@ -30,11 +31,14 @@ interface Props extends RouteComponentProps {}
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     avatar: {
-      width: '100%',
-      height: 'auto',
-      maxHeight: 250,
-      maxWidth: 250,
+      width: 200,
+      height: 200,
+      maxWidth: '100vw',
       margin: '0 auto',
+      [theme.breakpoints.down('xs')]: {
+        height: 100,
+        width: 100,
+      },
     },
     element: {
       marginTop: theme.spacing(1),
@@ -72,6 +76,7 @@ const UserProfile: React.FC<Props & LocalizeContextProps> = (
   const classes = useStyles();
 
   const [userProfile, setUserProfile] = useState<ProfileResponse | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const getUrlParams = (): URLSearchParams => {
     if (!props.location.search) {
@@ -86,6 +91,7 @@ const UserProfile: React.FC<Props & LocalizeContextProps> = (
   };
 
   const getUserProfile = (): void => {
+    setIsLoading(true);
     let lang = 'en';
     if (props.activeLanguage) {
       lang = props.activeLanguage.code;
@@ -101,8 +107,12 @@ const UserProfile: React.FC<Props & LocalizeContextProps> = (
       ).then(
         resp => {
           setUserProfile(resp);
+          setIsLoading(false);
         },
-        errors => displayErrors(errors),
+        errors => {
+          displayErrors(errors);
+          setIsLoading(false);
+        },
       );
     }
   };
@@ -188,8 +198,12 @@ const UserProfile: React.FC<Props & LocalizeContextProps> = (
             <CardSceleton />
           </Grid>
         </Grid>
+      ) : isLoading ? (
+        <LinearProgress />
       ) : (
-        <T id="noData" />
+        <Typography variant="h4" style={{ textAlign: 'center' }}>
+          <T id="noData" />
+        </Typography>
       )}
     </>
   );
