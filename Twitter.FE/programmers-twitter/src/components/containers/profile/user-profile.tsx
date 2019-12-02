@@ -33,7 +33,6 @@ const useStyles = makeStyles((theme: Theme) =>
     avatar: {
       width: 200,
       height: 200,
-      maxWidth: '100vw',
       margin: '0 auto',
       [theme.breakpoints.down('xs')]: {
         height: 100,
@@ -177,7 +176,7 @@ const UserProfile: React.FC<Props & LocalizeContextProps> = (
             />
           </Grid>
 
-          <Grid item xs={10} sm={6} lg={3} className={classes.userDescription}>
+          <Grid item xs={10} sm={5} lg={3} className={classes.userDescription}>
             <Typography className={classes.element} variant="h4">
               {userProfile.model.firstName + ' ' + userProfile.model.lastName}
             </Typography>
@@ -190,7 +189,7 @@ const UserProfile: React.FC<Props & LocalizeContextProps> = (
             <Typography className={classes.element} variant="h6">
               <T id="aboutMe" />
             </Typography>
-            <Typography variant="body1">
+            <Typography variant="body1" style={{textAlign: 'justify'}}>
               {userProfile.model.aboutMe || <T id="notWrittenYet" />}
             </Typography>
           </Grid>

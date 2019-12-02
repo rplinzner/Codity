@@ -111,7 +111,7 @@ function ResponsiveDrawer(props: Props & LocalizeContextProps) {
       <MenuItem
         className={classes.menuItem}
         component={Link}
-        to="MyFeed"
+        to="/MyFeed"
         selected={'/MyFeed' === pathname}
         onClick={onDrawerClose}
       >

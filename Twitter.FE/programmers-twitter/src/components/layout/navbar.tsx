@@ -45,6 +45,7 @@ import SearchResponse from '../../types/search-response';
 import * as constants from '../../constants/global.constats';
 import displayErrors from '../../helpers/display-errors';
 import get from '../../services/get.service';
+import User from '../../types/user';
 
 const drawerWidth = 240;
 
@@ -158,6 +159,7 @@ interface Props extends LocalizeContextProps {
   children?: ReactNode;
   isLoggedIn: boolean;
   logOutAction: typeof logout;
+  user: User | null;
 }
 
 function PrimarySearchAppBar(props: Props & RouteComponentProps) {
@@ -411,6 +413,7 @@ function PrimarySearchAppBar(props: Props & RouteComponentProps) {
         id={menuId}
         isOpen={isMenuOpen}
         onClose={handleMenuClose}
+        user={props.user}
         logOutAction={logOutAction}
       />
       <ResponsiveDrawer
@@ -426,6 +429,7 @@ function PrimarySearchAppBar(props: Props & RouteComponentProps) {
 
 const mapStateToProps = (state: AppState) => ({
   isLoggedIn: state.user.loggedIn,
+  user: state.user.user,
 });
 
 const mapDispatchToProps = (dispatch: any) => {
