@@ -114,6 +114,9 @@ const UserProfile: React.FC<Props & LocalizeContextProps> = (
           setIsLoading(false);
         },
       );
+    } else {
+      setUserProfile(null);
+      setIsLoading(false);
     }
   };
 
