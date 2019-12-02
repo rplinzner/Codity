@@ -5,6 +5,7 @@ import {
   Typography,
   Theme,
   createStyles,
+  Divider,
 } from '@material-ui/core';
 import { withRouter, RouteComponentProps } from 'react-router';
 
@@ -22,6 +23,7 @@ import {
   withLocalize,
 } from 'react-localize-redux';
 import displayErrors from '../../../helpers/display-errors';
+import CardSceleton from '../feed/card-sceleton';
 
 interface Props extends RouteComponentProps {}
 
@@ -49,8 +51,17 @@ const useStyles = makeStyles((theme: Theme) =>
     userDescription: {
       [theme.breakpoints.down('xs')]: {
         textAlign: 'center',
-        paddingTop: theme.spacing(1),
+        paddingTop: theme.spacing(5),
       },
+    },
+    posts: {
+      textAlign: 'center',
+      [theme.breakpoints.down('xs')]: {
+        paddingTop: theme.spacing(5),
+      },
+    },
+    divider: {
+      marginBottom: theme.spacing(2),
     },
   }),
 );
@@ -120,7 +131,7 @@ const UserProfile: React.FC<Props & LocalizeContextProps> = (
           justify="center"
           alignItems="center"
         >
-          <Grid item xs={10} sm={6} lg={3} style={{ textAlign: 'center' }}>
+          <Grid item xs={10} sm={6} lg={5} style={{ textAlign: 'center' }}>
             <UserAvatar
               firstName={userProfile.model.firstName}
               lastName={userProfile.model.lastName}
@@ -171,8 +182,10 @@ const UserProfile: React.FC<Props & LocalizeContextProps> = (
             </Typography>
           </Grid>
 
-          <Grid item xs={10} sm={10} lg={10} style={{ textAlign: 'center' }}>
-            No recent posts
+          <Grid item xs={10} sm={10} lg={10} className={classes.posts}>
+            <Divider className={classes.divider} />
+            <Typography variant="h5">Recent Posts:</Typography>
+            <CardSceleton />
           </Grid>
         </Grid>
       ) : (
