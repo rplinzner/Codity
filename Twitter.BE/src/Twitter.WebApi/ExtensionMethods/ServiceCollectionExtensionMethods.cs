@@ -196,6 +196,7 @@ namespace Twitter.WebApi.ExtensionMethods
             services.AddTransient<IBaseRepository<UserNotification>, BaseRepository<UserNotification>>();
             services.AddTransient<IBaseRepository<ProgrammingLanguage>, BaseRepository<ProgrammingLanguage>>();
             services.AddTransient<ITweetRepository, TweetRepository>();
+            services.AddTransient<IUserRepository, UserRepository>();
         }
     }
 }
