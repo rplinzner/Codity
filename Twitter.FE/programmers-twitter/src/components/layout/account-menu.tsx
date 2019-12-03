@@ -6,6 +6,8 @@ import {
   withLocalize,
 } from 'react-localize-redux';
 import { UserActionTypes } from '../../store/user/user.types';
+import User from '../../types/user';
+import { withRouter, RouteComponentProps } from 'react-router-dom';
 
 interface Props extends LocalizeContextProps {
   anchorEl: Element | ((element: Element) => Element) | null | undefined;
@@ -13,9 +15,12 @@ interface Props extends LocalizeContextProps {
   isOpen: boolean;
   onClose: () => void;
   logOutAction: () => UserActionTypes;
+  user: User | null;
 }
 
-const AccountMenu: React.FC<Props> = (props: Props) => {
+const AccountMenu: React.FC<Props & RouteComponentProps> = (
+  props: Props & RouteComponentProps,
+) => {
   return (
     <Menu
       anchorEl={props.anchorEl}
@@ -26,7 +31,14 @@ const AccountMenu: React.FC<Props> = (props: Props) => {
       open={props.isOpen}
       onClose={props.onClose}
     >
-      <MenuItem onClick={props.onClose}>
+      <MenuItem
+        onClick={() => {
+          props.onClose();
+          props.history.push(
+            `/profile?userId=${props.user ? props.user.id : ''}`,
+          );
+        }}
+      >
         <T id="profile" />
       </MenuItem>
       <MenuItem onClick={props.onClose}>
@@ -44,4 +56,4 @@ const AccountMenu: React.FC<Props> = (props: Props) => {
   );
 };
 
-export default withLocalize(AccountMenu);
+export default withLocalize(withRouter(AccountMenu));

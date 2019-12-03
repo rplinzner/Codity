@@ -55,7 +55,7 @@ const SearchResult: React.FC<Props & LocalizeContextProps> = (
     return search.get('search') || '';
   };
 
-  const pageSize = 6;
+  const pageSize = 5;
 
   const getUsers = (page: number = 0): void => {
     let lang = 'en';
@@ -70,7 +70,7 @@ const SearchResult: React.FC<Props & LocalizeContextProps> = (
 
     if (query !== '') {
       get<SearchResponse>(
-        `${constants.usersController}`,
+        constants.usersController,
         `/search?query=${query}&pageNumber=${current}&pageSize=${pageSize}`,
         lang,
         <T id="errorConnection" />,

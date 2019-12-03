@@ -6,20 +6,28 @@ import {
   withLocalize,
   Translate as T,
 } from 'react-localize-redux';
+import { withRouter, RouteComponentProps } from 'react-router-dom';
 
 interface Props extends LocalizeContextProps {
   firstName: string;
   lastName: string;
   photo: string | null;
   followers: number;
+  userId: number;
 }
 
-const SearchResultCard: React.FC<Props> = (props: Props) => {
+const SearchResultCard: React.FC<Props & RouteComponentProps> = (
+  props: Props & RouteComponentProps,
+) => {
   return (
     <Card>
       <T>
         {({ translate }) => (
-          <CardActionArea onClick={() => alert('you clicked')}>
+          <CardActionArea
+            onClick={() =>
+              props.history.push(`/profile/?userId=${props.userId}`)
+            }
+          >
             <CardHeader
               avatar={
                 <UserAvatar
@@ -38,4 +46,4 @@ const SearchResultCard: React.FC<Props> = (props: Props) => {
   );
 };
 
-export default withLocalize(SearchResultCard);
+export default withLocalize(withRouter(SearchResultCard));
