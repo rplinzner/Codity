@@ -5,12 +5,13 @@ using Twitter.Services.Interfaces;
 using Twitter.Services.RequestModels.User;
 using Twitter.Services.ResponseModels.DTOs.Settings;
 using Twitter.Services.ResponseModels.Interfaces;
+using Twitter.WebApi.Filters;
 
 namespace Twitter.WebApi.Controllers
 {
     [Route("api/[controller]")]
     [Authorize]
-    [ApiController]
+    [BaseFilter]
     public class SettingsController : ControllerBase
     {
         private readonly ISettingsService _settingsService;

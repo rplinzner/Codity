@@ -1,9 +1,5 @@
-﻿using Microsoft.Data.SqlClient;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
+﻿using Microsoft.EntityFrameworkCore;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using Twitter.Data.Context;
@@ -19,17 +15,27 @@ namespace Twitter.Repositories.Repositories
         {
         }
 
-
-
         public async Task<PagedList<User>> SearchAsync(string query, int pageNumber, int pageSize, bool withTracking = false)
         {
+            var constructedQuery = new StringBuilder();
+            var splittedQuery = query.Split(' ');
+
+            constructedQuery.Append(splittedQuery[0]);
+            if (splittedQuery.Length > 1)
+            {
+                for (int i = 1; i < splittedQuery.Length; i++)
+                {
+                    constructedQuery.Append($" OR \"{splittedQuery[i]}\"*");
+                }
+            }
+
             var result = await _dbContext.Users.FromSqlInterpolated(
-                $"SELECT * FROM dbo.SearchUsers({query}, {pageNumber}, {pageSize})")
+                $"SELECT * FROM dbo.SearchUsers({constructedQuery.ToString()}, {pageNumber}, {pageSize})")
                 .Include(c => c.Followers)
                 .ToListAsync();
 
             var count = _dbContext.Users.FromSqlInterpolated(
-                $"SELECT * FROM dbo.SearchUsersCount({query})")
+                $"SELECT * FROM dbo.SearchUsersCount({constructedQuery.ToString()})")
                 .Count();
 
             return new PagedList<User>(result, count, pageNumber, pageSize);

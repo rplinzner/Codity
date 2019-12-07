@@ -7,7 +7,7 @@ namespace Twitter.Data.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.Sql("CREATE FULLTEXT CATALOG fullTextCatalog AS DEFAULT", true);
-            migrationBuilder.Sql("CREATE FULLTEXT INDEX ON dbo.Users(FirstName, LastName, AboutMe) KEY INDEX PK_Users WITH STOPLIST = SYSTEM", true);
+            migrationBuilder.Sql("CREATE FULLTEXT INDEX ON dbo.Users(FirstName, LastName) KEY INDEX PK_Users WITH STOPLIST = SYSTEM", true);
             migrationBuilder.Sql(
                 @"CREATE FUNCTION [dbo].[SearchUsers]
                       (@SearchParameter nvarchar(4000),
@@ -18,7 +18,17 @@ namespace Twitter.Data.Migrations
                   RETURN
                     (
                       SELECT * FROM [Users] AS [u]
-                      INNER JOIN FREETEXTTABLE([Users], ([FirstName], [LastName], [AboutMe]), @SearchParameter) [ft]
+                      INNER JOIN (
+					  Select [Key], SUM([Rank]) as [RANK] from 
+					  (
+						SELECT * FROM
+    					    CONTAINSTABLE([Users], [FirstName], @SearchParameter) 
+                        UNION ALL
+                        SELECT * FROM
+                            CONTAINSTABLE([Users], [LastName], @SearchParameter)
+					  ) as fts
+                        GROUP BY fts.[Key]
+					  )[ft]
                             ON [u].Id = [ft].[Key]
                       ORDER BY [ft].[RANK] DESC
                       OFFSET(@PageNumber - 1) * @PageSize ROWS FETCH NEXT @PageSize ROWS only
@@ -31,7 +41,18 @@ namespace Twitter.Data.Migrations
                   RETURN
                     (
                       SELECT * FROM [Users] AS [u]
-                      WHERE FREETEXT(([FirstName], [LastName], [AboutMe]), @SearchParameter)
+                       INNER JOIN (
+					   Select [Key], SUM([Rank]) as [RANK] from 
+					   (
+						 SELECT * FROM
+    					     CONTAINSTABLE([Users], [FirstName], @SearchParameter) 
+                         UNION ALL
+                         SELECT * FROM
+                             CONTAINSTABLE([Users], [LastName], @SearchParameter)
+					   ) as fts
+                         GROUP BY fts.[Key]
+					   )[ft]
+                             ON [u].Id = [ft].[Key]
                     )");
         }
 

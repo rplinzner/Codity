@@ -1,22 +1,23 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Twitter.Services.Resources;
 
 namespace Twitter.Services.RequestModels.Authentication
 {
     public class RegisterRequest
     {
-        [Required]
+        [Required(AllowEmptyStrings = false, ErrorMessage = nameof(ErrorTranslations.RequiredError))]
         public string FirstName { get; set; }
-        [Required]
+        [Required(AllowEmptyStrings = false, ErrorMessage = nameof(ErrorTranslations.RequiredError))]
         public string LastName { get; set; }
-        [Required]
-        [EmailAddress]
+        [EmailAddress(ErrorMessage = nameof(ErrorTranslations.EmailError))]
+        [Required(AllowEmptyStrings = false, ErrorMessage = nameof(ErrorTranslations.RequiredError))]
         public string Email { get; set; }
-        [Required]
+        [Required(AllowEmptyStrings = false, ErrorMessage = nameof(ErrorTranslations.RequiredError))]
         public string Password { get; set; }
 
-        [Required]
+        [Required(AllowEmptyStrings = false, ErrorMessage = nameof(ErrorTranslations.RequiredError))]
         public bool IsDarkTheme { get; set; }
-        [Required]
+        [Required(AllowEmptyStrings = false, ErrorMessage = nameof(ErrorTranslations.RequiredError))]
         public string LanguageCode { get; set; }
 
     }

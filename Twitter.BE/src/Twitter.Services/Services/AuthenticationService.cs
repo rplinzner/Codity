@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
-using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Twitter.Data.Model;

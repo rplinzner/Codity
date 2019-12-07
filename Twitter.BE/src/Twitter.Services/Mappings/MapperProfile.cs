@@ -11,7 +11,6 @@ using Twitter.Services.ResponseModels;
 using System.Linq;
 using Twitter.Services.RequestModels.Tweet;
 using Twitter.Services.ResponseModels.DTOs.Tweet;
-using System.Collections.Generic;
 
 namespace Twitter.Services.Mappings
 {

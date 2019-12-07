@@ -106,6 +106,15 @@ namespace Twitter.Services.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Email is invalid..
+        /// </summary>
+        public static string EmailError {
+            get {
+                return ResourceManager.GetString("EmailError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Email is not confirmed..
         /// </summary>
         public static string EmailNotConfirmed {
@@ -291,6 +300,24 @@ namespace Twitter.Services.Resources {
         public static string RecoveryCodeRedemptionFailed {
             get {
                 return ResourceManager.GetString("RecoveryCodeRedemptionFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Field &apos;{0}&apos; is required..
+        /// </summary>
+        public static string RequiredError {
+            get {
+                return ResourceManager.GetString("RequiredError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You need to type &apos;{1}&apos; or more characters to search for someone..
+        /// </summary>
+        public static string SearchUserMinLength {
+            get {
+                return ResourceManager.GetString("SearchUserMinLength", resourceCulture);
             }
         }
         

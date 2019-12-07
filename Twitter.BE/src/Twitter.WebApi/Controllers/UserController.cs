@@ -5,12 +5,13 @@ using Twitter.Services.Interfaces;
 using Twitter.Services.RequestModels.User;
 using Twitter.Services.ResponseModels.DTOs.User;
 using Twitter.Services.ResponseModels.Interfaces;
+using Twitter.WebApi.Filters;
 
 namespace Twitter.WebApi.Controllers
 {
     [Route("api/[controller]")]
     [Authorize]
-    [ApiController]
+    [BaseFilter]
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
@@ -27,6 +28,7 @@ namespace Twitter.WebApi.Controllers
         /// Search users
         /// </summary>
         /// <returns>Users</returns>
+        [BaseFilter]
         [HttpGet("search")]
         public async Task<ActionResult<IPagedResponse<BaseUserDTO>>> SearchUsers([FromQuery] SearchUserRequest searchUserRequest)
         {

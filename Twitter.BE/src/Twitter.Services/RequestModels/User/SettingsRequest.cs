@@ -1,12 +1,13 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Twitter.Services.Resources;
 
 namespace Twitter.Services.RequestModels.User
 {
     public class SettingsRequest
     {
-        [Required]
+        [Required(ErrorMessage = nameof(ErrorTranslations.RequiredError))]
         public bool IsDarkTheme { get; set; }
-        [Required]
+        [Required(AllowEmptyStrings = false, ErrorMessage = nameof(ErrorTranslations.RequiredError))]
         public string LanguageCode { get; set; }
     }
 }

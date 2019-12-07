@@ -190,4 +190,13 @@
   <data name="NotificationNotFound" xml:space="preserve">
     <value>Powiadomienie nie istnieje.</value>
   </data>
+  <data name="SearchUserMinLength" xml:space="preserve">
+    <value>Musisz wpisać '{1}' lub więcej znaków aby kogoś wyszukać.</value>
+  </data>
+  <data name="RequiredError" xml:space="preserve">
+    <value>Pole '{0}' jest wymagane.</value>
+  </data>
+  <data name="EmailError" xml:space="preserve">
+    <value>Email jest niepoprawny.</value>
+  </data>
 </root>

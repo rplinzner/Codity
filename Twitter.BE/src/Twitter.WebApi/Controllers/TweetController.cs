@@ -5,11 +5,12 @@ using Twitter.Services.Interfaces;
 using Twitter.Services.RequestModels.Tweet;
 using Twitter.Services.ResponseModels.DTOs.Tweet;
 using Twitter.Services.ResponseModels.Interfaces;
+using Twitter.WebApi.Filters;
 
 namespace Twitter.WebApi.Controllers
 {
     [Route("api/[controller]")]
-    [ApiController]
+    [BaseFilter]
     public class TweetController : ControllerBase
     {
         private readonly ITweetService _tweetService;

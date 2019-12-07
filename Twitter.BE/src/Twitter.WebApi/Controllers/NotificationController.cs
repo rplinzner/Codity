@@ -3,11 +3,12 @@ using Microsoft.AspNetCore.Mvc;
 using Twitter.Services.Interfaces;
 using Twitter.Services.ResponseModels.DTOs.Notification;
 using Twitter.Services.ResponseModels.Interfaces;
+using Twitter.WebApi.Filters;
 
 namespace Twitter.WebApi.Controllers
 {
     [Route("api/[controller]")]
-    [ApiController]
+    [BaseFilter]
     public class NotificationController : ControllerBase
     {
         private readonly INotificationService _notificationService;

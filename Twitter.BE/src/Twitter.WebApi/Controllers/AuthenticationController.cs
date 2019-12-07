@@ -5,11 +5,12 @@ using Twitter.Services.Interfaces;
 using Twitter.Services.RequestModels.Authentication;
 using Twitter.Services.ResponseModels.DTOs.Authentication;
 using Twitter.Services.ResponseModels.Interfaces;
+using Twitter.WebApi.Filters;
 
 namespace Twitter.WebApi.Controllers
 {
     [Route("api/[controller]/[action]")]
-    [ApiController]
+    [BaseFilter]
     public class AuthenticationController : ControllerBase
     {
         private readonly IAuthenticationService _authenticationService;

@@ -3,7 +3,6 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Twitter.Data.Model;
 using Twitter.Repositories.Interfaces;
@@ -208,7 +207,6 @@ namespace Twitter.Services.Services
         {
             var response = new PagedResponse<BaseUserDTO>();
 
-            var searchExpression = CreateSearchExpression(searchRequest);
             var users = await _userRepository.SearchAsync(
                 searchRequest.Query,
                 searchRequest.PageNumber,
@@ -237,20 +235,6 @@ namespace Twitter.Services.Services
             await _userRepository.UpdateAsync(user);
 
             return response;
-        }
-
-        private Expression<Func<User, bool>> CreateSearchExpression(SearchUserRequest searchRequest)
-        {
-
-            Expression<Func<User, bool>> searchExpression = c => true;
-
-            if (!string.IsNullOrEmpty(searchRequest.Query))
-            {
-                var query = searchRequest.Query.ToLower();
-                searchExpression = c => EF.Functions.Contains(c.FirstName, query) || EF.Functions.Contains(c.LastName, query) || EF.Functions.Contains(c.AboutMe, query);
-            }
-
-            return searchExpression;
         }
     }
 }
