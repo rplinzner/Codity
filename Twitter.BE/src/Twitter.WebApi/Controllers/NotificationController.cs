@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Twitter.Services.Interfaces;
 using Twitter.Services.ResponseModels.DTOs.Notification;
@@ -9,6 +10,7 @@ namespace Twitter.WebApi.Controllers
 {
     [Route("api/[controller]")]
     [BaseFilter]
+    [Authorize]
     public class NotificationController : ControllerBase
     {
         private readonly INotificationService _notificationService;

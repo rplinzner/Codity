@@ -163,15 +163,15 @@ namespace Twitter.Services.Services
         {
             var likeAuthorFullName = $"{likeAuthor.FirstName} {likeAuthor.LastName}";
             var tweetAuthorFullName = $"{tweetAuthor.FirstName} {tweetAuthor.LastName}";
-            var distinctLikesCount = tweet.Comments
-                .Where(c => c.AuthorId != likeAuthor.Id)
-                .Select(c => c.AuthorId)
-                .Distinct()
+            var distinctLikesCount = tweet.Likes
+                .Where(c => c.UserId != likeAuthor.Id)
                 .Count();
 
-            var notification = await _notificationRepository
-                .GetByAsync(c => c.TweetId == tweet.Id &&
-                !string.IsNullOrEmpty(_notificationMapper.DeserializeNotificationParameters<LikeParameters>(c.Parameters).TweetAuthorFullName));
+            var notifications = await _notificationRepository
+                .GetAllByAsync(c => c.TweetId == tweet.Id && c.Type == NotificationType.Like);
+
+            var notification = notifications
+                .FirstOrDefault(c => !string.IsNullOrEmpty(_notificationMapper.DeserializeNotificationParameters<LikeParameters>(c.Parameters).TweetAuthorFullName));
 
             var notificationParams = new LikeParameters()
             {
@@ -180,19 +180,23 @@ namespace Twitter.Services.Services
                 LikesCount = distinctLikesCount
             };
 
-            notification.Parameters = _notificationMapper.SerializeNotificationParameters(notificationParams);
-            notification.CreatedTime = DateTime.Now;
-
             if (notification == null)
             {
-                notification.TweetId = tweet.Id;
-                notification.Type = NotificationType.Like;
-                notification.RedirectTo = string.Format(_redirectOptions.TweetUrl, tweet.Id);
+                notification = new Notification
+                {
+                    Parameters = _notificationMapper.SerializeNotificationParameters(notificationParams),
+                    CreatedTime = DateTime.Now,
+                    TweetId = tweet.Id,
+                    Type = NotificationType.Like,
+                    RedirectTo = string.Format(_redirectOptions.TweetUrl, tweet.Id)
+                };
 
                 await _notificationRepository.AddAsync(notification);
             }
             else
             {
+                notification.Parameters = _notificationMapper.SerializeNotificationParameters(notificationParams);
+                notification.CreatedTime = DateTime.Now;
                 await _notificationRepository.UpdateAsync(notification);
             }
 
@@ -210,27 +214,33 @@ namespace Twitter.Services.Services
 
             if (likeAuthor.Id != tweetAuthor.Id)
             {
-                var tweetAuthorNotification = await _notificationRepository
-                    .GetByAsync(c => c.TweetId == tweet.Id &&
-                    string.IsNullOrEmpty(_notificationMapper.DeserializeNotificationParameters<LikeParameters>(c.Parameters).TweetAuthorFullName));
+                var tweetAuthorNotification = notifications
+                    .FirstOrDefault(c => string.IsNullOrEmpty(_notificationMapper.DeserializeNotificationParameters<LikeParameters>(c.Parameters).TweetAuthorFullName));
 
                 var tweetAuthorNotificationParams = new LikeParameters()
                 {
                     LikingUserFullName = likeAuthorFullName,
                     LikesCount = distinctLikesCount
                 };
-                tweetAuthorNotification.Parameters = _notificationMapper.SerializeNotificationParameters(tweetAuthorNotificationParams);
-                tweetAuthorNotification.CreatedTime = DateTime.Now;
 
                 if (tweetAuthorNotification == null)
                 {
-                    tweetAuthorNotification.TweetId = tweet.Id;
-                    tweetAuthorNotification.Type = NotificationType.Like;
-                    tweetAuthorNotification.RedirectTo = string.Format(_redirectOptions.TweetUrl, tweet.Id);
+                    tweetAuthorNotification = new Notification
+                    {
+
+                        Parameters = _notificationMapper.SerializeNotificationParameters(tweetAuthorNotificationParams),
+                        CreatedTime = DateTime.Now,
+                        TweetId = tweet.Id,
+                        Type = NotificationType.Like,
+                        RedirectTo = string.Format(_redirectOptions.TweetUrl, tweet.Id)
+                    };
+
                     await _notificationRepository.AddAsync(tweetAuthorNotification);
                 }
                 else
                 {
+                    tweetAuthorNotification.Parameters = _notificationMapper.SerializeNotificationParameters(tweetAuthorNotificationParams);
+                    tweetAuthorNotification.CreatedTime = DateTime.Now;
                     await _notificationRepository.UpdateAsync(tweetAuthorNotification);
                 }
 

@@ -54,6 +54,12 @@ namespace Twitter.Services.Mappings
                .ForMember(d => d.LikesCount, o => o.MapFrom(s => s.Likes.Count))
                .ForMember(d => d.CommentsCount, o => o.MapFrom(s => s.Comments.Count));
 
+            CreateMap<Comment, CommentDTO>()
+               .ForMember(d => d.AuthorFirstName, o => o.MapFrom(s => s.Author.FirstName))
+               .ForMember(d => d.AuthorLastName, o => o.MapFrom(s => s.Author.LastName));
+
+            CreateMap<User, LikeUserDTO>();
+
             CreateMap<CodeSnippet, CodeSnippetDTO>()
                .ForMember(d => d.ProgrammingLanguageName, o => o.MapFrom(s => s.ProgrammingLanguage.Name));
 

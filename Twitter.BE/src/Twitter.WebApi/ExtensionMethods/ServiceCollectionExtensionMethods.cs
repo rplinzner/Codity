@@ -182,6 +182,8 @@ namespace Twitter.WebApi.ExtensionMethods
             services.AddTransient<ISettingsService, SettingsService>();
             services.AddTransient<IGenderService, GenderService>();
             services.AddTransient<ITweetService, TweetService>();
+            services.AddTransient<ILikeService, LikeService>();
+            services.AddTransient<ICommentService, CommentService>();
             services.AddTransient<DataSeeder>();
         }
 
@@ -195,6 +197,8 @@ namespace Twitter.WebApi.ExtensionMethods
             services.AddTransient<IBaseRepository<Notification>, BaseRepository<Notification>>();
             services.AddTransient<IBaseRepository<UserNotification>, BaseRepository<UserNotification>>();
             services.AddTransient<IBaseRepository<ProgrammingLanguage>, BaseRepository<ProgrammingLanguage>>();
+            services.AddTransient<IBaseRepository<Comment>, BaseRepository<Comment>>();
+            services.AddTransient<IBaseRepository<TweetLike>, BaseRepository<TweetLike>>();
             services.AddTransient<ITweetRepository, TweetRepository>();
             services.AddTransient<IUserRepository, UserRepository>();
         }

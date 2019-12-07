@@ -200,4 +200,28 @@
   <data name="EmailError" xml:space="preserve">
     <value>Email is invalid.</value>
   </data>
+  <data name="TweetNotFound" xml:space="preserve">
+    <value>Tweet does not exist.</value>
+  </data>
+  <data name="CommentNotFound" xml:space="preserve">
+    <value>Comment does not exist.</value>
+  </data>
+  <data name="NotYourTweetUpdate" xml:space="preserve">
+    <value>You cannot update not Your tweet.</value>
+  </data>
+  <data name="NotYourTweetRemove" xml:space="preserve">
+    <value>You cannot remove not Your tweet.</value>
+  </data>
+  <data name="NotYourCommentUpdate" xml:space="preserve">
+    <value>You cannot update not Your comment.</value>
+  </data>
+  <data name="NotYourCommentRemove" xml:space="preserve">
+    <value>You cannot remove not Your comment.</value>
+  </data>
+  <data name="LikeAlreadyExists" xml:space="preserve">
+    <value>You already like this tweet.</value>
+  </data>
+  <data name="LikeNotFound" xml:space="preserve">
+    <value>You already dislike this tweet.</value>
+  </data>
 </root>

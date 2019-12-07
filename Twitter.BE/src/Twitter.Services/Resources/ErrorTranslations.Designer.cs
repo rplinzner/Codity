@@ -61,6 +61,15 @@ namespace Twitter.Services.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Comment does not exist..
+        /// </summary>
+        public static string CommentNotFound {
+            get {
+                return ResourceManager.GetString("CommentNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Confirmation token is not valid..
         /// </summary>
         public static string ConfirmationTokenNotValid {
@@ -214,6 +223,24 @@ namespace Twitter.Services.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to You already like this tweet..
+        /// </summary>
+        public static string LikeAlreadyExists {
+            get {
+                return ResourceManager.GetString("LikeAlreadyExists", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You already dislike this tweet..
+        /// </summary>
+        public static string LikeNotFound {
+            get {
+                return ResourceManager.GetString("LikeNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to A user with this login already exists..
         /// </summary>
         public static string LoginAlreadyAssociated {
@@ -228,6 +255,42 @@ namespace Twitter.Services.Resources {
         public static string NotificationNotFound {
             get {
                 return ResourceManager.GetString("NotificationNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You cannot remove not Your comment..
+        /// </summary>
+        public static string NotYourCommentRemove {
+            get {
+                return ResourceManager.GetString("NotYourCommentRemove", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You cannot update not Your comment..
+        /// </summary>
+        public static string NotYourCommentUpdate {
+            get {
+                return ResourceManager.GetString("NotYourCommentUpdate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You cannot remove not Your tweet..
+        /// </summary>
+        public static string NotYourTweetRemove {
+            get {
+                return ResourceManager.GetString("NotYourTweetRemove", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You cannot update not Your tweet..
+        /// </summary>
+        public static string NotYourTweetUpdate {
+            get {
+                return ResourceManager.GetString("NotYourTweetUpdate", resourceCulture);
             }
         }
         
@@ -318,6 +381,15 @@ namespace Twitter.Services.Resources {
         public static string SearchUserMinLength {
             get {
                 return ResourceManager.GetString("SearchUserMinLength", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Tweet does not exist..
+        /// </summary>
+        public static string TweetNotFound {
+            get {
+                return ResourceManager.GetString("TweetNotFound", resourceCulture);
             }
         }
         

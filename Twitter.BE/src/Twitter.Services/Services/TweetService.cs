@@ -63,7 +63,7 @@ namespace Twitter.Services.Services
             {
                 response.AddError(new Error
                 {
-                    Message = ErrorTranslations.UserNotFound
+                    Message = ErrorTranslations.TweetNotFound
                 });
 
                 return response;
@@ -99,7 +99,7 @@ namespace Twitter.Services.Services
             {
                 response.AddError(new Error
                 {
-                    Message = ErrorTranslations.UserNotFound
+                    Message = ErrorTranslations.TweetNotFound
                 });
 
                 return response;
@@ -109,7 +109,7 @@ namespace Twitter.Services.Services
             {
                 response.AddError(new Error
                 {
-                    Message = ErrorTranslations.UserNotFound
+                    Message = ErrorTranslations.NotYourTweetRemove
                 });
             }
 
@@ -130,7 +130,7 @@ namespace Twitter.Services.Services
             {
                 response.AddError(new Error
                 {
-                    Message = ErrorTranslations.UserNotFound
+                    Message = ErrorTranslations.TweetNotFound
                 });
 
                 return response;
@@ -140,7 +140,7 @@ namespace Twitter.Services.Services
             {
                 response.AddError(new Error
                 {
-                    Message = ErrorTranslations.UserNotFound
+                    Message = ErrorTranslations.NotYourTweetUpdate
                 });
             }
 

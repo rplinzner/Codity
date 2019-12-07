@@ -1,5 +1,5 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Twitter.Services.Interfaces;
 using Twitter.Services.RequestModels.Tweet;
@@ -11,17 +11,21 @@ namespace Twitter.WebApi.Controllers
 {
     [Route("api/[controller]")]
     [BaseFilter]
+    [Authorize]
     public class TweetController : ControllerBase
     {
         private readonly ITweetService _tweetService;
+        private readonly ICommentService _commentService;
+        private readonly ILikeService _likeService;
         private readonly IUserContext _userContext;
 
-        public TweetController(ITweetService tweetService, IUserContext userContext)
+        public TweetController(ITweetService tweetService, ICommentService commentService, ILikeService likeService, IUserContext userContext)
         {
             _tweetService = tweetService;
+            _commentService = commentService;
+            _likeService = likeService;
             _userContext = userContext;
         }
-
 
         /// <summary>
         /// Search tweets
@@ -60,27 +64,39 @@ namespace Twitter.WebApi.Controllers
         }
 
         /// <summary>
-        /// NOT IMPLEMENTED YET
         /// Fetch likes for a tweet with specified id
         /// </summary>
         /// <param name="tweetId">Id of a tweet</param>
         /// <returns>Likes</returns>
         [HttpGet("{tweetId}/like")]
-        public async Task<ActionResult<IBaseResponse>> GetLikes(int tweetId)
+        public async Task<ActionResult<ICollectionResponse<LikeUserDTO>>> GetLikes(int tweetId)
         {
-            throw new NotImplementedException();
+            var response = await _likeService.GetLikesAsync(tweetId);
+
+            if (response.IsError)
+            {
+                return BadRequest(response);
+            }
+
+            return Ok(response);
         }
 
         /// <summary>
-        /// NOT IMPLEMENTED YET
         /// Fetch comments for a tweet with specified id
         /// </summary>
         /// <param name="tweetId">Id of a tweet</param>
         /// <returns>Comments</returns>
         [HttpGet("{tweetId}/comment")]
-        public async Task<ActionResult<IBaseResponse>> GetComments(int tweetId)
+        public async Task<ActionResult<ICollectionResponse<CommentDTO>>> GetComments(int tweetId)
         {
-            throw new NotImplementedException();
+            var response = await _commentService.GetCommentsAsync(tweetId);
+
+            if (response.IsError)
+            {
+                return BadRequest(response);
+            }
+
+            return Ok(response);
         }
 
         /// <summary>
@@ -89,7 +105,7 @@ namespace Twitter.WebApi.Controllers
         /// <param name="tweet">Tweet</param>
         /// <returns>Base reponse</returns>
         [HttpPost]
-        public async Task<ActionResult<IBaseResponse>> CreateTweet([FromBody] TweetRequest tweet)
+        public async Task<ActionResult<IResponse<TweetDTO>>> CreateTweet([FromBody] TweetRequest tweet)
         {
             int userId = _userContext.GetUserId();
 

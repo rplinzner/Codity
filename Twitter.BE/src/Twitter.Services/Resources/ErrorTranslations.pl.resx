@@ -199,4 +199,28 @@
   <data name="EmailError" xml:space="preserve">
     <value>Email jest niepoprawny.</value>
   </data>
+  <data name="TweetNotFound" xml:space="preserve">
+    <value>Tweet nie istnieje.</value>
+  </data>
+  <data name="CommentNotFound" xml:space="preserve">
+    <value>Komentarz nie istnieje.</value>
+  </data>
+  <data name="NotYourTweetUpdate" xml:space="preserve">
+    <value>Nie możesz edytować nie swojego tweetu.</value>
+  </data>
+  <data name="NotYourTweetRemove" xml:space="preserve">
+    <value>Nie możesz usunąć nie swojego tweetu.</value>
+  </data>
+  <data name="NotYourCommentUpdate" xml:space="preserve">
+    <value>Nie możesz edytować nie swojego komentarza.</value>
+  </data>
+  <data name="NotYourCommentRemove" xml:space="preserve">
+    <value>Nie możesz usunąć nie swojego komentarza.</value>
+  </data>
+  <data name="LikeAlreadyExists" xml:space="preserve">
+    <value>Już polubiłeś tego tweeta.</value>
+  </data>
+  <data name="LikeNotFound" xml:space="preserve">
+    <value>Już nie lubisz tego tweeta.</value>
+  </data>
 </root>
