@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Twitter.Data.Model;
 using Twitter.Repositories.Interfaces;
 using Twitter.Services.Interfaces;
+using Twitter.Services.RequestModels;
 using Twitter.Services.RequestModels.Tweet;
 using Twitter.Services.Resources;
 using Twitter.Services.ResponseModels;
@@ -74,15 +75,13 @@ namespace Twitter.Services.Services
             return response;
         }
 
-        public async Task<IPagedResponse<TweetDTO>> GetTweetsAsync(SearchTweetRequest searchRequest)
+        public async Task<IPagedResponse<TweetDTO>> GetTweetsAsync(PaginationRequest paginationRequest)
         {
             var response = new PagedResponse<TweetDTO>();
 
-            var searchExpression = CreateSearchExpression(searchRequest);
-            var tweets = await _tweetRepository.GetAllByAsync(
-                searchExpression,
-                searchRequest.PageNumber,
-                searchRequest.PageSize);
+            var tweets = await _tweetRepository.GetPagedAsync(
+                paginationRequest.PageNumber,
+                paginationRequest.PageSize);
 
             _mapper.Map(tweets, response);
 
@@ -154,23 +153,6 @@ namespace Twitter.Services.Services
             await _tweetRepository.UpdateAsync(tweetEntity);
 
             return response;
-        }
-
-        private Expression<Func<Tweet, bool>> CreateSearchExpression(SearchTweetRequest searchRequest)
-        {
-            var query = searchRequest.Query.ToLower();
-
-            Expression<Func<Tweet, bool>> searchExpression = c => true;
-
-            if (!string.IsNullOrEmpty(searchRequest.Query))
-            {
-                searchExpression = c => c.Text.ToLower().Contains(query) ||
-                  (c.CodeSnippet != null && c.CodeSnippet.Text.ToLower().Contains(query)) ||
-                  c.Author.FirstName.ToLower().Contains(query) ||
-                  c.Author.LastName.ToLower().Contains(query);
-            }
-
-            return searchExpression;
         }
     }
 }

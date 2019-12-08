@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Twitter.Services.Interfaces;
+using Twitter.Services.RequestModels;
 using Twitter.Services.RequestModels.User;
 using Twitter.Services.ResponseModels.DTOs.User;
 using Twitter.Services.ResponseModels.Interfaces;
@@ -68,13 +69,14 @@ namespace Twitter.WebApi.Controllers
         /// Fetch followers for an user with specified id
         /// </summary>
         /// <param name="id">Id of an user</param>
+        /// <param name="paginationRequest">Pagination parameters</param>
         /// <returns>Followers</returns>
         [HttpGet("{id}/followers")]
-        public async Task<ActionResult<ICollectionResponse<BaseUserDTO>>> GetFollowers(int id)
+        public async Task<ActionResult<ICollectionResponse<BaseUserDTO>>> GetFollowers(int id, [FromQuery] PaginationRequest paginationRequest)
         {
             int userId = _userContext.GetUserId();
 
-            var response = await _userService.GetFollowersAsync(id, userId);
+            var response = await _userService.GetFollowersAsync(id, userId, paginationRequest);
 
             if (response.IsError)
             {
@@ -88,13 +90,14 @@ namespace Twitter.WebApi.Controllers
         /// Fetch following for an user with specified id
         /// </summary>
         /// <param name="id">If of an user</param>
+        /// <param name="paginationRequest">Pagination parameters</param>
         /// <returns>Following</returns>
         [HttpGet("{id}/following")]
-        public async Task<ActionResult<ICollectionResponse<BaseUserDTO>>> GetFollowing(int id)
+        public async Task<ActionResult<ICollectionResponse<BaseUserDTO>>> GetFollowing(int id, [FromQuery] PaginationRequest paginationRequest)
         {
             int userId = _userContext.GetUserId();
 
-            var response = await _userService.GetFollowingAsync(id, userId);
+            var response = await _userService.GetFollowingAsync(id, userId, paginationRequest);
 
             if (response.IsError)
             {

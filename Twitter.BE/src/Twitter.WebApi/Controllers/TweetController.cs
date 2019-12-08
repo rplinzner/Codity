@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Twitter.Services.Interfaces;
+using Twitter.Services.RequestModels;
 using Twitter.Services.RequestModels.Tweet;
 using Twitter.Services.ResponseModels.DTOs.Tweet;
 using Twitter.Services.ResponseModels.Interfaces;
@@ -30,12 +31,12 @@ namespace Twitter.WebApi.Controllers
         /// <summary>
         /// Search tweets
         /// </summary>
-        /// <param name="searchTweetRequest">Search parameters</param>
+        /// <param name="paginationRequest">Pagination parameters</param>
         /// <returns>Tweets</returns>
         [HttpGet("search")]
-        public async Task<ActionResult<IPagedResponse<TweetDTO>>> SearchTweets([FromQuery] SearchTweetRequest searchTweetRequest)
+        public async Task<ActionResult<IPagedResponse<TweetDTO>>> SearchTweets([FromQuery] PaginationRequest paginationRequest)
         {
-            var response = await _tweetService.GetTweetsAsync(searchTweetRequest);
+            var response = await _tweetService.GetTweetsAsync(paginationRequest);
 
             if (response.IsError)
             {
@@ -85,11 +86,12 @@ namespace Twitter.WebApi.Controllers
         /// Fetch comments for a tweet with specified id
         /// </summary>
         /// <param name="tweetId">Id of a tweet</param>
+        /// <param name="paginationRequest">Pagination parameters</param>
         /// <returns>Comments</returns>
         [HttpGet("{tweetId}/comment")]
-        public async Task<ActionResult<ICollectionResponse<CommentDTO>>> GetComments(int tweetId)
+        public async Task<ActionResult<ICollectionResponse<CommentDTO>>> GetComments(int tweetId, [FromQuery] PaginationRequest paginationRequest)
         {
-            var response = await _commentService.GetCommentsAsync(tweetId);
+            var response = await _commentService.GetCommentsAsync(tweetId, paginationRequest);
 
             if (response.IsError)
             {

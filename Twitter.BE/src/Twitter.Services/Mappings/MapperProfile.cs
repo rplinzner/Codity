@@ -43,6 +43,10 @@ namespace Twitter.Services.Mappings
                 .ForMember(d => d.Models, o => o.MapFrom(s => s.ToList()));
             CreateMap<PagedList<Tweet>, PagedResponse<TweetDTO>>()
                 .ForMember(d => d.Models, o => o.MapFrom(s => s.ToList()));
+            CreateMap<PagedList<Comment>, PagedResponse<CommentDTO>>()
+                .ForMember(d => d.Models, o => o.MapFrom(s => s.ToList()));
+            CreateMap<PagedList<Follow>, PagedResponse<BaseUserDTO>>();
+            CreateMap<PagedList<Notification>, PagedResponse<NotificationDTO>>();
 
             CreateMap<TweetRequest, Tweet>();
             CreateMap<UpdateTweetRequest, Tweet>();
@@ -62,9 +66,6 @@ namespace Twitter.Services.Mappings
 
             CreateMap<CodeSnippet, CodeSnippetDTO>()
                .ForMember(d => d.ProgrammingLanguageName, o => o.MapFrom(s => s.ProgrammingLanguage.Name));
-
-            CreateMap<PagedList<User>, PagedResponse<BaseUserDTO>>()
-                .ForMember(d => d.Models, o => o.MapFrom(s => s.ToList()));
         }
     }
 }

@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Twitter.Data.Model;
 using Twitter.Repositories.Interfaces;
 using Twitter.Services.Interfaces;
+using Twitter.Services.RequestModels;
 using Twitter.Services.RequestModels.Tweet;
 using Twitter.Services.Resources;
 using Twitter.Services.ResponseModels;
@@ -17,20 +17,17 @@ namespace Twitter.Services.Services
     {
         private readonly ITweetRepository _tweetRepository;
         private readonly IBaseRepository<Comment> _commentRepository;
-        private readonly IBaseRepository<Notification> _notificationRepository;
         private readonly INotificationGeneratorService _notificationGeneratorService;
         private readonly IMapper _mapper;
 
         public CommentService(
             ITweetRepository tweetRepository,
             IBaseRepository<Comment> commentRepository,
-            IBaseRepository<Notification> notificationRepository,
             INotificationGeneratorService notificationGeneratorService,
             IMapper mapper)
         {
             _tweetRepository = tweetRepository;
             _commentRepository = commentRepository;
-            _notificationRepository = notificationRepository;
             _notificationGeneratorService = notificationGeneratorService;
             _mapper = mapper;
         }
@@ -73,13 +70,18 @@ namespace Twitter.Services.Services
             return response;
         }
 
-        public async Task<ICollectionResponse<CommentDTO>> GetCommentsAsync(int tweetId)
+        public async Task<IPagedResponse<CommentDTO>> GetCommentsAsync(int tweetId, PaginationRequest paginationReqeust)
         {
-            var response = new CollectionResponse<CommentDTO>();
+            var response = new PagedResponse<CommentDTO>();
 
-            var comments = await _commentRepository.GetAllByAsync(c => c.TweetId == tweetId, false, c => c.Author);
+            var comments = await _commentRepository.GetPagedByAsync(
+                c => c.TweetId == tweetId,
+                paginationReqeust.PageNumber,
+                paginationReqeust.PageSize,
+                false,
+                c => c.Author);
 
-            response.Models = _mapper.Map<IEnumerable<CommentDTO>>(comments);
+            _mapper.Map(comments, response);
 
             return response;
         }

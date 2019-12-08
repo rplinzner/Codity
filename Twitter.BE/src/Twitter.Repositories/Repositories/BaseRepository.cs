@@ -74,7 +74,7 @@ namespace Twitter.Repositories.Repositories
                 .ToListAsync();
         }
 
-        public virtual async Task<PagedList<T>> GetAllByAsync(
+        public virtual async Task<PagedList<T>> GetPagedByAsync(
            Expression<Func<T, bool>> getBy,
            int pageNumber,
            int pageSize,
@@ -82,7 +82,7 @@ namespace Twitter.Repositories.Repositories
            params Expression<Func<T, object>>[] includes)
         {
             var query = GetAllByQuery(getBy, withTracking, includes);
-            
+
             return await PagedList<T>.Create(query, pageNumber, pageSize);
         }
 
@@ -150,10 +150,9 @@ namespace Twitter.Repositories.Repositories
             await _dbContext.SaveChangesAsync();
         }
 
-        private IQueryable<T> GetAllByQuery(
-            Expression<Func<T, bool>> getBy,
-            bool withTracking = false,
-            params Expression<Func<T, object>>[] includes)
+        private IQueryable<T> GetAllQuery(
+          bool withTracking = false,
+          params Expression<Func<T, object>>[] includes)
         {
             var query = _dbContext.Set<T>() as IQueryable<T>;
 
@@ -167,7 +166,28 @@ namespace Twitter.Repositories.Repositories
                 query = query.Include(include);
             }
 
+            return query;
+        }
+
+        private IQueryable<T> GetAllByQuery(
+            Expression<Func<T, bool>> getBy,
+            bool withTracking = false,
+            params Expression<Func<T, object>>[] includes)
+        {
+            var query = GetAllQuery(withTracking, includes);
+
             return query.Where(getBy);
+        }
+
+        public async Task<PagedList<T>> GetPagedAsync(
+            int pageNumber,
+            int pageSize,
+            bool withTracking = false,
+            params Expression<Func<T, object>>[] includes)
+        {
+            var query = GetAllQuery(withTracking, includes);
+
+            return await PagedList<T>.Create(query, pageNumber, pageSize);
         }
     }
 }

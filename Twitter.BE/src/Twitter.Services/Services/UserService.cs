@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Twitter.Data.Model;
 using Twitter.Repositories.Interfaces;
 using Twitter.Services.Interfaces;
+using Twitter.Services.RequestModels;
 using Twitter.Services.RequestModels.User;
 using Twitter.Services.Resources;
 using Twitter.Services.ResponseModels;
@@ -141,12 +142,16 @@ namespace Twitter.Services.Services
             return response;
         }
 
-        public async Task<ICollectionResponse<BaseUserDTO>> GetFollowersAsync(int userId, int currentUserId)
+        public async Task<IPagedResponse<BaseUserDTO>> GetFollowersAsync(int userId, int currentUserId, PaginationRequest paginationRequest)
         {
-            var response = new CollectionResponse<BaseUserDTO>();
+            var response = new PagedResponse<BaseUserDTO>();
 
-            var follows = await _followRepository
-                .GetAllByAsync(c => c.FollowingId == userId, false, c => c.Follower);
+            var follows = await _followRepository.GetPagedByAsync(
+                c => c.FollowingId == userId,
+                paginationRequest.PageNumber,
+                paginationRequest.PageSize,
+                false,
+                c => c.Follower);
 
             if (!follows.Any())
             {
@@ -158,11 +163,14 @@ namespace Twitter.Services.Services
                 return response;
             }
 
+            _mapper.Map(follows, response);
+
             var followers = follows.Select(c => c.Follower);
             response.Models = _mapper.Map<IEnumerable<BaseUserDTO>>(followers);
 
             var userIds = followers.Select(c => c.Id);
-            var following = await _followRepository.GetAllByAsync(c => userIds.Contains(c.FollowingId) && c.FollowerId == currentUserId);
+            var following = await _followRepository
+                .GetAllByAsync(c => userIds.Contains(c.FollowingId) && c.FollowerId == currentUserId);
 
             foreach (var model in response.Models)
             {
@@ -172,12 +180,16 @@ namespace Twitter.Services.Services
             return response;
         }
 
-        public async Task<ICollectionResponse<BaseUserDTO>> GetFollowingAsync(int userId, int currentUserId)
+        public async Task<IPagedResponse<BaseUserDTO>> GetFollowingAsync(int userId, int currentUserId, PaginationRequest paginationRequest)
         {
-            var response = new CollectionResponse<BaseUserDTO>();
+            var response = new PagedResponse<BaseUserDTO>();
 
-            var follows = await _followRepository
-                .GetAllByAsync(c => c.FollowerId == userId, false, c => c.Following);
+            var follows = await _followRepository.GetPagedByAsync(
+                c => c.FollowerId == userId,
+                paginationRequest.PageNumber,
+                paginationRequest.PageSize,
+                false,
+                c => c.Following);
 
             if (!follows.Any())
             {
@@ -189,11 +201,14 @@ namespace Twitter.Services.Services
                 return response;
             }
 
+            _mapper.Map(follows, response);
+
             var following = follows.Select(c => c.Following);
             response.Models = _mapper.Map<IEnumerable<BaseUserDTO>>(following);
 
             var userIds = following.Select(c => c.Id);
-            var currentUsersFollowing = await _followRepository.GetAllByAsync(c => userIds.Contains(c.FollowingId) && c.FollowerId == currentUserId);
+            var currentUsersFollowing = await _followRepository
+                .GetAllByAsync(c => userIds.Contains(c.FollowingId) && c.FollowerId == currentUserId);
 
             foreach (var model in response.Models)
             {

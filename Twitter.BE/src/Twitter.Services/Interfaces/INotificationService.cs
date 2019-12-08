@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using Twitter.Services.RequestModels;
 using Twitter.Services.ResponseModels.DTOs.Notification;
 using Twitter.Services.ResponseModels.Interfaces;
 
@@ -11,7 +12,7 @@ namespace Twitter.Services.Interfaces
         Task SendNotification(IEnumerable<int> userIds, IEnumerable<int> exceptUserIds, int notificationId);
 
         Task<IResponse<NotificationDTO>> GetNotification(int notificationId);
-        Task<ICollectionResponse<NotificationDTO>> GetAllNotifications(int userId);
+        Task<IPagedResponse<NotificationDTO>> GetAllNotifications(int userId, PaginationRequest paingationRequest);
         Task<IBaseResponse> MarkNotificationAsRead(int notificationId);
         Task<IBaseResponse> MarkAllNotificationsAsRead();
     }

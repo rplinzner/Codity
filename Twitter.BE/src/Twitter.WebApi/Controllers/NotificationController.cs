@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Twitter.Services.Interfaces;
+using Twitter.Services.RequestModels;
 using Twitter.Services.ResponseModels.DTOs.Notification;
 using Twitter.Services.ResponseModels.Interfaces;
 using Twitter.WebApi.Filters;
@@ -27,11 +28,11 @@ namespace Twitter.WebApi.Controllers
         /// </summary>
         /// <returns>All Notifications for logged user</returns>
         [HttpGet]
-        public async Task<ActionResult<ICollectionResponse<NotificationDTO>>> GetNotifications()
+        public async Task<ActionResult<ICollectionResponse<NotificationDTO>>> GetNotifications([FromQuery] PaginationRequest paginationRequest)
         {
             var userId = _userContext.GetUserId();
 
-            var response = await _notificationService.GetAllNotifications(userId);
+            var response = await _notificationService.GetAllNotifications(userId, paginationRequest);
 
             if (response.IsError)
             {

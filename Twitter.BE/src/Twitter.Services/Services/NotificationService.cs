@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.SignalR;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.SignalR;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,6 +8,7 @@ using Twitter.Data.Model;
 using Twitter.Repositories.Interfaces;
 using Twitter.Services.Hubs;
 using Twitter.Services.Interfaces;
+using Twitter.Services.RequestModels;
 using Twitter.Services.Resources;
 using Twitter.Services.ResponseModels;
 using Twitter.Services.ResponseModels.DTOs.Notification;
@@ -19,25 +21,29 @@ namespace Twitter.Services.Services
         private readonly INotificationMapperService _notificationMapperService;
         private readonly IBaseRepository<UserNotification> _notificationRepository;
         private readonly IHubContext<NotificationHub> _notificationContext;
+        private readonly IMapper _mapper;
 
         public NotificationService(
             INotificationMapperService notificationMapperService,
             IBaseRepository<UserNotification> notificationRepository,
-            IHubContext<NotificationHub> notificationContext)
+            IHubContext<NotificationHub> notificationContext,
+            IMapper mapper)
         {
             _notificationMapperService = notificationMapperService;
             _notificationRepository = notificationRepository;
             _notificationContext = notificationContext;
+            _mapper = mapper;
         }
 
-        public async Task<ICollectionResponse<NotificationDTO>> GetAllNotifications(int userId)
+        public async Task<IPagedResponse<NotificationDTO>> GetAllNotifications(int userId, PaginationRequest paginationReqeust)
         {
-            var response = new CollectionResponse<NotificationDTO>();
+            var response = new PagedResponse<NotificationDTO>();
 
             var notifications = (await _notificationRepository
                 .GetAllByAsync(c => c.UserId == userId, false, c => c.Notification))
                 .Select(c => c.Notification);
-
+            
+            _mapper.Map(notifications, response);
             response.Models = _notificationMapperService.MapNotifications(notifications);
 
             return response;

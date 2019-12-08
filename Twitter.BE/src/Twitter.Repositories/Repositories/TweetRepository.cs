@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
@@ -17,25 +16,19 @@ namespace Twitter.Repositories.Repositories
         {
         }
 
-        public async Task<IEnumerable<Tweet>> GetAllAsync(bool withTracking = false)
-        {
-            var query = CreateGetQuery(withTracking);
-
-            return await query.ToListAsync();
-        }
-
-        public async Task<PagedList<Tweet>> GetAllByAsync(Expression<Func<Tweet, bool>> getBy, int pageNumber, int pageSize, bool withTracking = false)
-        {
-            var query = CreateGetQuery(withTracking).Where(getBy);
-
-            return await PagedList<Tweet>.Create(query, pageNumber, pageSize);
-        }
-
         public async Task<Tweet> GetByAsync(Expression<Func<Tweet, bool>> getBy, bool withTracking = false)
         {
             var query = CreateGetQuery(withTracking);
 
             return await query.FirstOrDefaultAsync(getBy);
+        }
+
+        public async Task<PagedList<Tweet>> GetPagedAsync(int pageNumber, int pageSize, bool withTracking = false)
+        {
+            var query = CreateGetQuery(withTracking)
+                .OrderByDescending(c => c.CreationDate);
+
+            return await PagedList<Tweet>.Create(query, pageNumber, pageSize);
         }
 
         private IQueryable<Tweet> CreateGetQuery(bool withTracking)
