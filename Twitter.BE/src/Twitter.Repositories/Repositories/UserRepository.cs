@@ -20,19 +20,24 @@ namespace Twitter.Repositories.Repositories
             var constructedQuery = new StringBuilder();
             var splittedQuery = query.Split(' ');
 
-            constructedQuery.Append(splittedQuery[0]);
+            constructedQuery.Append($"\"{splittedQuery[0]}*\"");
             if (splittedQuery.Length > 1)
             {
                 for (int i = 1; i < splittedQuery.Length; i++)
                 {
-                    constructedQuery.Append($" OR \"{splittedQuery[i]}\"*");
+                    constructedQuery.Append($" OR \"{splittedQuery[i]}*\"");
                 }
             }
 
             var result = await _dbContext.Users.FromSqlInterpolated(
                 $"SELECT * FROM dbo.SearchUsers({constructedQuery.ToString()}, {pageNumber}, {pageSize})")
-                .Include(c => c.Followers)
                 .ToListAsync();
+
+            if (result.Any())
+            {
+                var userIds = result.Select(c => c.Id);
+                await _dbContext.Follows.Where(c => userIds.Contains(c.FollowingId)).LoadAsync();
+            }
 
             var count = _dbContext.Users.FromSqlInterpolated(
                 $"SELECT * FROM dbo.SearchUsersCount({constructedQuery.ToString()})")
