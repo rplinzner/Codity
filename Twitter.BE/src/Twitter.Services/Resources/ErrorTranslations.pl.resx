@@ -158,7 +158,7 @@
     <value>Wystąpił nieznany błąd.</value>
   </data>
   <data name="RecoveryCodeRedemptionFailed" xml:space="preserve">
-    <value>Wykorzystanie kodu odzyskiwania nie powiodło się. </value>
+    <value>Wykorzystanie kodu odzyskiwania nie powiodło się.</value>
   </data>
   <data name="EmailNotConfirmed" xml:space="preserve">
     <value>Email nie został potwierdzony.</value>
@@ -222,5 +222,17 @@
   </data>
   <data name="LikeNotFound" xml:space="preserve">
     <value>Już nie lubisz tego tweeta.</value>
+  </data>
+  <data name="GithubTokenNotFound" xml:space="preserve">
+    <value>Nie masz dodanego personal access tokenu z GitHuba do Twojego konta.</value>
+  </data>
+  <data name="GithubTokenMissingGists" xml:space="preserve">
+    <value>Twój personal access token z GitHuba nie posiada pozwolenia na dodawanie gistów.</value>
+  </data>
+  <data name="InvalidGithubToken" xml:space="preserve">
+    <value>Twój personal access token z GitHuba jest niepoprawny.</value>
+  </data>
+  <data name="GithubGistError" xml:space="preserve">
+    <value>Wystąpił błąd podczas publikowania Gista.</value>
   </data>
 </root>

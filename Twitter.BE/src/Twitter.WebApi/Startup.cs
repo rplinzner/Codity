@@ -35,6 +35,7 @@ namespace Twitter.WebApi
             services.AddIdentity();
             services.AddAndConfigureAutoMapper();
             services.AddServices();
+            services.AddHttpClients();
             services.ConfigureOptions(Configuration);
             services.AddRepositories();
         }

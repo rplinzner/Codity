@@ -169,6 +169,16 @@ namespace Twitter.WebApi.ExtensionMethods
             services.AddSingleton(mapper);
         }
 
+        public static void AddHttpClients(this IServiceCollection services)
+        {
+            services.AddHttpClient("github", c =>
+            {
+                c.BaseAddress = new Uri("https://api.github.com");
+                c.DefaultRequestHeaders.Add("Accept", "application/vnd.github.v3+json");
+                c.DefaultRequestHeaders.Add("User-Agent", "NotATwitter");
+            });
+        }
+
         public static void AddServices(this IServiceCollection services)
         {
             services.AddTransient<IAuthenticationService, AuthenticationService>();
@@ -184,6 +194,7 @@ namespace Twitter.WebApi.ExtensionMethods
             services.AddTransient<ITweetService, TweetService>();
             services.AddTransient<ILikeService, LikeService>();
             services.AddTransient<ICommentService, CommentService>();
+            services.AddTransient<IGithubService, GithubService>();
             services.AddTransient<DataSeeder>();
         }
 

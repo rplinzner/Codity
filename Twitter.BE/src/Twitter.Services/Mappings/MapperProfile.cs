@@ -20,7 +20,6 @@ namespace Twitter.Services.Mappings
         {
             CreateMap<RegisterRequest, User>()
                 .ForMember(d => d.UserName, o => o.MapFrom(s => s.Email));
-            CreateMap<UserProfileRequest, User>();
 
             CreateMap<User, BaseUserDTO>()
                .ForMember(d => d.FollowersCount, o => o.MapFrom(s => s.Followers.Count));
@@ -33,24 +32,18 @@ namespace Twitter.Services.Mappings
                 .ForMember(d => d.GenderId, o => o.MapFrom(s => s.Id))
                 .ForMember(d => d.GenderName, o => o.MapFrom(s => s.Name));
 
-            CreateMap<Notification, NotificationDTO>();
-
             CreateMap<Settings, SettingsDTO>()
-                .ForMember(d => d.LanguageCode, o => o.MapFrom(s => s.Language.Code));
-
+                .ForMember(d => d.LanguageCode, o => o.MapFrom(s => s.Language.Code))
+                .ForMember(d => d.HasGithubToken, o => o.MapFrom(s => !string.IsNullOrEmpty(s.GithubToken)));
 
             CreateMap<PagedList<User>, PagedResponse<BaseUserDTO>>()
                 .ForMember(d => d.Models, o => o.MapFrom(s => s.ToList()));
+
             CreateMap<PagedList<Tweet>, PagedResponse<TweetDTO>>()
                 .ForMember(d => d.Models, o => o.MapFrom(s => s.ToList()));
+
             CreateMap<PagedList<Comment>, PagedResponse<CommentDTO>>()
                 .ForMember(d => d.Models, o => o.MapFrom(s => s.ToList()));
-            CreateMap<PagedList<Follow>, PagedResponse<BaseUserDTO>>();
-            CreateMap<PagedList<Notification>, PagedResponse<NotificationDTO>>();
-
-            CreateMap<TweetRequest, Tweet>();
-            CreateMap<UpdateTweetRequest, Tweet>();
-            CreateMap<CodeSnippetRequest, CodeSnippet>();
 
             CreateMap<Tweet, TweetDTO>()
                .ForMember(d => d.AuthorFirstName, o => o.MapFrom(s => s.Author.FirstName))
@@ -62,10 +55,18 @@ namespace Twitter.Services.Mappings
                .ForMember(d => d.AuthorFirstName, o => o.MapFrom(s => s.Author.FirstName))
                .ForMember(d => d.AuthorLastName, o => o.MapFrom(s => s.Author.LastName));
 
-            CreateMap<User, LikeUserDTO>();
 
             CreateMap<CodeSnippet, CodeSnippetDTO>()
                .ForMember(d => d.ProgrammingLanguageName, o => o.MapFrom(s => s.ProgrammingLanguage.Name));
+
+            CreateMap<PagedList<Follow>, PagedResponse<BaseUserDTO>>();
+            CreateMap<PagedList<Notification>, PagedResponse<NotificationDTO>>();
+            CreateMap<TweetRequest, Tweet>();
+            CreateMap<UpdateTweetRequest, Tweet>();
+            CreateMap<CodeSnippetRequest, CodeSnippet>();
+            CreateMap<Notification, NotificationDTO>();
+            CreateMap<UserProfileRequest, User>();
+            CreateMap<User, LikeUserDTO>();
         }
     }
 }

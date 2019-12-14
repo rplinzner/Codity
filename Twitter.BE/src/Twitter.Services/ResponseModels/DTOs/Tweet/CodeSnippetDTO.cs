@@ -7,5 +7,6 @@ namespace Twitter.Services.ResponseModels.DTOs.Tweet
         public string Text { get; set; }
         public int ProgrammingLanguageId { get; set; }
         public string ProgrammingLanguageName { get; set; }
+        public string GistURL { get; set; }
     }
 }
