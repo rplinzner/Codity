@@ -15,11 +15,12 @@ namespace Twitter.WebApi.Controllers
     public class SettingsController : ControllerBase
     {
         private readonly ISettingsService _settingsService;
+        private readonly IGithubService _githubService;
         private readonly IUserContext _userContext;
-
-        public SettingsController(ISettingsService settingsService, IUserContext userContext)
+        public SettingsController(ISettingsService settingsService, IGithubService githubService, IUserContext userContext)
         {
             _settingsService = settingsService;
+            _githubService = githubService;
             _userContext = userContext;
         }
 
@@ -53,6 +54,45 @@ namespace Twitter.WebApi.Controllers
             int userId = _userContext.GetUserId();
 
             var response = await _settingsService.UpdateSettingsAsync(userId, settings);
+
+            if (response.IsError)
+            {
+                return BadRequest(response);
+            }
+
+            return Ok(response);
+        }
+
+        /// <summary>
+        /// Add Github Token
+        /// </summary>
+        /// <param name="token"></param>
+        /// <returns></returns>
+        [HttpPost("personal_access_token")]
+        public async Task<ActionResult<IBaseResponse>> AddGithubToken([FromBody] GithubTokenRequest token)
+        {
+            int userId = _userContext.GetUserId();
+
+            var response = await _githubService.AddToken(token.Token, userId);
+
+            if (response.IsError)
+            {
+                return BadRequest(response);
+            }
+
+            return Ok(response);
+        }
+
+        /// <summary>
+        /// Remove Github Token
+        /// </summary>
+        /// <returns></returns>
+        [HttpDelete("personal_access_token")]
+        public async Task<ActionResult<IBaseResponse>> RemoveGithubToken()
+        {
+            int userId = _userContext.GetUserId();
+
+            var response = await _githubService.RemoveToken(userId);
 
             if (response.IsError)
             {

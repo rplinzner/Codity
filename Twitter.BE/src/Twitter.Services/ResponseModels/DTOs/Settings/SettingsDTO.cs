@@ -6,5 +6,6 @@ namespace Twitter.Services.ResponseModels.DTOs.Settings
     {
         public bool IsDarkTheme { get; set; }
         public string LanguageCode { get; set; }
+        public bool HasGithubToken { get; set; }
     }
 }

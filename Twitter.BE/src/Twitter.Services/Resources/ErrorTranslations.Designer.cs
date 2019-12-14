@@ -178,6 +178,33 @@ namespace Twitter.Services.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to There was an error publishing Gist..
+        /// </summary>
+        public static string GithubGistError {
+            get {
+                return ResourceManager.GetString("GithubGistError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Your GitHub personal access token is missing &apos;gist&apos; permission..
+        /// </summary>
+        public static string GithubTokenMissingGists {
+            get {
+                return ResourceManager.GetString("GithubTokenMissingGists", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You don&apos;t have GitHub personal access token added to Your account..
+        /// </summary>
+        public static string GithubTokenNotFound {
+            get {
+                return ResourceManager.GetString("GithubTokenNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Email or password are incorrect..
         /// </summary>
         public static string IncorrectCredentials {
@@ -192,6 +219,15 @@ namespace Twitter.Services.Resources {
         public static string InvalidEmail {
             get {
                 return ResourceManager.GetString("InvalidEmail", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Your GitHub personal access token is invalid..
+        /// </summary>
+        public static string InvalidGithubToken {
+            get {
+                return ResourceManager.GetString("InvalidGithubToken", resourceCulture);
             }
         }
         

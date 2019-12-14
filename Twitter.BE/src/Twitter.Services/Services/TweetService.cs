@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using System;
-using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Twitter.Data.Model;
 using Twitter.Repositories.Interfaces;
@@ -18,17 +17,20 @@ namespace Twitter.Services.Services
     {
         private readonly ITweetRepository _tweetRepository;
         private readonly IBaseRepository<Notification> _notificationRepository;
+        private readonly IGithubService _githubService;
         private readonly INotificationGeneratorService _notificationGeneratorService;
         private readonly IMapper _mapper;
 
         public TweetService(
             ITweetRepository tweetRepository,
             IBaseRepository<Notification> notificationRepository,
+            IGithubService githubService,
             INotificationGeneratorService notificationGeneratorService,
             IMapper mapper)
         {
             _tweetRepository = tweetRepository;
             _notificationRepository = notificationRepository;
+            _githubService = githubService;
             _notificationGeneratorService = notificationGeneratorService;
             _mapper = mapper;
         }
@@ -36,8 +38,19 @@ namespace Twitter.Services.Services
         public async Task<IResponse<TweetDTO>> CreateTweetAsync(int userId, TweetRequest tweet)
         {
             var response = new Response<TweetDTO>();
-
             var tweetEntity = _mapper.Map<Tweet>(tweet);
+
+            if (tweet.CodeSnippet != null && tweet.CodeSnippet.IsGist && tweet.CodeSnippet.Gist != null)
+            {
+                var gistResponse = await _githubService.CreateGistURL(tweet.CodeSnippet.Gist, tweet.Text, userId);
+                if (gistResponse.IsError)
+                {
+                    response.Errors = gistResponse.Errors;
+                    return response;
+                }
+
+                tweetEntity.CodeSnippet.GistURL = gistResponse.Message;
+            }
 
             tweetEntity.AuthorId = userId;
             tweetEntity.CreationDate = DateTime.Now;
@@ -47,7 +60,6 @@ namespace Twitter.Services.Services
             var result = await _tweetRepository.GetByAsync(c => c.Id == tweetEntity.Id);
 
             response.Model = _mapper.Map<TweetDTO>(result);
-
 
             await _notificationGeneratorService.CreateTweetNotification(result, result.Author);
 

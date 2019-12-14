@@ -3,6 +3,7 @@
     public class Settings : BaseEntity, IBaseEntity
     {
         public bool IsDarkTheme { get; set; }
+        public string GithubToken { get; set; }
 
         public int LanguageId { get; set; }
         public Language Language { get; set; }
