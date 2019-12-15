@@ -42,7 +42,7 @@ namespace Twitter.Services.Services
 
             if (tweet.CodeSnippet != null && tweet.CodeSnippet.IsGist && tweet.CodeSnippet.Gist != null)
             {
-                var gistResponse = await _githubService.CreateGistURL(tweet.CodeSnippet.Gist, tweet.Text, userId);
+                var gistResponse = await _githubService.CreateGistURL(tweet.CodeSnippet.Gist, tweet.CodeSnippet.Text, userId);
                 if (gistResponse.IsError)
                 {
                     response.Errors = gistResponse.Errors;
