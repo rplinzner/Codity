@@ -226,7 +226,7 @@ function PrimarySearchAppBar(props: Props & RouteComponentProps) {
   );
 
   const getUsers = (searchQuery: string): void => {
-    if (searchQuery !== '') {
+    if (searchQuery !== '' && searchQuery.length > 1) {
       get<SearchResponse>(
         constants.usersController,
         `/search?query=${searchQuery}&pageSize=3`,
