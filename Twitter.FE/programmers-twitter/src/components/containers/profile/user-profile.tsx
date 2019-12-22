@@ -7,6 +7,7 @@ import {
   createStyles,
   Divider,
   LinearProgress,
+  Button,
 } from '@material-ui/core';
 import { withRouter, RouteComponentProps } from 'react-router';
 
@@ -25,8 +26,13 @@ import {
 } from 'react-localize-redux';
 import displayErrors from '../../../helpers/display-errors';
 import CardSceleton from '../feed/card-sceleton';
+import { AppState } from '../../..';
+import { connect } from 'react-redux';
+import { UserState } from '../../../store/user/user.types';
 
-interface Props extends RouteComponentProps {}
+interface Props extends RouteComponentProps {
+  user: UserState;
+}
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -64,7 +70,11 @@ const useStyles = makeStyles((theme: Theme) =>
       },
     },
     divider: {
-      marginBottom: theme.spacing(2),
+      margin: theme.spacing(2, 0, 2, 0),
+      width: '100%',
+    },
+    editButton: {
+      margin: theme.spacing(2),
     },
   }),
 );
@@ -120,14 +130,26 @@ const UserProfile: React.FC<Props & LocalizeContextProps> = (
   };
 
   const calculateAge = (date: string) => {
-    var today = new Date();
-    var birthDate = new Date(date);
-    var age_now = today.getFullYear() - birthDate.getFullYear();
-    var m = today.getMonth() - birthDate.getMonth();
+    const today = new Date();
+    const birthDate = new Date(date);
+    let age_now = today.getFullYear() - birthDate.getFullYear();
+    const m = today.getMonth() - birthDate.getMonth();
     if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
       age_now--;
     }
     return age_now;
+  };
+
+  const isOwnProfile = (): boolean => {
+    if (
+      props.user &&
+      props.user.user &&
+      // tslint:disable-next-line: radix
+      props.user.user.id === parseInt(getUserIdSearchValue())
+    ) {
+      return true;
+    }
+    return false;
   };
 
   useEffect(() => {
@@ -139,11 +161,27 @@ const UserProfile: React.FC<Props & LocalizeContextProps> = (
       {userProfile !== null ? (
         <Grid
           style={{ height: '90vh', padding: '20px' }}
-          container
+          container={true}
           justify="center"
           alignItems="center"
         >
-          <Grid item xs={10} sm={6} lg={5} style={{ textAlign: 'center' }}>
+          <Grid
+            item={true}
+            xs={10}
+            sm={6}
+            lg={5}
+            style={{ textAlign: 'center' }}
+          >
+            {isOwnProfile() && (
+              <Button
+                className={classes.editButton}
+                color="primary"
+                variant="contained"
+              >
+                Edit profile
+              </Button>
+            )}
+
             <UserAvatar
               firstName={userProfile.model.firstName}
               lastName={userProfile.model.lastName}
@@ -168,15 +206,23 @@ const UserProfile: React.FC<Props & LocalizeContextProps> = (
               {': '}
               {userProfile.model.followingCount}
             </Typography>
-            <FollowButton
-              className={classes.element}
-              isFollowing={userProfile.model.isFollowing}
-              reloadProfile={() => getUserProfile()}
-              userId={userProfile.model.id}
-            />
+            {!isOwnProfile() && (
+              <FollowButton
+                className={classes.element}
+                isFollowing={userProfile.model.isFollowing}
+                reloadProfile={() => getUserProfile()}
+                userId={userProfile.model.id}
+              />
+            )}
           </Grid>
 
-          <Grid item xs={10} sm={5} lg={3} className={classes.userDescription}>
+          <Grid
+            item={true}
+            xs={10}
+            sm={5}
+            lg={3}
+            className={classes.userDescription}
+          >
             <Typography className={classes.element} variant="h4">
               {userProfile.model.firstName + ' ' + userProfile.model.lastName}
             </Typography>
@@ -189,13 +235,13 @@ const UserProfile: React.FC<Props & LocalizeContextProps> = (
             <Typography className={classes.element} variant="h6">
               <T id="aboutMe" />
             </Typography>
-            <Typography variant="body1" style={{textAlign: 'justify'}}>
+            <Typography variant="body1" style={{ textAlign: 'justify' }}>
               {userProfile.model.aboutMe || <T id="notWrittenYet" />}
             </Typography>
           </Grid>
-
-          <Grid item xs={10} sm={10} lg={10} className={classes.posts}>
-            <Divider className={classes.divider} />
+          {/*  User Posts */}
+          <Divider className={classes.divider} />
+          <Grid item={true} xs={10} sm={10} lg={10} className={classes.posts}>
             <Typography variant="h5">Recent Posts:</Typography>
             <CardSceleton />
           </Grid>
@@ -211,4 +257,8 @@ const UserProfile: React.FC<Props & LocalizeContextProps> = (
   );
 };
 
-export default withLocalize(withRouter(UserProfile));
+const mapStateToProps = (state: AppState) => ({
+  user: state.user,
+});
+
+export default connect(mapStateToProps)(withLocalize(withRouter(UserProfile)));
