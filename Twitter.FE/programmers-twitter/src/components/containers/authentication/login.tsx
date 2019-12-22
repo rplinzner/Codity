@@ -98,8 +98,7 @@ class Login extends Component<Props & RouteComponentProps<any>, State> {
     const { classes, isLoggedIn, history } = this.props;
     if (isLoggedIn) {
       history.push('/MyFeed');
-      // eslint-disable-next-line no-restricted-globals
-      location.reload(true);
+      window.location.replace('/MyFeed');
     }
     return (
       <Grid
