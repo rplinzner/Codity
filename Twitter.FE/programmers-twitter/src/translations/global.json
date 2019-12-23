@@ -42,5 +42,11 @@
   ],
   "yearsOld": ["years old", "lat"],
   "aboutMe": ["About me", "O mnie"],
-  "notWrittenYet": ["User has not provided any info yet", "Użytkownik nie uzupełnił jeszcze tej informacji"]
+  "notWrittenYet": [
+    "User has not provided any info yet",
+    "Użytkownik nie uzupełnił jeszcze tej informacji"
+  ],
+  "editProfile": ["Edit Profile", "Edytuj Profil"],
+  "save": ["Save", "Zapisz"],
+  "birthDay": ["Birth Day", "Urodziny"]
 }

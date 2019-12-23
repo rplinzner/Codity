@@ -68,6 +68,13 @@ class App extends Component<Props> {
     });
   }
 
+  // shouldComponentUpdate(nextProps: Props, nextState: any) {
+  //   if (nextProps.isDarkTheme === this.props.isDarkTheme) {
+  //     return false;
+  //   }
+  //   return true;
+  // }
+
   downloadSettings = () => {
     get<SettingsResponse>(
       settingsController,
