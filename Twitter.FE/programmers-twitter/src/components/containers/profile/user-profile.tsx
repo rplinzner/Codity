@@ -158,13 +158,15 @@ const UserProfile: React.FC<Props & LocalizeContextProps> = (
   };
 
   const setEditableStates = (profile: ProfileResponse): void => {
-    const { birthDay, aboutMe } = profile.model;
+    const { birthDay, aboutMe, image } = profile.model;
     if (birthDay !== null) {
       setBirthDate(new Date(birthDay));
     }
     if (aboutMe !== null) {
       setAboutMe(aboutMe);
     }
+    setImage(image);
+    // TODO: Add gender
   };
 
   const calculateAge = (date: string) => {
@@ -280,13 +282,11 @@ const UserProfile: React.FC<Props & LocalizeContextProps> = (
             )}
             {/* User Photo */}
             {isEditing ? (
-              <>
-                <AddPhotoAvatar
-                  className={classes.avatar}
-                  handleImage={handleImage}
-                  existingPic={userProfile.model.image}
-                />
-              </>
+              <AddPhotoAvatar
+                className={classes.avatar}
+                handleImage={handleImage}
+                existingPic={image}
+              />
             ) : (
               <UserAvatar
                 firstName={userProfile.model.firstName}
@@ -380,7 +380,7 @@ const UserProfile: React.FC<Props & LocalizeContextProps> = (
                 onChange={handleAboutMeTextField}
                 label={<T id="aboutMe" />}
                 multiline={true}
-                rows={5}
+                rows={7}
               />
             )}
           </Grid>
