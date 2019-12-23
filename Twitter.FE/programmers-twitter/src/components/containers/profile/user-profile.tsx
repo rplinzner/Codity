@@ -198,7 +198,7 @@ const UserProfile: React.FC<Props & LocalizeContextProps> = (
     if (!isEditing) {
       setIsEditing(true);
     } else {
-      toast.info('Please wait for server response'); //TODO: translation
+      toast.info('Please wait for server response'); // TODO: translation
       const body: ProfileUpdateBody = {
         aboutMe,
         birthDay: birthDate !== null ? birthDate.toISOString() : null,
@@ -284,6 +284,7 @@ const UserProfile: React.FC<Props & LocalizeContextProps> = (
                 <AddPhotoAvatar
                   className={classes.avatar}
                   handleImage={handleImage}
+                  existingPic={userProfile.model.image}
                 />
               </>
             ) : (
@@ -378,7 +379,7 @@ const UserProfile: React.FC<Props & LocalizeContextProps> = (
                 value={aboutMe}
                 onChange={handleAboutMeTextField}
                 label={<T id="aboutMe" />}
-                multiline
+                multiline={true}
                 rows={5}
               />
             )}

@@ -6,11 +6,12 @@ import { toast } from 'react-toastify';
 interface Props {
   className?: string;
   handleImage: (base64Image: string) => void;
+  existingPic?: string;
 }
 
 const AddPhotoAvatar: React.FC<Props> = (props: Props) => {
   const [loadedImg, setLoadedImg] = React.useState<string | ArrayBuffer | null>(
-    '',
+    props.existingPic ? props.existingPic : '',
   );
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     const images = e.target.files;
@@ -32,9 +33,8 @@ const AddPhotoAvatar: React.FC<Props> = (props: Props) => {
   };
 
   const handleRemovePicButton = () => {
-    setLoadedImg(null);
-      props.handleImage('');
-      toast.success('your image will be removed after you save the changes') //TODO: translation
+    setLoadedImg('');
+    props.handleImage('');
   };
   return (
     <div>
