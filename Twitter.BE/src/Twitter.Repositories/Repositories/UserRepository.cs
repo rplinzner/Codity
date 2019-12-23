@@ -15,7 +15,7 @@ namespace Twitter.Repositories.Repositories
         {
         }
 
-        public async Task<PagedList<User>> SearchAsync(string query, int pageNumber, int pageSize, bool withTracking = false)
+        public async Task<PagedList<User>> SearchAsync(string query, int pageNumber, int pageSize, int exceptId, bool withTracking = false)
         {
             var constructedQuery = new StringBuilder();
             var splittedQuery = query.Split(' ');
@@ -30,7 +30,7 @@ namespace Twitter.Repositories.Repositories
             }
 
             var result = await _dbContext.Users.FromSqlInterpolated(
-                $"SELECT * FROM dbo.SearchUsers({constructedQuery.ToString()}, {pageNumber}, {pageSize})")
+                $"SELECT * FROM dbo.SearchUsers({constructedQuery.ToString()}, {pageNumber}, {pageSize}, {exceptId})")
                 .ToListAsync();
 
             if (result.Any())
@@ -40,7 +40,7 @@ namespace Twitter.Repositories.Repositories
             }
 
             var count = _dbContext.Users.FromSqlInterpolated(
-                $"SELECT * FROM dbo.SearchUsersCount({constructedQuery.ToString()})")
+                $"SELECT * FROM dbo.SearchUsersCount({constructedQuery.ToString()}, {exceptId})")
                 .Count();
 
             return new PagedList<User>(result, count, pageNumber, pageSize);
