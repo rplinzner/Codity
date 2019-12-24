@@ -9,6 +9,8 @@ import {
   LinearProgress,
   Button,
   TextField,
+  FormControlLabel,
+  Checkbox,
 } from '@material-ui/core';
 import { withRouter, RouteComponentProps } from 'react-router';
 import {
@@ -21,6 +23,7 @@ import plLocale from 'date-fns/locale/pl';
 
 import RecordVoiceOverIcon from '@material-ui/icons/RecordVoiceOver';
 import RssFeedIcon from '@material-ui/icons/RssFeed';
+import EmojiPeopleIcon from '@material-ui/icons/EmojiPeople';
 
 import FollowButton from './follow-unfollow-button';
 import UserAvatar from './user-avatar';
@@ -41,6 +44,7 @@ import { UserState } from '../../../store/user/user.types';
 import AddPhotoAvatar from './add-photo-avatar';
 import { toast } from 'react-toastify';
 import { BaseResponse } from '../../../types/base-response';
+import GenderResponse from '../../../types/gender-response';
 
 interface Props extends RouteComponentProps {
   user: UserState;
@@ -105,11 +109,13 @@ const UserProfile: React.FC<Props & LocalizeContextProps> = (
   const classes = useStyles();
 
   const [userProfile, setUserProfile] = useState<ProfileResponse | null>(null);
+  const [genders, setGenders] = useState<GenderResponse>();
   const [isLoading, setIsLoading] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
 
   // -- Editable states --
   const [birthDate, setBirthDate] = useState<Date | null>(new Date());
+  const [showBirthDay, setShowBirthDay] = useState<boolean>(true);
   const [aboutMe, setAboutMe] = useState('');
   const [image, setImage] = useState('');
   // TODO: Add gender
@@ -127,6 +133,8 @@ const UserProfile: React.FC<Props & LocalizeContextProps> = (
   };
 
   const langCode = props.activeLanguage ? props.activeLanguage.code : 'en';
+
+  //#region API calls
 
   const getUserProfile = (): void => {
     setIsLoading(true);
@@ -157,43 +165,17 @@ const UserProfile: React.FC<Props & LocalizeContextProps> = (
     }
   };
 
-  const setEditableStates = (profile: ProfileResponse): void => {
-    const { birthDay, aboutMe, image } = profile.model;
-    if (birthDay !== null) {
-      setBirthDate(new Date(birthDay));
-    }
-    if (aboutMe !== null) {
-      setAboutMe(aboutMe);
-    }
-    setImage(image);
-    // TODO: Add gender
-  };
-
-  const calculateAge = (date: string) => {
-    const today = new Date();
-    const birthDate = new Date(date);
-    let age_now = today.getFullYear() - birthDate.getFullYear();
-    const m = today.getMonth() - birthDate.getMonth();
-    if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
-      age_now--;
-    }
-    return age_now;
-  };
-
-  const handleDateChange = (date: Date | null) => {
-    setBirthDate(date);
-  };
-
-  const isOwnProfile = (): boolean => {
-    if (
-      props.user &&
-      props.user.user &&
-      // tslint:disable-next-line: radix
-      props.user.user.id === parseInt(getUserIdSearchValue())
-    ) {
-      return true;
-    }
-    return false;
+  const getGenders = () => {
+    get<GenderResponse>(
+      constants.genderController,
+      '',
+      langCode,
+      <T id="errorConection" />,
+      true,
+    ).then(
+      resp => setGenders(resp),
+      errors => displayErrors(errors),
+    );
   };
 
   const handleEditButton = () => {
@@ -201,10 +183,15 @@ const UserProfile: React.FC<Props & LocalizeContextProps> = (
       setIsEditing(true);
     } else {
       toast.info('Please wait for server response'); // TODO: translation
+      let birthDayToSend: string | null = null;
+      if (showBirthDay && birthDate) {
+        birthDayToSend = birthDate.toISOString();
+      }
+
       const body: ProfileUpdateBody = {
         aboutMe,
-        birthDay: birthDate !== null ? birthDate.toISOString() : null,
-        genderId: 1,
+        birthDay: birthDayToSend,
+        genderId: 2, //TODO: add choice
         image,
       };
       put<BaseResponse, ProfileUpdateBody>(
@@ -226,21 +213,77 @@ const UserProfile: React.FC<Props & LocalizeContextProps> = (
       );
     }
   };
+  //#endregion
+
+  const setEditableStates = (profile: ProfileResponse): void => {
+    const { birthDay, aboutMe, image } = profile.model;
+    if (birthDay !== null) {
+      setBirthDate(new Date(birthDay));
+    }
+    if (aboutMe !== null) {
+      setAboutMe(aboutMe);
+    }
+    setImage(image);
+  };
+
+  const calculateAge = (date: string) => {
+    const today = new Date();
+    const birthDate = new Date(date);
+    let age_now = today.getFullYear() - birthDate.getFullYear();
+    const m = today.getMonth() - birthDate.getMonth();
+    if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+      age_now--;
+    }
+    return age_now;
+  };
+
+  const isOwnProfile = (): boolean => {
+    if (
+      props.user &&
+      props.user.user &&
+      // tslint:disable-next-line: radix
+      props.user.user.id === parseInt(getUserIdSearchValue())
+    ) {
+      return true;
+    }
+    return false;
+  };
+
+  const handleDateChange = (date: Date | null) => {
+    setBirthDate(date);
+  };
 
   const handleAboutMeTextField = (
     event: React.ChangeEvent<HTMLInputElement>,
-  ) => {
+  ): void => {
     setAboutMe(event.target.value);
   };
 
   const handleImage = (image: string) => {
     setImage(image);
   };
+  const handleCheckBox = (name: string) => (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    switch (name) {
+      case 'showBirthDay':
+        setShowBirthDay(event.target.checked);
+        break;
+
+      default:
+        break;
+    }
+  };
 
   useEffect(() => {
+    getGenders();
     getUserProfile();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.location.search]);
+
+  console.log(genders);
+  console.log(showBirthDay);
+
   return (
     <>
       {userProfile !== null ? (
@@ -296,15 +339,15 @@ const UserProfile: React.FC<Props & LocalizeContextProps> = (
               />
             )}
             {/* User basic info */}
-            <Typography
-              className={classes.typographyWithIcon}
-              variant="subtitle1"
-            >
-              <RecordVoiceOverIcon className={classes.icon} />
-              <T id="followers" />
-              {': '}
-              {userProfile.model.followersCount}
-            </Typography>
+            {userProfile.model.genderName && (
+              <Typography
+                className={classes.typographyWithIcon}
+                variant="subtitle1"
+              >
+                <EmojiPeopleIcon className={classes.icon} />
+                {userProfile.model.genderName}
+              </Typography>
+            )}
             <Typography
               className={classes.typographyWithIcon}
               variant="subtitle1"
@@ -313,6 +356,15 @@ const UserProfile: React.FC<Props & LocalizeContextProps> = (
               <T id="following" />
               {': '}
               {userProfile.model.followingCount}
+            </Typography>
+            <Typography
+              className={classes.typographyWithIcon}
+              variant="subtitle1"
+            >
+              <RecordVoiceOverIcon className={classes.icon} />
+              <T id="followers" />
+              {': '}
+              {userProfile.model.followersCount}
             </Typography>
             {!isOwnProfile() && (
               <FollowButton
@@ -344,23 +396,39 @@ const UserProfile: React.FC<Props & LocalizeContextProps> = (
                 <T id="yearsOld" />
               ) : null}
             </Typography>
+            {/* -- BirthDay -- */}
             {isEditing && (
-              <MuiPickersUtilsProvider
-                locale={langCode.includes('pl') ? plLocale : enLocale}
-                utils={DateFnsUtils}
-              >
-                <KeyboardDatePicker
-                  margin="normal"
-                  id="date-picker-dialog"
-                  label={<T id="birthDay" />}
-                  format={langCode.includes('pl') ? 'dd.MM.yyyy' : 'MM/dd/yyyy'}
-                  value={birthDate}
-                  onChange={handleDateChange}
-                  KeyboardButtonProps={{
-                    'aria-label': 'change date',
-                  }}
+              <>
+                <MuiPickersUtilsProvider
+                  locale={langCode.includes('pl') ? plLocale : enLocale}
+                  utils={DateFnsUtils}
+                >
+                  <KeyboardDatePicker
+                    margin="normal"
+                    id="date-picker-dialog"
+                    label={<T id="birthDay" />}
+                    format={
+                      langCode.includes('pl') ? 'dd.MM.yyyy' : 'MM/dd/yyyy'
+                    }
+                    value={birthDate}
+                    onChange={handleDateChange}
+                    KeyboardButtonProps={{
+                      'aria-label': 'change date',
+                    }}
+                  />
+                </MuiPickersUtilsProvider>
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={showBirthDay}
+                      onChange={handleCheckBox('showBirthDay')}
+                      value="showBirthDay"
+                      color="primary"
+                    />
+                  }
+                  label="Show birthday in profle" //TODO: translation
                 />
-              </MuiPickersUtilsProvider>
+              </>
             )}
             {/* About me section */}
             {!isEditing ? (

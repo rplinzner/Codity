@@ -1,4 +1,3 @@
-
 export interface BaseResponse {
   message: string | null;
   isError: boolean;
