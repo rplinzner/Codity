@@ -2,14 +2,23 @@ import React from 'react';
 import { Avatar, Button } from '@material-ui/core';
 import AddAPhotoIcon from '@material-ui/icons/AddAPhoto';
 import { toast } from 'react-toastify';
+import {
+  withLocalize,
+  LocalizeContextProps,
+  Translate as T,
+} from 'react-localize-redux';
 
-interface Props {
+import { profileTranslations } from '../../../translations/index';
+
+interface Props extends LocalizeContextProps {
   className?: string;
   handleImage: (base64Image: string) => void;
   existingPic?: string;
 }
 
 const AddPhotoAvatar: React.FC<Props> = (props: Props) => {
+  props.addTranslation(profileTranslations);
+
   const [loadedImg, setLoadedImg] = React.useState<string | ArrayBuffer | null>(
     props.existingPic ? props.existingPic : '',
   );
@@ -22,11 +31,13 @@ const AddPhotoAvatar: React.FC<Props> = (props: Props) => {
 
       reader.readAsDataURL(image);
       reader.onload = () => {
-        if (Math.round(image.size / 1000) <= 1000) {
+        if (!image.type.includes('image/')) {
+          toast.error(<T id="imageOfType" />);
+        } else if (Math.round(image.size / 1000) <= 1024) {
           setLoadedImg(reader.result);
           props.handleImage(reader.result as string);
         } else {
-          toast.error('image must be of size'); //TODO: add translation
+          toast.error(<T id="imageOfSize" />);
         }
       };
     }
@@ -61,11 +72,11 @@ const AddPhotoAvatar: React.FC<Props> = (props: Props) => {
           color="secondary"
           style={{ margin: '8px' }}
         >
-          Remove pic
+          <T id="removePicture" />
         </Button>
       </label>
     </div>
   );
 };
 
-export default AddPhotoAvatar;
+export default withLocalize(AddPhotoAvatar);

@@ -11,6 +11,10 @@ import {
   TextField,
   FormControlLabel,
   Checkbox,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
 } from '@material-ui/core';
 import { withRouter, RouteComponentProps } from 'react-router';
 import {
@@ -100,6 +104,10 @@ const useStyles = makeStyles((theme: Theme) =>
       margin: theme.spacing(2),
     },
     aboutMeTextField: { width: '100%', margin: theme.spacing(2, 0, 1, 0) },
+    formControl: {
+      margin: theme.spacing(1),
+      minWidth: 120,
+    },
   }),
 );
 
@@ -118,7 +126,7 @@ const UserProfile: React.FC<Props & LocalizeContextProps> = (
   const [showBirthDay, setShowBirthDay] = useState<boolean>(true);
   const [aboutMe, setAboutMe] = useState('');
   const [image, setImage] = useState('');
-  // TODO: Add gender
+  const [selectedGender, setSelectedGender] = useState<number>(0);
 
   const getUrlParams = (): URLSearchParams => {
     if (!props.location.search) {
@@ -158,7 +166,9 @@ const UserProfile: React.FC<Props & LocalizeContextProps> = (
             setIsLoading(false);
           },
         )
-        .then(() => setIsEditing(false));
+        .then(() => {
+          setIsEditing(false);
+        });
     } else {
       setUserProfile(null);
       setIsLoading(false);
@@ -173,16 +183,25 @@ const UserProfile: React.FC<Props & LocalizeContextProps> = (
       <T id="errorConection" />,
       true,
     ).then(
-      resp => setGenders(resp),
+      resp => {
+        const temp = resp;
+        temp.models.push({
+          genderId: 0,
+          genderName: 'notProvided',
+        });
+
+        setGenders(temp);
+      },
       errors => displayErrors(errors),
     );
   };
 
   const handleEditButton = () => {
     if (!isEditing) {
+      setGenderByName(userProfile ? userProfile.model.genderName : null);
       setIsEditing(true);
     } else {
-      toast.info('Please wait for server response'); // TODO: translation
+      toast.info(<T id="waitForServerResponse" />);
       let birthDayToSend: string | null = null;
       if (showBirthDay && birthDate) {
         birthDayToSend = birthDate.toISOString();
@@ -191,7 +210,7 @@ const UserProfile: React.FC<Props & LocalizeContextProps> = (
       const body: ProfileUpdateBody = {
         aboutMe,
         birthDay: birthDayToSend,
-        genderId: 2, //TODO: add choice
+        genderId: selectedGender === 0 ? null : selectedGender,
         image,
       };
       put<BaseResponse, ProfileUpdateBody>(
@@ -203,7 +222,7 @@ const UserProfile: React.FC<Props & LocalizeContextProps> = (
         true,
       ).then(
         () => {
-          toast.success('profile successfully updated');
+          toast.success(<T id="successfullyUpdated" />);
           getUserProfile();
         },
         errors => {
@@ -214,6 +233,18 @@ const UserProfile: React.FC<Props & LocalizeContextProps> = (
     }
   };
   //#endregion
+
+  const setGenderByName = (name: string | null) => {
+    if (name === null) {
+      setSelectedGender(0);
+    } else {
+      if (genders && genders.models) {
+        const models = genders.models;
+        const tempGender = models.find(e => e.genderName === name);
+        setSelectedGender(tempGender ? tempGender.genderId : 0);
+      }
+    }
+  };
 
   const setEditableStates = (profile: ProfileResponse): void => {
     const { birthDay, aboutMe, image } = profile.model;
@@ -264,7 +295,7 @@ const UserProfile: React.FC<Props & LocalizeContextProps> = (
   };
   const handleCheckBox = (name: string) => (
     event: React.ChangeEvent<HTMLInputElement>,
-  ) => {
+  ): void => {
     switch (name) {
       case 'showBirthDay':
         setShowBirthDay(event.target.checked);
@@ -275,14 +306,15 @@ const UserProfile: React.FC<Props & LocalizeContextProps> = (
     }
   };
 
+  const handleGenderChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+    setSelectedGender(event.target.value as number);
+  };
+
   useEffect(() => {
     getGenders();
     getUserProfile();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.location.search]);
-
-  console.log(genders);
-  console.log(showBirthDay);
 
   return (
     <>
@@ -317,8 +349,7 @@ const UserProfile: React.FC<Props & LocalizeContextProps> = (
                     variant="contained"
                     onClick={() => setIsEditing(false)}
                   >
-                    Cancel
-                    {/* TODO: Translation */}
+                    <T id="cancel" />
                   </Button>
                 )}
               </>
@@ -339,7 +370,7 @@ const UserProfile: React.FC<Props & LocalizeContextProps> = (
               />
             )}
             {/* User basic info */}
-            {userProfile.model.genderName && (
+            {!isEditing && userProfile.model.genderName && (
               <Typography
                 className={classes.typographyWithIcon}
                 variant="subtitle1"
@@ -347,6 +378,19 @@ const UserProfile: React.FC<Props & LocalizeContextProps> = (
                 <EmojiPeopleIcon className={classes.icon} />
                 {userProfile.model.genderName}
               </Typography>
+            )}
+            {isEditing && genders && (
+              <FormControl className={classes.formControl}>
+                <InputLabel id="demo-simple-select-label">Gender</InputLabel>
+                <Select value={selectedGender} onChange={handleGenderChange}>
+                  {genders.models.map(model => (
+                    <MenuItem key={model.genderId} value={model.genderId}>
+                      <T id={model.genderName}>{model.genderName}</T>
+                      //TODO: Do something about state problem
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
             )}
             <Typography
               className={classes.typographyWithIcon}
@@ -426,7 +470,7 @@ const UserProfile: React.FC<Props & LocalizeContextProps> = (
                       color="primary"
                     />
                   }
-                  label="Show birthday in profle" //TODO: translation
+                  label={<T id="showAge" />}
                 />
               </>
             )}

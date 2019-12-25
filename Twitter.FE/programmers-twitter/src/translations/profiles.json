@@ -1,0 +1,14 @@
+{
+  "imageOfSize": [
+    "Image must be no more than 1MB",
+    "Zdjęcie może mieć maksymalnie 1MB"
+  ],
+  "imageOfType": ["File must be an image", "Plik musi być zdjęciem"],
+  "removePicture": ["Remove picture", "Usuń zdjęcie"],
+  "showAge": ["Show age in profile", "Pokazuj wiek w profilu"],
+  "successfullyUpdated": [
+    "Profile successfully updated",
+    "Profil zaktualizowany pomyślnie"
+  ],
+  "notProvided": ["Not provided", "Nie podano"]
+}

@@ -48,5 +48,12 @@
   ],
   "editProfile": ["Edit Profile", "Edytuj Profil"],
   "save": ["Save", "Zapisz"],
-  "birthDay": ["Birth Day", "Urodziny"]
+  "birthDay": ["Birth Day", "Urodziny"],
+  "waitForServerResponse": [
+    "Please wait for server to respond",
+    "Proszę poczekać na odpowiedź od serwera"
+  ],
+  "cancel": ["Cancel", "Anuluj"],
+  "Man": ["Man", "Mężczyzna"],
+  "Woman": ["Woman", "Kobieta"]
 }
