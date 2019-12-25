@@ -97,6 +97,7 @@ const SearchResult: React.FC<Props & LocalizeContextProps> = (
   }, [props.location.search]);
 
   const classes = useStyles();
+
   return (
     <Container className={classes.container}>
       {profiles && profiles.models && profiles.models.length > 0 ? (
@@ -112,6 +113,8 @@ const SearchResult: React.FC<Props & LocalizeContextProps> = (
             updateSearch={getUsers}
           />
         ))
+      ) : isLoading ? (
+        <LinearProgress className={classes.progress} />
       ) : (
         <div style={{ textAlign: 'center' }}>
           <Typography variant="h5">
@@ -119,7 +122,6 @@ const SearchResult: React.FC<Props & LocalizeContextProps> = (
           </Typography>
         </div>
       )}
-      {isLoading && <LinearProgress className={classes.progress} />}
       {profiles && profiles.totalPages && profiles.totalPages > 1 && (
         <div className={classes.progress}>
           <Pagination
