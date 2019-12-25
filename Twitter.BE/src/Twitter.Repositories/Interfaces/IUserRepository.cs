@@ -10,6 +10,7 @@ namespace Twitter.Repositories.Interfaces
            string query,
            int pageNumber,
            int pageSize,
+           int exceptId,
            bool withTracking = false);
     }
 }

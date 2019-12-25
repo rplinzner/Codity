@@ -225,8 +225,9 @@ namespace Twitter.Services.Services
             var users = await _userRepository.SearchAsync(
                 searchRequest.Query,
                 searchRequest.PageNumber,
-                searchRequest.PageSize);
-
+                searchRequest.PageSize,
+                currentUserId);
+            
             _mapper.Map(users, response);
 
             var userIds = users.Select(c => c.Id);

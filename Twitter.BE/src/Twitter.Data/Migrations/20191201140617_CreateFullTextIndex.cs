@@ -12,7 +12,8 @@ namespace Twitter.Data.Migrations
                 @"CREATE FUNCTION [dbo].[SearchUsers]
                       (@SearchParameter nvarchar(4000),
                       @PageNumber int,
-                      @PageSize int)
+                      @PageSize int,
+                      @ExceptId int)
                   RETURNS TABLE  
                   AS
                   RETURN
@@ -30,12 +31,14 @@ namespace Twitter.Data.Migrations
                         GROUP BY fts.[Key]
 					  )[ft]
                             ON [u].Id = [ft].[Key]
+                      WHERE NOT [u].Id = @ExceptId
                       ORDER BY [ft].[RANK] DESC
                       OFFSET(@PageNumber - 1) * @PageSize ROWS FETCH NEXT @PageSize ROWS only
                     )");    
             migrationBuilder.Sql(
                 @"CREATE FUNCTION [dbo].[SearchUsersCount]
-                      (@SearchParameter nvarchar(4000))
+                      (@SearchParameter nvarchar(4000),
+                      @ExceptId int)
                   RETURNS TABLE  
                   AS
                   RETURN
@@ -53,6 +56,7 @@ namespace Twitter.Data.Migrations
                          GROUP BY fts.[Key]
 					   )[ft]
                              ON [u].Id = [ft].[Key]
+                       WHERE NOT [u].Id = @ExceptId
                     )");
         }
 
