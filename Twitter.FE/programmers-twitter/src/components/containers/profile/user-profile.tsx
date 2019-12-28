@@ -318,6 +318,7 @@ const UserProfile: React.FC<Props & LocalizeContextProps> = (
 
   return (
     <>
+      {isLoading && <LinearProgress />}
       {userProfile !== null ? (
         <Grid
           style={{ height: '90vh', padding: '20px' }}
@@ -385,8 +386,9 @@ const UserProfile: React.FC<Props & LocalizeContextProps> = (
                 <Select value={selectedGender} onChange={handleGenderChange}>
                   {genders.models.map(model => (
                     <MenuItem key={model.genderId} value={model.genderId}>
-                      <T id={model.genderName}>{model.genderName}</T>
-                      //TODO: Do something about state problem
+                      {model.genderName}
+                      {/* <T id={model.genderName}>{model.genderName}</T> */}
+                      {/* TODO: Do something about state problem */}
                     </MenuItem>
                   ))}
                 </Select>
@@ -498,13 +500,11 @@ const UserProfile: React.FC<Props & LocalizeContextProps> = (
           </Grid>
           {/*  User Posts */}
           <Divider className={classes.divider} />
-          <Grid item={true} xs={10} sm={10} lg={10} className={classes.posts}>
+          <Grid item={true} xs={12} className={classes.posts}>
             <Typography variant="h5">Recent Posts:</Typography>
             <CardSceleton />
           </Grid>
         </Grid>
-      ) : isLoading ? (
-        <LinearProgress />
       ) : (
         <Typography variant="h4" style={{ textAlign: 'center' }}>
           <T id="noData" />

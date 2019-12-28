@@ -3,5 +3,6 @@ export default interface SettingsResponse extends BaseResponse {
   model: {
     isDarkTheme: boolean;
     languageCode: string;
+    hasGithubToken: boolean;
   };
 }

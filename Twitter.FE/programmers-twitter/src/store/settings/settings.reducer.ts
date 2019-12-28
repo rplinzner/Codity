@@ -1,6 +1,9 @@
 import * as types from './settings.types';
 
-const initialState: types.SettingsState = { isDarkTheme: false };
+const initialState: types.SettingsState = {
+  isDarkTheme: false,
+  hasGithubToken: false,
+};
 
 export default function settingsReducer(
   state = initialState,
@@ -11,6 +14,11 @@ export default function settingsReducer(
       return {
         ...state,
         isDarkTheme: action.payload,
+      };
+    case 'SETTINGS_SET_ALL_SETTINGS':
+      return {
+        isDarkTheme: action.payload.isDarkTheme,
+        hasGithubToken: action.payload.hasGithubToken,
       };
     default:
       return state;

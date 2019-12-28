@@ -1,5 +1,5 @@
 import React from 'react';
-import { Grid, Card, CardHeader, CardContent, Theme } from '@material-ui/core';
+import { Card, CardHeader, CardContent, Theme, Grid } from '@material-ui/core';
 import { makeStyles, createStyles } from '@material-ui/styles';
 import Skeleton from '@material-ui/lab/Skeleton';
 
@@ -20,7 +20,7 @@ const CardSceleton: React.FC<Props> = () => {
 
   return (
     <Grid container justify="center">
-      <Grid item sm={8} xs={12} md={7} lg={5} xl={4}>
+      <Grid item sm={8} xs={12} md={8} lg={5} xl={4}>
         <Card className={classes.card}>
           <CardHeader
             avatar={<Skeleton variant="circle" width={40} height={40} />}

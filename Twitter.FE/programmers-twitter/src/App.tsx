@@ -30,11 +30,12 @@ import { connect } from 'react-redux';
 import { AppState } from '.';
 import get from './services/get.service';
 import SettingsResponse from './types/settings-response';
-import { setDarkTheme } from './store/settings/settings.actions';
+import { setAllSettings } from './store/settings/settings.actions';
 
 import themeDark from './themes/dark-theme';
 import themeLight from './themes/light-theme';
 import displayErrors from './helpers/display-errors';
+import { SettingsState } from './store/settings/settings.types';
 
 const darkTheme = responsiveFontSizes(
   createMuiTheme(themeDark as ThemeOptions),
@@ -47,7 +48,7 @@ interface Props extends LocalizeContextProps {
   browserLanguage: string;
   isDarkTheme: boolean;
   isLoggedIn: boolean;
-  setDarkThemeAction: typeof setDarkTheme;
+  setAllSettingseAction: typeof setAllSettings;
 }
 
 // tslint:disable-next-line: typedef
@@ -85,7 +86,10 @@ class App extends Component<Props> {
     ).then(
       response => {
         this.props.setActiveLanguage(response.model.languageCode);
-        this.props.setDarkThemeAction(response.model.isDarkTheme);
+        this.props.setAllSettingseAction({
+          isDarkTheme: response.model.isDarkTheme,
+          hasGithubToken: response.model.hasGithubToken,
+        });
       },
       error => displayErrors(error),
     );
@@ -135,7 +139,8 @@ const mapStateToProps = (state: AppState) => ({
 
 const mapDispatchToProps = (dispatch: any) => {
   return {
-    setDarkThemeAction: (isDark: boolean) => dispatch(setDarkTheme(isDark)),
+    setAllSettingseAction: (settings: SettingsState) =>
+      dispatch(setAllSettings(settings)),
   };
 };
 
