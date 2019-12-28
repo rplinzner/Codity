@@ -121,4 +121,10 @@
   <data name="YoursNewLikes" xml:space="preserve">
     <value>'{0}' i '{1}' użytkowników polubiło Twojego Tweeta.</value>
   </data>
+  <data name="Man" xml:space="preserve">
+    <value>Mężczyzna</value>
+  </data>
+  <data name="Woman" xml:space="preserve">
+    <value>Kobieta</value>
+  </data>
 </root>

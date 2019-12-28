@@ -141,4 +141,10 @@
   <data name="YoursNewLikes" xml:space="preserve">
     <value>'{0}' and '{1}' users liked Your Tweet.</value>
   </data>
+  <data name="Man" xml:space="preserve">
+    <value>Man</value>
+  </data>
+  <data name="Woman" xml:space="preserve">
+    <value>Woman</value>
+  </data>
 </root>

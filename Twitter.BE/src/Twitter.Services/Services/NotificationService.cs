@@ -35,16 +35,14 @@ namespace Twitter.Services.Services
             _mapper = mapper;
         }
 
-        public async Task<IPagedResponse<NotificationDTO>> GetAllNotifications(int userId, PaginationRequest paginationReqeust)
+        public async Task<IPagedResponse<NotificationDTO>> GetAllNotifications(int userId, PaginationRequest paginationRequest)
         {
             var response = new PagedResponse<NotificationDTO>();
-
-            var notifications = (await _notificationRepository
-                .GetAllByAsync(c => c.UserId == userId, false, c => c.Notification))
-                .Select(c => c.Notification);
-            
+            var notifications = await _notificationRepository
+                .GetPagedByAsync(c => c.UserId == userId, paginationRequest.PageNumber, paginationRequest.PageSize, false, c => c.Notification);
             _mapper.Map(notifications, response);
-            response.Models = _notificationMapperService.MapNotifications(notifications);
+
+            response.Models = _notificationMapperService.MapNotifications(notifications.Select(c => c.Notification));
 
             return response;
         }
@@ -56,7 +54,7 @@ namespace Twitter.Services.Services
             var notification = await _notificationRepository
                 .GetByAsync(c => c.NotificationId == notificationId, false, c => c.Notification);
 
-            if(notification==null)
+            if (notification == null)
             {
                 response.AddError(new Error
                 {

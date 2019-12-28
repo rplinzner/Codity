@@ -160,13 +160,7 @@ namespace Twitter.WebApi.ExtensionMethods
 
         public static void AddAndConfigureAutoMapper(this IServiceCollection services)
         {
-            var mappingConfig = new MapperConfiguration(mc =>
-            {
-                mc.AddProfile(new MapperProfile());
-            });
-
-            var mapper = mappingConfig.CreateMapper();
-            services.AddSingleton(mapper);
+            services.AddAutoMapper(typeof(MapperProfile));
         }
 
         public static void AddHttpClients(this IServiceCollection services)

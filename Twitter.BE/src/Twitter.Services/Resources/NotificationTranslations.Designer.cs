@@ -61,6 +61,15 @@ namespace Twitter.Services.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Man.
+        /// </summary>
+        internal static string Man {
+            get {
+                return ResourceManager.GetString("Man", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to &apos;{0}&apos; replied on &apos;{1}&apos; user Tweet..
         /// </summary>
         internal static string NewComment {
@@ -93,6 +102,15 @@ namespace Twitter.Services.Resources {
         internal static string NewTweet {
             get {
                 return ResourceManager.GetString("NewTweet", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Woman.
+        /// </summary>
+        internal static string Woman {
+            get {
+                return ResourceManager.GetString("Woman", resourceCulture);
             }
         }
         

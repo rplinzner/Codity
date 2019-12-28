@@ -11,6 +11,8 @@ using Twitter.Services.ResponseModels;
 using System.Linq;
 using Twitter.Services.RequestModels.Tweet;
 using Twitter.Services.ResponseModels.DTOs.Tweet;
+using Microsoft.Extensions.Localization;
+using Twitter.Services.Resources;
 
 namespace Twitter.Services.Mappings
 {
@@ -25,12 +27,12 @@ namespace Twitter.Services.Mappings
                .ForMember(d => d.FollowersCount, o => o.MapFrom(s => s.Followers.Count));
 
             CreateMap<User, UserDTO>()
-               .ForMember(d => d.GenderName, o => o.MapFrom(s => s.Gender == null ? null : s.Gender.Name))
+               .ForMember(d => d.GenderName, o => o.MapFrom<TranslateResolver, string>(s => s.Gender == null ? null : s.Gender.Name))
                .ForMember(d => d.FollowingCount, o => o.MapFrom(s => s.Following.Count));
 
             CreateMap<Gender, GenderDTO>()
                 .ForMember(d => d.GenderId, o => o.MapFrom(s => s.Id))
-                .ForMember(d => d.GenderName, o => o.MapFrom(s => s.Name));
+                .ForMember(d => d.GenderName, o => o.MapFrom<TranslateResolver, string>(s => s.Name));
 
             CreateMap<Settings, SettingsDTO>()
                 .ForMember(d => d.LanguageCode, o => o.MapFrom(s => s.Language.Code))
@@ -60,13 +62,28 @@ namespace Twitter.Services.Mappings
                .ForMember(d => d.ProgrammingLanguageName, o => o.MapFrom(s => s.ProgrammingLanguage.Name));
 
             CreateMap<PagedList<Follow>, PagedResponse<BaseUserDTO>>();
-            CreateMap<PagedList<Notification>, PagedResponse<NotificationDTO>>();
+            CreateMap<PagedList<UserNotification>, PagedResponse<NotificationDTO>>();
             CreateMap<TweetRequest, Tweet>();
             CreateMap<UpdateTweetRequest, Tweet>();
             CreateMap<CodeSnippetRequest, CodeSnippet>();
             CreateMap<Notification, NotificationDTO>();
             CreateMap<UserProfileRequest, User>();
             CreateMap<User, LikeUserDTO>();
+        }
+
+        internal class TranslateResolver : IMemberValueResolver<object, object, string, string>
+        {
+            private readonly IStringLocalizer<NotificationTranslations> _localizer;
+            public TranslateResolver(IStringLocalizer<NotificationTranslations> localizer)
+            {
+                _localizer = localizer;
+            }
+
+            public string Resolve(object source, object destination, string sourceMember, string destMember,
+                ResolutionContext context)
+            {
+                return _localizer[sourceMember];
+            }
         }
     }
 }
