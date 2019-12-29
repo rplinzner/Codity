@@ -82,6 +82,11 @@ namespace Twitter.Services.Mappings
             public string Resolve(object source, object destination, string sourceMember, string destMember,
                 ResolutionContext context)
             {
+                if (string.IsNullOrEmpty(sourceMember))
+                {
+                    return null;
+                }
+
                 return _localizer[sourceMember];
             }
         }
