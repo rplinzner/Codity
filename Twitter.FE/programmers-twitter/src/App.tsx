@@ -93,7 +93,9 @@ class App extends Component<Props> {
       },
       error => displayErrors(error),
     );
+  // tslint:disable-next-line: semicolon
   };
+
   componentDidMount() {
     if (this.props.isLoggedIn) {
       this.downloadSettings();

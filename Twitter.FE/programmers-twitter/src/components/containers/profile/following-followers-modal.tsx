@@ -70,7 +70,7 @@ function FollowingFollowersModal(props: Props) {
         if (profiles === null) {
           setProfiles(resp);
         } else {
-          let temp = resp;
+          const temp = resp;
           temp.models = [...profiles.models, ...temp.models];
           setProfiles(temp);
         }

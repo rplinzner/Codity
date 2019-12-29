@@ -90,7 +90,7 @@
       }
     ],
     "typedef": [
-      true,
+      false,
       "call-signature",
       "parameter",
       "arrow-call-signature",

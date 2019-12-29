@@ -125,10 +125,10 @@ const UserProfile: React.FC<Props & LocalizeContextProps> = (
   const [isFollowersOpen, setIsFollowersOpen] = useState(false);
 
   // -- Editable states --
-  const [birthDate, setBirthDate] = useState<Date | null>(new Date());
+  const [editBirthDate, setEditBirthDate] = useState<Date | null>(new Date());
   const [showBirthDay, setShowBirthDay] = useState<boolean>(true);
-  const [aboutMe, setAboutMe] = useState('');
-  const [image, setImage] = useState('');
+  const [editAboutMe, setEditAboutMe] = useState('');
+  const [editImage, setEditImage] = useState('');
   const [selectedGender, setSelectedGender] = useState<number>(0);
 
   const getUrlParams = (): URLSearchParams => {
@@ -207,15 +207,15 @@ const UserProfile: React.FC<Props & LocalizeContextProps> = (
     } else {
       toast.info(<T id="waitForServerResponse" />);
       let birthDayToSend: string | null = null;
-      if (showBirthDay && birthDate) {
-        birthDayToSend = birthDate.toISOString();
+      if (showBirthDay && editBirthDate) {
+        birthDayToSend = editBirthDate.toISOString();
       }
 
       const body: ProfileUpdateBody = {
-        aboutMe,
+        aboutMe: editAboutMe,
         birthDay: birthDayToSend,
         genderId: selectedGender === 0 ? null : selectedGender,
-        image,
+        image: editImage,
       };
       put<BaseResponse, ProfileUpdateBody>(
         body,
@@ -253,12 +253,12 @@ const UserProfile: React.FC<Props & LocalizeContextProps> = (
   const setEditableStates = (profile: ProfileResponse): void => {
     const { birthDay, aboutMe, image } = profile.model;
     if (birthDay !== null) {
-      setBirthDate(new Date(birthDay));
+      setEditBirthDate(new Date(birthDay));
     }
     if (aboutMe !== null) {
-      setAboutMe(aboutMe);
+      setEditAboutMe(aboutMe);
     }
-    setImage(image);
+    setEditImage(image);
   };
 
   const calculateAge = (date: string) => {
@@ -285,17 +285,17 @@ const UserProfile: React.FC<Props & LocalizeContextProps> = (
   };
 
   const handleDateChange = (date: Date | null) => {
-    setBirthDate(date);
+    setEditBirthDate(date);
   };
 
   const handleAboutMeTextField = (
     event: React.ChangeEvent<HTMLInputElement>,
   ): void => {
-    setAboutMe(event.target.value);
+    setEditAboutMe(event.target.value);
   };
 
   const handleImage = (image: string) => {
-    setImage(image);
+    setEditImage(image);
   };
   const handleCheckBox = (name: string) => (
     event: React.ChangeEvent<HTMLInputElement>,
@@ -364,7 +364,7 @@ const UserProfile: React.FC<Props & LocalizeContextProps> = (
               <AddPhotoAvatar
                 className={classes.avatar}
                 handleImage={handleImage}
-                existingPic={image}
+                existingPic={editImage}
               />
             ) : (
               <UserAvatar
@@ -479,7 +479,7 @@ const UserProfile: React.FC<Props & LocalizeContextProps> = (
                     format={
                       langCode.includes('pl') ? 'dd.MM.yyyy' : 'MM/dd/yyyy'
                     }
-                    value={birthDate}
+                    value={editBirthDate}
                     onChange={handleDateChange}
                     KeyboardButtonProps={{
                       'aria-label': 'change date',
@@ -513,7 +513,7 @@ const UserProfile: React.FC<Props & LocalizeContextProps> = (
               <TextField
                 variant="outlined"
                 className={classes.aboutMeTextField}
-                value={aboutMe}
+                value={editAboutMe}
                 onChange={handleAboutMeTextField}
                 label={<T id="aboutMe" />}
                 multiline={true}
