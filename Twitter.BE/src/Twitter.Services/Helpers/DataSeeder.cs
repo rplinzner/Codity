@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Bogus;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using System.Linq;
+using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Twitter.Data.Context;
 using Twitter.Data.Model;
@@ -85,33 +87,23 @@ namespace Twitter.Services.Helpers
             if (!await _dbContext.Users.AnyAsync())
             {
                 var languages = await _languageRepository.GetAllAsync();
-                var users = new User[]
+                var users = new List<User>();
+
+                for (int i = 0; i < 100; i++)
                 {
-                    new User
-                    {
-                        FirstName="Jan",
-                        LastName="Kowalski",
-                        Email="jan.kowalski@gmail.com",
-                        UserName="jan.kowalski@gmail.com",
-                        Settings = new Settings
-                        {
-                            IsDarkTheme = true,
-                            LanguageId = languages.ElementAt(0).Id
-                        }
-                    },
-                     new User
-                    {
-                        FirstName="Jadwiga",
-                        LastName="Kowalska",
-                        Email="jadwiga.kowalska@gmail.com",
-                        UserName="jadwiga.kowalska@gmail.com",
-                        Settings = new Settings
-                        {
-                            IsDarkTheme = true,
-                            LanguageId = languages.ElementAt(1).Id
-                        }
-                    },
-                };
+                    var userFaker = new Faker<User>()
+                        .RuleFor(o => o.Email, f => f.Internet.Email())
+                        .RuleFor(o => o.UserName, f => f.Internet.Email())
+                        .RuleFor(o => o.FirstName, f => f.Name.FirstName())
+                        .RuleFor(o => o.LastName, f => f.Name.LastName())
+                        .RuleFor(o => o.AboutMe, f => f.Lorem.Paragraph(10))
+                        .RuleFor(o => o.BirthDay, f => f.Date.Between(new DateTime(1970, 1, 30), new DateTime(1999, 12, 30)))
+                        .RuleFor(o => o.Image, f => f.Internet.Avatar())
+                        .RuleFor(o => o.GenderId, f => f.Random.Int(1, 2))
+                        .Generate();
+
+                    users.Add(userFaker);
+                }
 
                 foreach (var user in users)
                 {

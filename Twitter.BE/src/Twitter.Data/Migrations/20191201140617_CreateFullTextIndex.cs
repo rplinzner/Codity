@@ -31,7 +31,7 @@ namespace Twitter.Data.Migrations
                         GROUP BY fts.[Key]
 					  )[ft]
                             ON [u].Id = [ft].[Key]
-                      WHERE NOT [u].Id = @ExceptId
+                      WHERE NOT [u].Id = @ExceptId AND [u].EmailConfirmed = 1
                       ORDER BY [ft].[RANK] DESC
                       OFFSET(@PageNumber - 1) * @PageSize ROWS FETCH NEXT @PageSize ROWS only
                     )");    
@@ -56,7 +56,7 @@ namespace Twitter.Data.Migrations
                          GROUP BY fts.[Key]
 					   )[ft]
                              ON [u].Id = [ft].[Key]
-                       WHERE NOT [u].Id = @ExceptId
+                       WHERE NOT [u].Id = @ExceptId AND [u].EmailConfirmed = 1
                     )");
         }
 
