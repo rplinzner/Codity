@@ -1,6 +1,6 @@
 import React from 'react';
 import { Card, CardHeader, CardActionArea } from '@material-ui/core';
-import { UserAvatar } from '../containers/profile';
+import { UserAvatar } from '../profile';
 import {
   LocalizeContextProps,
   withLocalize,
@@ -14,19 +14,24 @@ interface Props extends LocalizeContextProps {
   photo: string | null;
   followers: number;
   userId: number;
+  handleModalClose?: () => void;
+  className?: string;
 }
 
 const SearchResultCard: React.FC<Props & RouteComponentProps> = (
   props: Props & RouteComponentProps,
 ) => {
   return (
-    <Card>
+    <Card className={props.className} variant="outlined">
       <T>
         {({ translate }) => (
           <CardActionArea
-            onClick={() =>
-              props.history.push(`/profile/?userId=${props.userId}`)
-            }
+            onClick={() => {
+              if (props.handleModalClose) {
+                props.handleModalClose();
+              }
+              props.history.push(`/profile/?userId=${props.userId}`);
+            }}
           >
             <CardHeader
               avatar={

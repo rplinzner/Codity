@@ -23,7 +23,7 @@ import * as authentication from './components/containers/authentication/index';
 import * as additional from './components/containers/additional/index';
 import * as main from './components/containers/feed/index';
 import * as user from './components/containers/profile/index';
-import SearchResultCard from './components/layout/search-result-card';
+import SearchResultCard from './components/containers/additional/search-result-card';
 import { settingsController } from './constants/global.constats';
 import { PrivateRoute } from './components/containers/authentication/index';
 import { connect } from 'react-redux';

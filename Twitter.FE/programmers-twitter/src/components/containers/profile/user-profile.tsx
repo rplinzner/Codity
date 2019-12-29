@@ -49,6 +49,7 @@ import AddPhotoAvatar from './add-photo-avatar';
 import { toast } from 'react-toastify';
 import { BaseResponse } from '../../../types/base-response';
 import GenderResponse from '../../../types/gender-response';
+import FollowingFollowersModal from './following-followers-modal';
 
 interface Props extends RouteComponentProps {
   user: UserState;
@@ -120,6 +121,8 @@ const UserProfile: React.FC<Props & LocalizeContextProps> = (
   const [genders, setGenders] = useState<GenderResponse>();
   const [isLoading, setIsLoading] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
+  const [isFollowingOpen, setIsFollowingOpen] = useState(false);
+  const [isFollowersOpen, setIsFollowersOpen] = useState(false);
 
   // -- Editable states --
   const [birthDate, setBirthDate] = useState<Date | null>(new Date());
@@ -141,12 +144,13 @@ const UserProfile: React.FC<Props & LocalizeContextProps> = (
   };
 
   const langCode = props.activeLanguage ? props.activeLanguage.code : 'en';
+  const userId = getUserIdSearchValue();
 
   //#region API calls
 
   const getUserProfile = (): void => {
     setIsLoading(true);
-    const id = getUserIdSearchValue();
+    const id = userId;
     if (id !== '') {
       get<ProfileResponse>(
         constants.usersController,
@@ -273,7 +277,7 @@ const UserProfile: React.FC<Props & LocalizeContextProps> = (
       props.user &&
       props.user.user &&
       // tslint:disable-next-line: radix
-      props.user.user.id === parseInt(getUserIdSearchValue())
+      props.user.user.id === parseInt(userId)
     ) {
       return true;
     }
@@ -386,32 +390,51 @@ const UserProfile: React.FC<Props & LocalizeContextProps> = (
                 <Select value={selectedGender} onChange={handleGenderChange}>
                   {genders.models.map(model => (
                     <MenuItem key={model.genderId} value={model.genderId}>
-                      {model.genderName}
-                      {/* <T id={model.genderName}>{model.genderName}</T> */}
-                      {/* TODO: Do something about state problem */}
+                      {model.genderId === 0 ? (
+                        <T id={model.genderName} />
+                      ) : (
+                        model.genderName
+                      )}
                     </MenuItem>
                   ))}
                 </Select>
               </FormControl>
             )}
+            {/* FOLLOWING */}
             <Typography
+              style={{ cursor: 'pointer' }}
               className={classes.typographyWithIcon}
               variant="subtitle1"
+              onClick={() => setIsFollowingOpen(true)}
             >
               <RssFeedIcon className={classes.icon} />
               <T id="following" />
               {': '}
               {userProfile.model.followingCount}
             </Typography>
+            <FollowingFollowersModal
+              handleClose={() => setIsFollowingOpen(false)}
+              isOpen={isFollowingOpen}
+              mode="following"
+              userId={userId}
+            />
             <Typography
               className={classes.typographyWithIcon}
+              style={{ cursor: 'pointer' }}
               variant="subtitle1"
+              onClick={() => setIsFollowersOpen(true)}
             >
               <RecordVoiceOverIcon className={classes.icon} />
               <T id="followers" />
               {': '}
               {userProfile.model.followersCount}
             </Typography>
+            <FollowingFollowersModal
+              handleClose={() => setIsFollowersOpen(false)}
+              isOpen={isFollowersOpen}
+              mode="followers"
+              userId={userId}
+            />
             {!isOwnProfile() && (
               <FollowButton
                 className={classes.element}
@@ -506,9 +529,11 @@ const UserProfile: React.FC<Props & LocalizeContextProps> = (
           </Grid>
         </Grid>
       ) : (
-        <Typography variant="h4" style={{ textAlign: 'center' }}>
-          <T id="noData" />
-        </Typography>
+        !isLoading && (
+          <Typography variant="h4" style={{ textAlign: 'center' }}>
+            <T id="noData" />
+          </Typography>
+        )
       )}
     </>
   );
