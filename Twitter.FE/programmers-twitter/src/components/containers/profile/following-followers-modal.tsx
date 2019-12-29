@@ -3,7 +3,7 @@ import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import Modal from '@material-ui/core/Modal';
 import Backdrop from '@material-ui/core/Backdrop';
 import Fade from '@material-ui/core/Fade';
-import InfiniteScroll from 'react-infinite-scroll-component';
+import InfiniteScroll from 'react-infinite-scroller';
 
 import { FollowingResponse } from '../../../types/following-response';
 import get from '../../../services/get.service';
@@ -39,11 +39,11 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     card: {},
     item: {
-      margin: theme.spacing(1, 0, 1, 0),
+      margin: theme.spacing(1, 1, 1, 0),
     },
     scrollable: {
       height: 'auto',
-      maxHeight: '60vh',
+      maxHeight: '50vh',
       overflow: 'auto',
     },
   }),
@@ -52,16 +52,14 @@ const useStyles = makeStyles((theme: Theme) =>
 function FollowingFollowersModal(props: Props) {
   const classes = useStyles();
   const [profiles, setProfiles] = useState<FollowingResponse | null>(null);
-  const [currentPage, setCurrentPage] = useState(0);
-  const pageSize = 10;
+  const pageSize = 5;
 
   const lang = props.activeLanguage.code;
 
-  const getFollowing = (): void => {
+  const getFollowing = (page: number = 1): void => {
     get<FollowingResponse>(
       constants.usersController,
-      `/${props.userId}/${props.mode}?pageNumber=${currentPage +
-        1}&pageSize=${pageSize}`,
+      `/${props.userId}/${props.mode}?pageNumber=${page}&pageSize=${pageSize}`,
       lang,
       <T id="errorConnection" />,
       true,
@@ -74,7 +72,6 @@ function FollowingFollowersModal(props: Props) {
           temp.models = [...profiles.models, ...temp.models];
           setProfiles(temp);
         }
-        setCurrentPage(resp.currentPage);
       },
       error => {
         setProfiles(null);
@@ -84,7 +81,6 @@ function FollowingFollowersModal(props: Props) {
 
   useEffect(() => {
     setProfiles(null);
-    setCurrentPage(0);
     getFollowing();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.userId]);
@@ -109,16 +105,12 @@ function FollowingFollowersModal(props: Props) {
             ) : (
               <div id="scrollableDiv" className={classes.scrollable}>
                 <InfiniteScroll
-                  dataLength={profiles.totalPages}
-                  next={() => getFollowing()}
+                  pageStart={1}
                   hasMore={!(profiles.currentPage === profiles.totalPages)}
-                  loader={<h4>Loading...</h4>}
-                  endMessage={
-                    <p style={{ textAlign: 'center' }}>
-                      <b>Yay! You have seen it all</b>
-                    </p>
-                  }
-                  scrollableTarget="scrollableDiv"
+                  loader={<h4 key="h4">Loading...</h4>}
+                  loadMore={page => getFollowing(page)}
+                  useWindow={false}
+                  threshold={20}
                 >
                   {profiles.models.map((model, index) => (
                     <div key={model.id} className={classes.item}>
