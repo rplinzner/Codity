@@ -72,7 +72,7 @@ namespace Twitter.WebApi.Controllers
         /// <param name="paginationRequest">Pagination parameters</param>
         /// <returns>Followers</returns>
         [HttpGet("{id}/followers")]
-        public async Task<ActionResult<ICollectionResponse<BaseUserDTO>>> GetFollowers(int id, [FromQuery] PaginationRequest paginationRequest)
+        public async Task<ActionResult<IPagedResponse<BaseUserDTO>>> GetFollowers(int id, [FromQuery] PaginationRequest paginationRequest)
         {
             int userId = _userContext.GetUserId();
 
@@ -93,7 +93,7 @@ namespace Twitter.WebApi.Controllers
         /// <param name="paginationRequest">Pagination parameters</param>
         /// <returns>Following</returns>
         [HttpGet("{id}/following")]
-        public async Task<ActionResult<ICollectionResponse<BaseUserDTO>>> GetFollowing(int id, [FromQuery] PaginationRequest paginationRequest)
+        public async Task<ActionResult<IPagedResponse<BaseUserDTO>>> GetFollowing(int id, [FromQuery] PaginationRequest paginationRequest)
         {
             int userId = _userContext.GetUserId();
 

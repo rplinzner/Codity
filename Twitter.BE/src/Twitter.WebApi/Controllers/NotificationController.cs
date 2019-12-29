@@ -28,7 +28,7 @@ namespace Twitter.WebApi.Controllers
         /// </summary>
         /// <returns>All Notifications for logged user</returns>
         [HttpGet]
-        public async Task<ActionResult<ICollectionResponse<NotificationDTO>>> GetNotifications([FromQuery] PaginationRequest paginationRequest)
+        public async Task<ActionResult<IPagedResponse<NotificationDTO>>> GetNotifications([FromQuery] PaginationRequest paginationRequest)
         {
             var userId = _userContext.GetUserId();
 
@@ -47,7 +47,7 @@ namespace Twitter.WebApi.Controllers
         /// </summary>
         /// <returns>Notification</returns>
         [HttpGet("{id}")]
-        public async Task<ActionResult<ICollectionResponse<NotificationDTO>>> GetNotification(int id)
+        public async Task<ActionResult<IResponse<NotificationDTO>>> GetNotification(int id)
         {
             var response = await _notificationService.GetNotification(id);
 

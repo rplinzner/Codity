@@ -89,7 +89,7 @@ namespace Twitter.WebApi.Controllers
         /// <param name="paginationRequest">Pagination parameters</param>
         /// <returns>Comments</returns>
         [HttpGet("{tweetId}/comment")]
-        public async Task<ActionResult<ICollectionResponse<CommentDTO>>> GetComments(int tweetId, [FromQuery] PaginationRequest paginationRequest)
+        public async Task<ActionResult<IPagedResponse<CommentDTO>>> GetComments(int tweetId, [FromQuery] PaginationRequest paginationRequest)
         {
             var response = await _commentService.GetCommentsAsync(tweetId, paginationRequest);
 
