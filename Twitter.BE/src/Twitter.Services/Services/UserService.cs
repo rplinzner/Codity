@@ -93,6 +93,17 @@ namespace Twitter.Services.Services
         public async Task<IBaseResponse> FollowUserAsync(int userId, FollowingRequest following)
         {
             var response = new BaseResponse();
+
+            if (userId == following.FollowingId)
+            {
+                response.AddError(new Error
+                {
+                    Message = ErrorTranslations.FollowingYourself
+                });
+
+                return response;
+            }
+
             var followerUser = await _userRepository.GetAsync(userId);
             var followingUser = await _userRepository.GetAsync(following.FollowingId);
 
@@ -227,7 +238,7 @@ namespace Twitter.Services.Services
                 searchRequest.PageNumber,
                 searchRequest.PageSize,
                 currentUserId);
-            
+
             _mapper.Map(users, response);
 
             var userIds = users.Select(c => c.Id);

@@ -169,6 +169,15 @@ namespace Twitter.Services.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to You cannot follow Yourself..
+        /// </summary>
+        public static string FollowingYourself {
+            get {
+                return ResourceManager.GetString("FollowingYourself", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to You are not following the user..
         /// </summary>
         public static string FollowNotFound {
