@@ -252,12 +252,14 @@ const UserProfile: React.FC<Props & LocalizeContextProps> = (
 
   const setEditableStates = (profile: ProfileResponse): void => {
     const { birthDay, aboutMe, image } = profile.model;
-    if (birthDay !== null) {
-      setEditBirthDate(new Date(birthDay));
-    }
-    if (aboutMe !== null) {
+    setEditBirthDate(new Date(birthDay));
+
+    if (aboutMe === null) {
+      setEditAboutMe('');
+    } else {
       setEditAboutMe(aboutMe);
     }
+
     setEditImage(image);
   };
 

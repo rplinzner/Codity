@@ -13,7 +13,7 @@ import {
   LocalizeContextProps,
   Translate as T,
 } from 'react-localize-redux';
-import { Typography } from '@material-ui/core';
+import { Typography, CircularProgress } from '@material-ui/core';
 import { UserCardSimple } from '../additional/index';
 
 interface Props extends LocalizeContextProps {
@@ -52,11 +52,15 @@ const useStyles = makeStyles((theme: Theme) =>
 function FollowingFollowersModal(props: Props) {
   const classes = useStyles();
   const [profiles, setProfiles] = useState<FollowingResponse | null>(null);
+  const [loading, setLoading] = useState(false);
   const pageSize = 5;
 
   const lang = props.activeLanguage.code;
 
   const getFollowing = (page: number = 1): void => {
+    if (profiles !== null && page > profiles.totalPages) {
+      return;
+    }
     get<FollowingResponse>(
       constants.usersController,
       `/${props.userId}/${props.mode}?pageNumber=${page}&pageSize=${pageSize}`,
@@ -65,25 +69,33 @@ function FollowingFollowersModal(props: Props) {
       true,
     ).then(
       resp => {
-        if (profiles === null) {
+        if (resp.currentPage === 1 || profiles === null) {
           setProfiles(resp);
-        } else {
+        } else if (resp.totalCount > profiles.models.length) {
           const temp = resp;
           temp.models = [...profiles.models, ...temp.models];
           setProfiles(temp);
+        } else {
+          setProfiles(resp);
         }
+        setLoading(false);
       },
       error => {
         setProfiles(null);
+        setLoading(false);
       },
     );
   };
 
   useEffect(() => {
-    setProfiles(null);
     getFollowing();
+    setLoading(true);
+    // return () => {
+    //   setProfiles(null);
+    //   console.log('return useEffect', profiles);
+    // };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [props.userId]);
+  }, [props.userId, props.mode, props.isOpen]);
 
   return (
     <>
@@ -100,7 +112,11 @@ function FollowingFollowersModal(props: Props) {
       >
         <Fade in={props.isOpen}>
           <div className={classes.paper}>
-            {profiles === null ? (
+            {loading ? (
+              <div style={{ textAlign: 'center' }}>
+                <CircularProgress />
+              </div>
+            ) : profiles === null ? (
               <Typography variant="h5">No data to display</Typography>
             ) : (
               <div id="scrollableDiv" className={classes.scrollable}>
