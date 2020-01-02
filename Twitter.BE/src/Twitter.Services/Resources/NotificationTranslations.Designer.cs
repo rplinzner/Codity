@@ -61,6 +61,26 @@ namespace Twitter.Services.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to &lt;strong&gt;Hello, {0}!&lt;/strong&gt;
+        ///&lt;p&gt;We need to verify Your email address. Click the link below to confirm.&lt;/p&gt;
+        ///&lt;a href=&quot;{1}&quot; target=&quot;_blank&quot;&gt;Confirm Email!&lt;/a&gt;.
+        /// </summary>
+        internal static string ConfirmEmail {
+            get {
+                return ResourceManager.GetString("ConfirmEmail", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Confirm Your Email.
+        /// </summary>
+        internal static string ConfirmEmailTitle {
+            get {
+                return ResourceManager.GetString("ConfirmEmailTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Man.
         /// </summary>
         internal static string Man {

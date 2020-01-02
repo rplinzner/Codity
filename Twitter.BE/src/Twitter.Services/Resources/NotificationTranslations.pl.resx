@@ -127,4 +127,12 @@
   <data name="Woman" xml:space="preserve">
     <value>Kobieta</value>
   </data>
+  <data name="ConfirmEmail" xml:space="preserve">
+    <value>&lt;strong&gt;Cześć, {0}!&lt;/strong&gt;
+&lt;p&gt;Musimy zweryfikować Twój adres email. Kliknij w poniższy link, aby potwierdzić.&lt;/p&gt;
+&lt;a href="{1}" target="_blank"&gt;Potwierdź Email!&lt;/a&gt;</value>
+  </data>
+  <data name="ConfirmEmailTitle" xml:space="preserve">
+    <value>Potwierdź swój Email</value>
+  </data>
 </root>

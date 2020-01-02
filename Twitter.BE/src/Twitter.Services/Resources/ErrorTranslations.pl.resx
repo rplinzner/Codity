@@ -176,16 +176,16 @@
     <value>Wystąpił błąd podczas wysyłania maila.</value>
   </data>
   <data name="FollowNotFound" xml:space="preserve">
-    <value>Nie followujesz podanego użytkownika.</value>
+    <value>Nie obserwujesz podanego użytkownika.</value>
   </data>
   <data name="FollowAlreadyExists" xml:space="preserve">
-    <value>Już followujesz podanego użutkownika.</value>
+    <value>Już obserwujesz podanego użytkownika.</value>
   </data>
   <data name="FollowersNotFound" xml:space="preserve">
-    <value>Użytkownik nie posiada followerów.</value>
+    <value>Użytkownik nie posiada obserwujących.</value>
   </data>
   <data name="FollowingNotFound" xml:space="preserve">
-    <value>Użytkownik nikogo nie followuje.</value>
+    <value>Użytkownik nikogo nie obserwuje.</value>
   </data>
   <data name="NotificationNotFound" xml:space="preserve">
     <value>Powiadomienie nie istnieje.</value>
@@ -234,5 +234,8 @@
   </data>
   <data name="GithubGistError" xml:space="preserve">
     <value>Wystąpił błąd podczas publikowania Gista.</value>
+  </data>
+  <data name="FollowingYourself" xml:space="preserve">
+    <value>Nie możesz obserwować samego siebie.</value>
   </data>
 </root>

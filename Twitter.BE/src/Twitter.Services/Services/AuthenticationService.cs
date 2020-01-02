@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using System.Net;
+using System.Text;
 using System.Threading.Tasks;
 using Twitter.Data.Model;
 using Twitter.Repositories.Interfaces;
@@ -118,10 +119,13 @@ namespace Twitter.Services.Services
 
                 return response;
             }
+
             var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
             var tokenVerificationUrl = $"{_redirectOptions.ConfirmEmailUrl}?id={user.Id}&token={WebUtility.UrlEncode(token)}";
+            var message = string.Format(NotificationTranslations.ConfirmEmail, user.FirstName, tokenVerificationUrl);
+            var emailTitle = NotificationTranslations.ConfirmEmailTitle;
 
-            var success = await _emailSenderService.SendEmail(model.Email, "Confirm Your Email", tokenVerificationUrl);
+            var success = await _emailSenderService.SendEmail(model.Email, emailTitle, message);
             if (!success)
             {
                 response.AddError(new Error

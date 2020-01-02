@@ -235,4 +235,7 @@
   <data name="GithubGistError" xml:space="preserve">
     <value>There was an error publishing Gist.</value>
   </data>
+  <data name="FollowingYourself" xml:space="preserve">
+    <value>You cannot follow Yourself.</value>
+  </data>
 </root>
