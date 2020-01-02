@@ -7,6 +7,8 @@ import LockOpenIcon from '@material-ui/icons/LockOpen';
 import PersonAddIcon from '@material-ui/icons/PersonAdd';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ViewStreamIcon from '@material-ui/icons/ViewStream';
+import RssFeedIcon from '@material-ui/icons/RssFeed';
+
 
 import {
   makeStyles,
@@ -123,8 +125,19 @@ function ResponsiveDrawer(props: Props & LocalizeContextProps) {
         </Typography>
       </MenuItem>
       <Divider variant="middle" />
-      <MenuItem className={classes.menuItem}>
-        <Typography variant="inherit">Empty 2</Typography>
+      <MenuItem
+        component={Link}
+        to="/Following"
+        selected={'/Following' === pathname}
+        onClick={onDrawerClose}
+        className={classes.menuItem}
+      >
+        <ListItemIcon>
+          <RssFeedIcon fontSize="small" />
+        </ListItemIcon>
+        <Typography variant="inherit">
+          <T id="following" />
+        </Typography>
       </MenuItem>
       <Divider variant="middle" />
     </MenuList>
