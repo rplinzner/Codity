@@ -141,11 +141,11 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     content: {
       [theme.breakpoints.up('md')]: {
-        paddingTop: '80px', // Added 16px for spacing
+        paddingTop: '64px',
         paddingLeft: drawerWidth,
       },
       [theme.breakpoints.down('md')]: {
-        paddingTop: '72px', // Added 16px for spacing
+        paddingTop: '56px',
       },
     },
   }),

@@ -64,6 +64,9 @@ interface ProfileUpdateBody {
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
+    container: {
+      paddingTop: theme.spacing(2),
+    },
     avatar: {
       width: 200,
       height: 200,
@@ -242,7 +245,7 @@ const UserProfile: React.FC<Props & LocalizeContextProps> = (
     if (name === null) {
       setSelectedGender(0);
     } else {
-      if (genders && genders.models) {
+      if (genders?.models) {
         const models = genders.models;
         const tempGender = models.find(e => e.genderName === name);
         setSelectedGender(tempGender ? tempGender.genderId : 0);
@@ -253,12 +256,9 @@ const UserProfile: React.FC<Props & LocalizeContextProps> = (
   const setEditableStates = (profile: ProfileResponse): void => {
     const { birthDay, aboutMe, image } = profile.model;
     setEditBirthDate(new Date(birthDay));
+    setShowBirthDay(birthDay !== null);
 
-    if (aboutMe === null) {
-      setEditAboutMe('');
-    } else {
-      setEditAboutMe(aboutMe);
-    }
+    setEditAboutMe(aboutMe || '');
 
     setEditImage(image);
   };
@@ -276,10 +276,8 @@ const UserProfile: React.FC<Props & LocalizeContextProps> = (
 
   const isOwnProfile = (): boolean => {
     if (
-      props.user &&
-      props.user.user &&
       // tslint:disable-next-line: radix
-      props.user.user.id === parseInt(userId)
+      props.user?.user?.id === parseInt(userId)
     ) {
       return true;
     }
@@ -323,7 +321,7 @@ const UserProfile: React.FC<Props & LocalizeContextProps> = (
   }, [props.location.search]);
 
   return (
-    <>
+    <div className={classes.container}>
       {isLoading && <LinearProgress />}
       {userProfile !== null ? (
         <Grid
@@ -537,7 +535,7 @@ const UserProfile: React.FC<Props & LocalizeContextProps> = (
           </Typography>
         )
       )}
-    </>
+    </div>
   );
 };
 

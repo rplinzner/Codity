@@ -17,7 +17,7 @@
   "firstName": ["First name", "Imię"],
   "follow": ["Follow", "Obserwuj"],
   "followers": ["Followers", "Obserwujących"],
-  "following": ["Following", "Obserwuje"],
+  "following": ["Following", "Obserwowani"],
   "greeting": [
     "Welcome to InzTwitter! To use our service you need to log in!",
     "Witaj w InzTwitter! Żeby korzystać z naszych serwisów musisz się zalogować!"
@@ -54,6 +54,5 @@
     "Proszę poczekać na odpowiedź od serwera"
   ],
   "cancel": ["Cancel", "Anuluj"],
-  "Man": ["Man", "Mężczyzna"],
-  "Woman": ["Woman", "Kobieta"]
+  "loading": ["Loading...", "Ładowanie..."]
 }

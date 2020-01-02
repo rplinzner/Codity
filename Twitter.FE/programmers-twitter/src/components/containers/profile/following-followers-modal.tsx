@@ -80,7 +80,7 @@ function FollowingFollowersModal(props: Props) {
         }
         setLoading(false);
       },
-      error => {
+      () => {
         setProfiles(null);
         setLoading(false);
       },
@@ -90,10 +90,6 @@ function FollowingFollowersModal(props: Props) {
   useEffect(() => {
     getFollowing();
     setLoading(true);
-    // return () => {
-    //   setProfiles(null);
-    //   console.log('return useEffect', profiles);
-    // };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.userId, props.mode, props.isOpen]);
 
@@ -117,13 +113,19 @@ function FollowingFollowersModal(props: Props) {
                 <CircularProgress />
               </div>
             ) : profiles === null ? (
-              <Typography variant="h5">No data to display</Typography>
+              <Typography variant="h5">
+                <T id="noData" />
+              </Typography>
             ) : (
               <div id="scrollableDiv" className={classes.scrollable}>
                 <InfiniteScroll
                   pageStart={1}
                   hasMore={!(profiles.currentPage === profiles.totalPages)}
-                  loader={<h4 key="h4">Loading...</h4>}
+                  loader={
+                    <Typography variant="caption" key="h4">
+                      <T id="loading" />
+                    </Typography>
+                  }
                   loadMore={page => getFollowing(page)}
                   useWindow={false}
                   threshold={20}
