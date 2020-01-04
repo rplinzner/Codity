@@ -115,7 +115,7 @@ const Following: React.FC<Props & LocalizeContextProps> = (
           }
           loadMore={page => getFollowing(page)}
           useWindow={true}
-          threshold={20}
+          threshold={50}
         >
           <Grid className={classes.container} container={true}>
             {profiles.models.map(model => (
