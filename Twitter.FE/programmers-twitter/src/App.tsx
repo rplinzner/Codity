@@ -23,9 +23,11 @@ import * as authentication from './components/containers/authentication/index';
 import * as additional from './components/containers/additional/index';
 import * as main from './components/containers/feed/index';
 import * as user from './components/containers/profile/index';
-import SearchResultCard from './components/layout/search-result-card';
+import SearchResultCard from './components/containers/additional/search-result-card';
 import { settingsController } from './constants/global.constats';
 import { PrivateRoute } from './components/containers/authentication/index';
+import { Following } from "./components/containers/following/index";
+
 import { connect } from 'react-redux';
 import { AppState } from '.';
 import get from './services/get.service';
@@ -93,7 +95,9 @@ class App extends Component<Props> {
       },
       error => displayErrors(error),
     );
+  // tslint:disable-next-line: semicolon
   };
+
   componentDidMount() {
     if (this.props.isLoggedIn) {
       this.downloadSettings();
@@ -122,6 +126,7 @@ class App extends Component<Props> {
                 path="/SearchResults"
                 component={additional.SearchResults}
               />
+              <PrivateRoute path="/Following" component={Following} />
 
               <Route component={additional.NotFound} />
             </Switch>

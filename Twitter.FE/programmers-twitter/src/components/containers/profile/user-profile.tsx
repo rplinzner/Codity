@@ -49,6 +49,7 @@ import AddPhotoAvatar from './add-photo-avatar';
 import { toast } from 'react-toastify';
 import { BaseResponse } from '../../../types/base-response';
 import GenderResponse from '../../../types/gender-response';
+import FollowingFollowersModal from './following-followers-modal';
 
 interface Props extends RouteComponentProps {
   user: UserState;
@@ -63,6 +64,9 @@ interface ProfileUpdateBody {
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
+    container: {
+      paddingTop: theme.spacing(2),
+    },
     avatar: {
       width: 200,
       height: 200,
@@ -120,12 +124,14 @@ const UserProfile: React.FC<Props & LocalizeContextProps> = (
   const [genders, setGenders] = useState<GenderResponse>();
   const [isLoading, setIsLoading] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
+  const [isFollowingOpen, setIsFollowingOpen] = useState(false);
+  const [isFollowersOpen, setIsFollowersOpen] = useState(false);
 
   // -- Editable states --
-  const [birthDate, setBirthDate] = useState<Date | null>(new Date());
+  const [editBirthDate, setEditBirthDate] = useState<Date | null>(new Date());
   const [showBirthDay, setShowBirthDay] = useState<boolean>(true);
-  const [aboutMe, setAboutMe] = useState('');
-  const [image, setImage] = useState('');
+  const [editAboutMe, setEditAboutMe] = useState('');
+  const [editImage, setEditImage] = useState('');
   const [selectedGender, setSelectedGender] = useState<number>(0);
 
   const getUrlParams = (): URLSearchParams => {
@@ -141,12 +147,13 @@ const UserProfile: React.FC<Props & LocalizeContextProps> = (
   };
 
   const langCode = props.activeLanguage ? props.activeLanguage.code : 'en';
+  const userId = getUserIdSearchValue();
 
   //#region API calls
 
   const getUserProfile = (): void => {
     setIsLoading(true);
-    const id = getUserIdSearchValue();
+    const id = userId;
     if (id !== '') {
       get<ProfileResponse>(
         constants.usersController,
@@ -203,15 +210,15 @@ const UserProfile: React.FC<Props & LocalizeContextProps> = (
     } else {
       toast.info(<T id="waitForServerResponse" />);
       let birthDayToSend: string | null = null;
-      if (showBirthDay && birthDate) {
-        birthDayToSend = birthDate.toISOString();
+      if (showBirthDay && editBirthDate) {
+        birthDayToSend = editBirthDate.toISOString();
       }
 
       const body: ProfileUpdateBody = {
-        aboutMe,
+        aboutMe: editAboutMe,
         birthDay: birthDayToSend,
         genderId: selectedGender === 0 ? null : selectedGender,
-        image,
+        image: editImage,
       };
       put<BaseResponse, ProfileUpdateBody>(
         body,
@@ -222,7 +229,6 @@ const UserProfile: React.FC<Props & LocalizeContextProps> = (
         true,
       ).then(
         () => {
-          toast.success(<T id="successfullyUpdated" />);
           getUserProfile();
         },
         errors => {
@@ -238,7 +244,7 @@ const UserProfile: React.FC<Props & LocalizeContextProps> = (
     if (name === null) {
       setSelectedGender(0);
     } else {
-      if (genders && genders.models) {
+      if (genders?.models) {
         const models = genders.models;
         const tempGender = models.find(e => e.genderName === name);
         setSelectedGender(tempGender ? tempGender.genderId : 0);
@@ -248,13 +254,12 @@ const UserProfile: React.FC<Props & LocalizeContextProps> = (
 
   const setEditableStates = (profile: ProfileResponse): void => {
     const { birthDay, aboutMe, image } = profile.model;
-    if (birthDay !== null) {
-      setBirthDate(new Date(birthDay));
-    }
-    if (aboutMe !== null) {
-      setAboutMe(aboutMe);
-    }
-    setImage(image);
+    setEditBirthDate(new Date(birthDay));
+    setShowBirthDay(birthDay !== null);
+
+    setEditAboutMe(aboutMe || '');
+
+    setEditImage(image);
   };
 
   const calculateAge = (date: string) => {
@@ -270,10 +275,8 @@ const UserProfile: React.FC<Props & LocalizeContextProps> = (
 
   const isOwnProfile = (): boolean => {
     if (
-      props.user &&
-      props.user.user &&
       // tslint:disable-next-line: radix
-      props.user.user.id === parseInt(getUserIdSearchValue())
+      props.user?.user?.id === parseInt(userId)
     ) {
       return true;
     }
@@ -281,17 +284,17 @@ const UserProfile: React.FC<Props & LocalizeContextProps> = (
   };
 
   const handleDateChange = (date: Date | null) => {
-    setBirthDate(date);
+    setEditBirthDate(date);
   };
 
   const handleAboutMeTextField = (
     event: React.ChangeEvent<HTMLInputElement>,
   ): void => {
-    setAboutMe(event.target.value);
+    setEditAboutMe(event.target.value);
   };
 
   const handleImage = (image: string) => {
-    setImage(image);
+    setEditImage(image);
   };
   const handleCheckBox = (name: string) => (
     event: React.ChangeEvent<HTMLInputElement>,
@@ -317,7 +320,7 @@ const UserProfile: React.FC<Props & LocalizeContextProps> = (
   }, [props.location.search]);
 
   return (
-    <>
+    <div className={classes.container}>
       {isLoading && <LinearProgress />}
       {userProfile !== null ? (
         <Grid
@@ -360,7 +363,7 @@ const UserProfile: React.FC<Props & LocalizeContextProps> = (
               <AddPhotoAvatar
                 className={classes.avatar}
                 handleImage={handleImage}
-                existingPic={image}
+                existingPic={editImage}
               />
             ) : (
               <UserAvatar
@@ -382,36 +385,55 @@ const UserProfile: React.FC<Props & LocalizeContextProps> = (
             )}
             {isEditing && genders && (
               <FormControl className={classes.formControl}>
-                <InputLabel id="demo-simple-select-label">Gender</InputLabel>
+                <InputLabel id="demo-simple-select-label"><T id="gender"/></InputLabel>
                 <Select value={selectedGender} onChange={handleGenderChange}>
                   {genders.models.map(model => (
                     <MenuItem key={model.genderId} value={model.genderId}>
-                      {model.genderName}
-                      {/* <T id={model.genderName}>{model.genderName}</T> */}
-                      {/* TODO: Do something about state problem */}
+                      {model.genderId === 0 ? (
+                        <T id={model.genderName} />
+                      ) : (
+                        model.genderName
+                      )}
                     </MenuItem>
                   ))}
                 </Select>
               </FormControl>
             )}
+            {/* FOLLOWING */}
             <Typography
+              style={{ cursor: 'pointer' }}
               className={classes.typographyWithIcon}
               variant="subtitle1"
+              onClick={() => setIsFollowingOpen(true)}
             >
               <RssFeedIcon className={classes.icon} />
               <T id="following" />
               {': '}
               {userProfile.model.followingCount}
             </Typography>
+            <FollowingFollowersModal
+              handleClose={() => setIsFollowingOpen(false)}
+              isOpen={isFollowingOpen}
+              mode="following"
+              userId={userId}
+            />
             <Typography
               className={classes.typographyWithIcon}
+              style={{ cursor: 'pointer' }}
               variant="subtitle1"
+              onClick={() => setIsFollowersOpen(true)}
             >
               <RecordVoiceOverIcon className={classes.icon} />
               <T id="followers" />
               {': '}
               {userProfile.model.followersCount}
             </Typography>
+            <FollowingFollowersModal
+              handleClose={() => setIsFollowersOpen(false)}
+              isOpen={isFollowersOpen}
+              mode="followers"
+              userId={userId}
+            />
             {!isOwnProfile() && (
               <FollowButton
                 className={classes.element}
@@ -456,7 +478,7 @@ const UserProfile: React.FC<Props & LocalizeContextProps> = (
                     format={
                       langCode.includes('pl') ? 'dd.MM.yyyy' : 'MM/dd/yyyy'
                     }
-                    value={birthDate}
+                    value={editBirthDate}
                     onChange={handleDateChange}
                     KeyboardButtonProps={{
                       'aria-label': 'change date',
@@ -490,7 +512,7 @@ const UserProfile: React.FC<Props & LocalizeContextProps> = (
               <TextField
                 variant="outlined"
                 className={classes.aboutMeTextField}
-                value={aboutMe}
+                value={editAboutMe}
                 onChange={handleAboutMeTextField}
                 label={<T id="aboutMe" />}
                 multiline={true}
@@ -506,11 +528,13 @@ const UserProfile: React.FC<Props & LocalizeContextProps> = (
           </Grid>
         </Grid>
       ) : (
-        <Typography variant="h4" style={{ textAlign: 'center' }}>
-          <T id="noData" />
-        </Typography>
+        !isLoading && (
+          <Typography variant="h4" style={{ textAlign: 'center' }}>
+            <T id="noData" />
+          </Typography>
+        )
       )}
-    </>
+    </div>
   );
 };
 

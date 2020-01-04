@@ -35,7 +35,7 @@ import Popper from '@material-ui/core/Popper';
 import ResponsiveDrawer from './drawer';
 import { logout } from '../../store/user/user.actions';
 import { layoutTranslations } from '../../translations/index';
-import SearchResultCard from './search-result-card';
+import SearchResultCard from '../containers/additional/search-result-card';
 import MobileAccountMenu from './mobile-account-menu';
 import AccountMenu from './account-menu';
 import { AppState } from '../..';
@@ -141,11 +141,11 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     content: {
       [theme.breakpoints.up('md')]: {
-        paddingTop: '80px', // Added 16px for spacing
+        paddingTop: '64px',
         paddingLeft: drawerWidth,
       },
       [theme.breakpoints.down('md')]: {
-        paddingTop: '72px', // Added 16px for spacing
+        paddingTop: '56px',
       },
     },
   }),

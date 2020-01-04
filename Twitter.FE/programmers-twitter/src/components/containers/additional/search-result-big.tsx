@@ -27,6 +27,7 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     container: {
       marginBottom: theme.spacing(2),
+      marginTop: theme.spacing(2),
     },
     progress: {
       marginTop: theme.spacing(1),

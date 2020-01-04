@@ -7,6 +7,7 @@ import LockOpenIcon from '@material-ui/icons/LockOpen';
 import PersonAddIcon from '@material-ui/icons/PersonAdd';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ViewStreamIcon from '@material-ui/icons/ViewStream';
+import RssFeedIcon from '@material-ui/icons/RssFeed';
 
 import {
   makeStyles,
@@ -31,6 +32,7 @@ interface Props extends RouteComponentProps<any> {
   onDrawerClose: () => void;
   drawerWidth: number;
   isLoggedIn: boolean;
+  userId: number | undefined;
 }
 
 function ResponsiveDrawer(props: Props & LocalizeContextProps) {
@@ -106,6 +108,10 @@ function ResponsiveDrawer(props: Props & LocalizeContextProps) {
     </MenuList>
   );
 
+  const followPath: string = `/Following/?userId=${
+    props.userId ? props.userId : '1'
+  }`;
+
   const loggedInMenu = (
     <MenuList>
       <MenuItem
@@ -123,8 +129,19 @@ function ResponsiveDrawer(props: Props & LocalizeContextProps) {
         </Typography>
       </MenuItem>
       <Divider variant="middle" />
-      <MenuItem className={classes.menuItem}>
-        <Typography variant="inherit">Empty 2</Typography>
+      <MenuItem
+        component={Link}
+        to={followPath}
+        selected={pathname.includes('/Following')}
+        onClick={onDrawerClose}
+        className={classes.menuItem}
+      >
+        <ListItemIcon>
+          <RssFeedIcon fontSize="small" />
+        </ListItemIcon>
+        <Typography variant="inherit">
+          <T id="following" />
+        </Typography>
       </MenuItem>
       <Divider variant="middle" />
     </MenuList>
@@ -177,6 +194,7 @@ function ResponsiveDrawer(props: Props & LocalizeContextProps) {
 
 const mapStateToProps = (state: AppState) => ({
   isLoggedIn: state.user.loggedIn,
+  userId: state.user.user?.id,
 });
 
 export default connect(mapStateToProps)(

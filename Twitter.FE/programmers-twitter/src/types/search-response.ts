@@ -1,10 +1,6 @@
-import { BaseResponse } from './base-response';
+import { BaseResponsePagination } from './base-response-pagination';
 
-export default interface SearchResponse extends BaseResponse {
-  pageSize: number;
-  currentPage: number;
-  totalPages: number;
-  totalCount: number;
+export default interface SearchResponse extends BaseResponsePagination {
   models: SearchModel[];
 }
 
