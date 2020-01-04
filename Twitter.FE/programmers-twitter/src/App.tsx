@@ -26,7 +26,7 @@ import * as user from './components/containers/profile/index';
 import SearchResultCard from './components/containers/additional/search-result-card';
 import { settingsController } from './constants/global.constats';
 import { PrivateRoute } from './components/containers/authentication/index';
-import { Following } from "./components/containers/following/index";
+import { Following } from './components/containers/following/index';
 
 import { connect } from 'react-redux';
 import { AppState } from '.';

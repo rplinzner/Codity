@@ -347,6 +347,7 @@ function PrimarySearchAppBar(props: Props & RouteComponentProps) {
           {/* Normal menu */}
           {isLoggedIn ? (
             <div className={classes.sectionDesktop}>
+              {/* Mail Icon */}
               <Tooltip title={<T id="messages" />}>
                 <IconButton aria-label="show 4 new mails" color="inherit">
                   <Badge badgeContent={420} color="secondary">
@@ -354,12 +355,15 @@ function PrimarySearchAppBar(props: Props & RouteComponentProps) {
                   </Badge>
                 </IconButton>
               </Tooltip>
+              {/* Notifications Icon */}
               <Tooltip title={<T id="notifications" />}>
                 <IconButton
                   aria-label="show 17 new notifications"
                   color="inherit"
+                  // onClick={() => window.alert('lololol')}
                 >
-                  <Badge badgeContent={69} color="secondary">
+                  <Badge variant="dot" invisible={false} color="secondary">
+                    {/* TODO: Dot visibility */}
                     <NotificationsIcon />
                   </Badge>
                 </IconButton>

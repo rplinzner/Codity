@@ -42,7 +42,7 @@ const MobileAccountMenu: React.FC<Props> = (props: Props) => {
       </MenuItem>
       <MenuItem>
         <IconButton aria-label="show 11 new notifications" color="inherit">
-          <Badge badgeContent={69} color="secondary">
+          <Badge variant="dot" color="secondary">
             <NotificationsIcon />
           </Badge>
         </IconButton>
