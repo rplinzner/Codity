@@ -16,7 +16,7 @@ import {
   Translate as T,
 } from 'react-localize-redux';
 import { globalTranslations } from './translations/index';
-
+import { HubConnectionBuilder } from '@microsoft/signalr';
 import 'react-toastify/dist/ReactToastify.css';
 
 import * as authentication from './components/containers/authentication/index';
@@ -68,6 +68,17 @@ class App extends Component<Props> {
         renderInnerHtml: true,
         defaultLanguage: props.browserLanguage,
       },
+    });
+
+    const connection = new HubConnectionBuilder()
+      .withUrl(server + '/notificationHub', {
+        accessTokenFactory: () => this.props.token.user.token,
+      })
+      .build();
+
+    connection.start().then(() => console.log('connected'));
+    connection.on('newNotification', (id: number) => {
+      console.log(id);
     });
   }
 
@@ -140,6 +151,7 @@ class App extends Component<Props> {
 const mapStateToProps = (state: AppState) => ({
   isDarkTheme: state.settings.isDarkTheme,
   isLoggedIn: state.user.loggedIn,
+  token: state.user,
 });
 
 const mapDispatchToProps = (dispatch: any) => {
