@@ -98,28 +98,28 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="NewFollower" xml:space="preserve">
-    <value>'{0}' followed '{1}'.</value>
+    <value>{0} followed {1}.</value>
   </data>
   <data name="NewTweet" xml:space="preserve">
-    <value>User '{0}' shared new Tweet.</value>
+    <value>User {0} shared new Tweet.</value>
   </data>
   <data name="NewComment" xml:space="preserve">
-    <value>'{0}' replied on '{1}' user Tweet.</value>
+    <value>{0} replied on {1} user Tweet.</value>
   </data>
   <data name="NewLike" xml:space="preserve">
-    <value>'{0}' liked '{1}' user Tweet.</value>
+    <value>{0} liked {1} user Tweet.</value>
   </data>
   <data name="YoursNewComment" xml:space="preserve">
-    <value>'{0}' replied on Your Tweet.</value>
+    <value>{0} replied on Your Tweet.</value>
   </data>
   <data name="YoursNewFollower" xml:space="preserve">
-    <value>'{0}' followed You.</value>
+    <value>{0} followed You.</value>
   </data>
   <data name="YoursNewLike" xml:space="preserve">
-    <value>'{0}' liked Your Tweet.</value>
+    <value>{0} liked Your Tweet.</value>
   </data>
   <data name="YoursNewLikes" xml:space="preserve">
-    <value>'{0}' and '{1}' users liked Your Tweet.</value>
+    <value>{0} and {1} users liked Your Tweet.</value>
   </data>
   <data name="Man" xml:space="preserve">
     <value>Man</value>
