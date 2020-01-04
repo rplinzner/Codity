@@ -31,6 +31,8 @@ interface Props extends LocalizeContextProps {
   isFollowing: boolean;
   userId: number;
   updateSearch: () => void;
+  handleModalClose?: () => void;
+  unfollowButton?: boolean;
 }
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -87,11 +89,16 @@ const SearchCard: React.FC<Props & RouteComponentProps> = (
     <div className={classes.root}>
       <Card>
         <CardActionArea
-          onClick={() => props.history.push(`/profile/?userId=${props.userId}`)}
+          onClick={() => {
+            if (props.handleModalClose) {
+              props.handleModalClose();
+            }
+            props.history.push(`/profile/?userId=${props.userId}`);
+          }}
         >
           <CardContent>
-            <Grid container alignItems="center">
-              <Grid item>
+            <Grid container={true} alignItems="center">
+              <Grid item={true}>
                 <UserAvatar
                   firstName={props.firstName}
                   lastName={props.lastName}
@@ -99,8 +106,8 @@ const SearchCard: React.FC<Props & RouteComponentProps> = (
                   className={classes.avatar}
                 />
               </Grid>
-              <Grid item>
-                <Typography gutterBottom variant="h5" component="h2">
+              <Grid item={true}>
+                <Typography gutterBottom={true} variant="h5" component="h2">
                   {props.firstName + ' ' + props.lastName}
                 </Typography>
                 <Typography variant="body2" color="textSecondary" component="p">
@@ -110,16 +117,18 @@ const SearchCard: React.FC<Props & RouteComponentProps> = (
             </Grid>
           </CardContent>
         </CardActionArea>
-        <CardActions>
-          <Button
-            onClick={handleFollow}
-            style={{ marginLeft: '10px' }}
-            size="small"
-            color="primary"
-          >
-            {props.isFollowing ? <T id="unfollow" /> : <T id="follow" />}
-          </Button>
-        </CardActions>
+        {props.unfollowButton !== false && (
+          <CardActions>
+            <Button
+              onClick={handleFollow}
+              style={{ marginLeft: '10px' }}
+              size="small"
+              color="primary"
+            >
+              {props.isFollowing ? <T id="unfollow" /> : <T id="follow" />}
+            </Button>
+          </CardActions>
+        )}
       </Card>
     </div>
   );
