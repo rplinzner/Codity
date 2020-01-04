@@ -32,6 +32,7 @@ interface Props extends LocalizeContextProps {
   userId: number;
   updateSearch: () => void;
   handleModalClose?: () => void;
+  unfollowButton?: boolean;
 }
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -116,16 +117,18 @@ const SearchCard: React.FC<Props & RouteComponentProps> = (
             </Grid>
           </CardContent>
         </CardActionArea>
-        <CardActions>
-          <Button
-            onClick={handleFollow}
-            style={{ marginLeft: '10px' }}
-            size="small"
-            color="primary"
-          >
-            {props.isFollowing ? <T id="unfollow" /> : <T id="follow" />}
-          </Button>
-        </CardActions>
+        {props.unfollowButton !== false && (
+          <CardActions>
+            <Button
+              onClick={handleFollow}
+              style={{ marginLeft: '10px' }}
+              size="small"
+              color="primary"
+            >
+              {props.isFollowing ? <T id="unfollow" /> : <T id="follow" />}
+            </Button>
+          </CardActions>
+        )}
       </Card>
     </div>
   );

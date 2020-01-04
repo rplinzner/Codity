@@ -54,5 +54,6 @@
     "Proszę poczekać na odpowiedź od serwera"
   ],
   "cancel": ["Cancel", "Anuluj"],
-  "loading": ["Loading...", "Ładowanie..."]
+  "loading": ["Loading...", "Ładowanie..."],
+  "gender": ["Gender", "Płeć"]
 }

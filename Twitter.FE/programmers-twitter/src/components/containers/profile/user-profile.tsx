@@ -229,7 +229,6 @@ const UserProfile: React.FC<Props & LocalizeContextProps> = (
         true,
       ).then(
         () => {
-          toast.success(<T id="successfullyUpdated" />);
           getUserProfile();
         },
         errors => {
@@ -386,7 +385,7 @@ const UserProfile: React.FC<Props & LocalizeContextProps> = (
             )}
             {isEditing && genders && (
               <FormControl className={classes.formControl}>
-                <InputLabel id="demo-simple-select-label">Gender</InputLabel>
+                <InputLabel id="demo-simple-select-label"><T id="gender"/></InputLabel>
                 <Select value={selectedGender} onChange={handleGenderChange}>
                   {genders.models.map(model => (
                     <MenuItem key={model.genderId} value={model.genderId}>

@@ -1,17 +1,48 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
+import {
+  withLocalize,
+  Translate as T,
+  LocalizeContextProps,
+} from 'react-localize-redux';
+import InfiniteScroll from 'react-infinite-scroller';
 
 import get from '../../../services/get.service';
 import { FollowingResponse } from '../../../types/following-response';
 import * as constants from '../../../constants/global.constats';
+import {
+  LinearProgress,
+  Typography,
+  Grid,
+  makeStyles,
+  Theme,
+  createStyles,
+  CircularProgress,
+} from '@material-ui/core';
+import { UserCard } from '../additional/index';
+
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    marginTopBottom: {
+      margin: theme.spacing(2, 0, 2, 0),
+    },
+    container: {
+      padding: theme.spacing(2),
+    },
+  }),
+);
 
 interface Props extends RouteComponentProps {}
 
-const Following: React.FC<Props> = (props: Props) => {
+const Following: React.FC<Props & LocalizeContextProps> = (
+  props: Props & LocalizeContextProps,
+) => {
   const [isLoading, setIsLoading] = useState(false);
   const [profiles, setProfiles] = useState<FollowingResponse | null>(null);
 
   const pageSize = 10;
+
+  const classes = useStyles();
 
   const getUrlParams = (): URLSearchParams => {
     if (!props.location.search) {
@@ -26,9 +57,9 @@ const Following: React.FC<Props> = (props: Props) => {
   };
 
   const userId = getUserIdSearchValue();
+  const lang = props.activeLanguage ? props.activeLanguage.code : 'en';
 
   const getFollowing = (page: number = 1): void => {
-    setIsLoading(true);
     const id = userId;
     if (id !== '') {
       get<FollowingResponse>(
@@ -48,17 +79,64 @@ const Following: React.FC<Props> = (props: Props) => {
           } else {
             setProfiles(resp);
           }
-          setLoading(false);
+          setIsLoading(false);
         },
         error => {
           setProfiles(null);
-          setLoading(false);
+          setIsLoading(false);
         },
       );
     }
   };
 
-  return <div />;
+  useEffect(() => {
+    setIsLoading(true);
+    getFollowing();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [props.location.search]);
+  return (
+    <>
+      {isLoading ? (
+        <LinearProgress className={classes.marginTopBottom} />
+      ) : profiles === null ? (
+        <div style={{ textAlign: 'center' }} className={classes.marginTopBottom}>
+          <Typography variant="h4">
+            <T id="noData" />
+          </Typography>
+        </div>
+      ) : (
+        <InfiniteScroll
+          pageStart={1}
+          hasMore={!(profiles.currentPage === profiles.totalPages)}
+          loader={
+            <div style={{ textAlign: 'center' }}>
+              <CircularProgress />
+            </div>
+          }
+          loadMore={page => getFollowing(page)}
+          useWindow={true}
+          threshold={20}
+        >
+          <Grid className={classes.container} container={true}>
+            {profiles.models.map(model => (
+              <Grid key={model.id} item={true} xs={12} md={6} lg={4}>
+                <UserCard
+                  firstName={model.firstName}
+                  followers={model.followersCount}
+                  isFollowing={model.isFollowing}
+                  lastName={model.lastName}
+                  photo={model.image}
+                  userId={model.id}
+                  updateSearch={() => {}}
+                  unfollowButton={false}
+                />
+              </Grid>
+            ))}
+          </Grid>
+        </InfiniteScroll>
+      )}
+    </>
+  );
 };
 
-export default withRouter(Following);
+export default withRouter(withLocalize(Following));
