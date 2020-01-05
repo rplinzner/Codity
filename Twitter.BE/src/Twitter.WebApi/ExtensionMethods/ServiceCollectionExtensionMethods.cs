@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using Hangfire;
+using Hangfire.SqlServer;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
@@ -122,6 +124,18 @@ namespace Twitter.WebApi.ExtensionMethods
             });
         }
 
+        public static void AddHangfire(this IServiceCollection services, IConfiguration configuration)
+        {
+            services.AddHangfire(c => c
+               .UseSqlServerStorage(configuration.GetConnectionString("HangfireConnection"), new SqlServerStorageOptions
+               {
+                   SlidingInvisibilityTimeout = TimeSpan.FromMinutes(5),
+                   QueuePollInterval = TimeSpan.Zero,   
+               }));
+
+            services.AddHangfireServer();
+        }
+
         public static void AddAuthentication(this IServiceCollection services, IConfiguration configuration)
         {
             services
@@ -189,6 +203,7 @@ namespace Twitter.WebApi.ExtensionMethods
             services.AddTransient<ILikeService, LikeService>();
             services.AddTransient<ICommentService, CommentService>();
             services.AddTransient<IGithubService, GithubService>();
+            services.AddTransient<IStatisticService, StatisticService>();
             services.AddTransient<DataSeeder>();
         }
 

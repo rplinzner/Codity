@@ -90,7 +90,7 @@ namespace Twitter.Services.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &apos;{0}&apos; replied on &apos;{1}&apos; user Tweet..
+        ///   Looks up a localized string similar to {0} replied on {1} user Tweet..
         /// </summary>
         internal static string NewComment {
             get {
@@ -99,7 +99,7 @@ namespace Twitter.Services.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &apos;{0}&apos; followed &apos;{1}&apos;..
+        ///   Looks up a localized string similar to {0} followed {1}..
         /// </summary>
         internal static string NewFollower {
             get {
@@ -108,7 +108,7 @@ namespace Twitter.Services.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &apos;{0}&apos; liked &apos;{1}&apos; user Tweet..
+        ///   Looks up a localized string similar to {0} liked {1} user Tweet..
         /// </summary>
         internal static string NewLike {
             get {
@@ -117,7 +117,7 @@ namespace Twitter.Services.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to User &apos;{0}&apos; shared new Tweet..
+        ///   Looks up a localized string similar to User {0} shared new Tweet..
         /// </summary>
         internal static string NewTweet {
             get {
@@ -135,7 +135,7 @@ namespace Twitter.Services.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &apos;{0}&apos; replied on Your Tweet..
+        ///   Looks up a localized string similar to {0} replied on Your Tweet..
         /// </summary>
         internal static string YoursNewComment {
             get {
@@ -144,7 +144,7 @@ namespace Twitter.Services.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &apos;{0}&apos; followed You..
+        ///   Looks up a localized string similar to {0} followed You..
         /// </summary>
         internal static string YoursNewFollower {
             get {
@@ -153,7 +153,7 @@ namespace Twitter.Services.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &apos;{0}&apos; liked Your Tweet..
+        ///   Looks up a localized string similar to {0} liked Your Tweet..
         /// </summary>
         internal static string YoursNewLike {
             get {
@@ -162,7 +162,7 @@ namespace Twitter.Services.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &apos;{0}&apos; and &apos;{1}&apos; users liked Your Tweet..
+        ///   Looks up a localized string similar to {0} and {1} users liked Your Tweet..
         /// </summary>
         internal static string YoursNewLikes {
             get {

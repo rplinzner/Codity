@@ -98,28 +98,28 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="NewFollower" xml:space="preserve">
-    <value>'{0}' obserwuje '{1}'.</value>
+    <value>{0} obserwuje {1}.</value>
   </data>
   <data name="NewTweet" xml:space="preserve">
-    <value>Użytkownik '{0}' udostępnił/a nowego Tweeta.</value>
+    <value>Użytkownik {0} udostępnił/a nowego Tweeta.</value>
   </data>
   <data name="NewComment" xml:space="preserve">
-    <value>'{0}' odpowiedział/a na Tweeta użytkownika '{1}'.</value>
+    <value>{0} odpowiedział/a na Tweeta użytkownika {1}.</value>
   </data>
   <data name="NewLike" xml:space="preserve">
-    <value>'{0}' polubił/a Tweeta użytkownika '{1}'.</value>
+    <value>{0} polubił/a Tweeta użytkownika {1}.</value>
   </data>
   <data name="YoursNewComment" xml:space="preserve">
-    <value>'{0}' odpowiedział/a na Twój Tweet.</value>
+    <value>{0} odpowiedział/a na Twój Tweet.</value>
   </data>
   <data name="YoursNewFollower" xml:space="preserve">
-    <value>'{0}' obserwuje Cię.</value>
+    <value>{0} obserwuje Cię.</value>
   </data>
   <data name="YoursNewLike" xml:space="preserve">
-    <value>'{0}' polubił/a Twojego Tweeta.</value>
+    <value>{0} polubił/a Twojego Tweeta.</value>
   </data>
   <data name="YoursNewLikes" xml:space="preserve">
-    <value>'{0}' i '{1}' użytkowników polubiło Twojego Tweeta.</value>
+    <value>{0} i {1} użytkowników polubiło Twojego Tweeta.</value>
   </data>
   <data name="Man" xml:space="preserve">
     <value>Mężczyzna</value>

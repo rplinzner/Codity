@@ -100,6 +100,11 @@ namespace Twitter.Services.Helpers
                         .RuleFor(o => o.BirthDay, f => f.Date.Between(new DateTime(1970, 1, 30), new DateTime(1999, 12, 30)))
                         .RuleFor(o => o.Image, f => f.Internet.Avatar())
                         .RuleFor(o => o.GenderId, f => f.Random.Int(1, 2))
+                        .RuleFor(o => o.Settings, f => new Settings
+                        {
+                            IsDarkTheme = f.Random.Bool(),
+                            LanguageId = f.PickRandom(languages).Id
+                        })
                         .Generate();
 
                     users.Add(userFaker);
