@@ -195,6 +195,9 @@ namespace Twitter.Services.Services
             }
             else
             {
+                var oldNotifications = await _userNotificationRepository.GetAllByAsync(c => c.NotificationId == notification.Id);
+                await _userNotificationRepository.RemoveRangeAsync(oldNotifications);
+
                 notification.Parameters = _notificationMapper.SerializeNotificationParameters(notificationParams);
                 notification.CreatedTime = DateTime.Now;
                 await _notificationRepository.UpdateAsync(notification);
@@ -239,6 +242,9 @@ namespace Twitter.Services.Services
                 }
                 else
                 {
+                    var oldNotifications = await _userNotificationRepository.GetAllByAsync(c => c.NotificationId == tweetAuthorNotification.Id);
+                    await _userNotificationRepository.RemoveRangeAsync(oldNotifications);
+
                     tweetAuthorNotification.Parameters = _notificationMapper.SerializeNotificationParameters(tweetAuthorNotificationParams);
                     tweetAuthorNotification.CreatedTime = DateTime.Now;
                     await _notificationRepository.UpdateAsync(tweetAuthorNotification);
