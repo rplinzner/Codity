@@ -1,43 +1,76 @@
 import React from 'react';
-import { Paper } from '@material-ui/core';
+import {
+  Paper,
+  Typography,
+  Divider,
+  makeStyles,
+  createStyles,
+  Theme,
+  Grow,
+} from '@material-ui/core';
 import { connect } from 'react-redux';
 
 import { AppState } from '../..';
-import { init } from '../../store/notifications/notifications.actions';
 import { Notification } from '../../types/notification';
-
-// import { HubConnectionBuilder } from '@microsoft/signalr';
-// import * as constants from '../../constants/global.constats';
+import { withRouter, RouteComponentProps } from 'react-router-dom';
 
 interface Props {
-  newNotificationCallback?: () => void;
+  closeNotifications: () => void;
   className?: string;
-  token: string | undefined;
-  isConnected: boolean;
+  isOpen: boolean;
+  // redux props
   notifications: Notification[];
-  initAction: typeof init;
 }
 
-const Notifications: React.FC<Props> = (props: Props) => {
-  if (!props.isConnected) {
-    props.initAction();
-  }
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    innerNotificationStyle: {
+      padding: theme.spacing(1),
+      '&:hover': {
+        backgroundColor: theme.palette.action.hover,
+      },
+    },
+    outerNotificationStyle: {
+      cursor: 'pointer',
+    },
+  }),
+);
+
+const Notifications: React.FC<Props & RouteComponentProps> = (
+  props: Props & RouteComponentProps,
+) => {
+  const classes = useStyles();
+
+  const handleNotificationClicked = (el: Notification) => {
+    props.history.push(el.redirectTo);
+    props.closeNotifications();
+  };
+
   return (
-    <div className={props.className}>
-      <Paper />
-    </div>
+    <Grow in={props.isOpen}>
+      <div className={props.className}>
+        <Paper>
+          {props.notifications.map((el, index) => (
+            <div
+              key={index}
+              className={classes.outerNotificationStyle}
+              onClick={() => handleNotificationClicked(el)}
+            >
+              <div className={classes.innerNotificationStyle}>
+                <Typography variant="button">{el.label}</Typography>
+                <Typography variant="body2">{el.description}</Typography>
+              </div>
+              <Divider />
+            </div>
+          ))}
+        </Paper>
+      </div>
+    </Grow>
   );
 };
 
 const mapStateToProps = (state: AppState) => ({
-  isConnected: state.notifications.isConnectionOpen,
   notifications: state.notifications.notifications,
 });
 
-const mapDispatchToProps = (dispatch: any) => {
-  return {
-    initAction: () => dispatch(init()),
-  };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(Notifications);
+export default connect(mapStateToProps)(withRouter(Notifications));

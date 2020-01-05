@@ -14,7 +14,7 @@ import Badge from '@material-ui/core/Badge';
 import MenuIcon from '@material-ui/icons/Menu';
 import SearchIcon from '@material-ui/icons/Search';
 import AccountCircle from '@material-ui/icons/AccountCircle';
-import MailIcon from '@material-ui/icons/Mail';
+// import MailIcon from '@material-ui/icons/Mail';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import {
@@ -23,7 +23,13 @@ import {
   withRouter,
   RouteComponentProps,
 } from 'react-router-dom';
-import { Link, Tooltip, Paper, ClickAwayListener } from '@material-ui/core';
+import {
+  Link,
+  Tooltip,
+  Paper,
+  ClickAwayListener,
+  Grow,
+} from '@material-ui/core';
 import { connect } from 'react-redux';
 import {
   Translate as T,
@@ -34,6 +40,7 @@ import Popper from '@material-ui/core/Popper';
 
 import ResponsiveDrawer from './drawer';
 import { logout } from '../../store/user/user.actions';
+import { read, init } from '../../store/notifications/notifications.actions';
 import { layoutTranslations } from '../../translations/index';
 import SearchResultCard from '../containers/additional/search-result-card';
 import MobileAccountMenu from './mobile-account-menu';
@@ -113,7 +120,7 @@ const useStyles = makeStyles((theme: Theme) =>
         },
       },
     },
-    searchPopper: {
+    popper: {
       zIndex: theme.zIndex.modal,
       marginTop: 5,
     },
@@ -161,6 +168,10 @@ interface Props extends LocalizeContextProps {
   isLoggedIn: boolean;
   logOutAction: typeof logout;
   user: User | null;
+  isNewNotification: boolean;
+  readNotificationAction: typeof read;
+  isConnected: boolean;
+  initAction: typeof init;
 }
 
 function PrimarySearchAppBar(props: Props & RouteComponentProps) {
@@ -176,11 +187,20 @@ function PrimarySearchAppBar(props: Props & RouteComponentProps) {
   ] = React.useState<null | HTMLElement>(null);
   const [searchAnchorEl, setSearchAnchorEl] = React.useState<any | null>(null);
   const [searchField, setSearchField] = React.useState<string | null>('');
+  const [notificationAnchorEl, setNotificationAnchorEl] = React.useState<
+    any | null
+  >(null);
 
   const isMenuOpen = Boolean(primaryAccountMenuAnchorEl);
   const isMobileAccountMenuOpen = Boolean(mobileAccountMenuAnchorEl);
+
   const isSearchOpen = Boolean(searchAnchorEl);
   const searchId = isSearchOpen ? 'search-popover' : undefined;
+
+  const isNotificationOpen = Boolean(notificationAnchorEl);
+  const notificationId = isNotificationOpen
+    ? 'notification-popover'
+    : undefined;
 
   const [mobileDrawerOpen, setMobileDrawerOpen] = React.useState(false);
 
@@ -219,6 +239,15 @@ function PrimarySearchAppBar(props: Props & RouteComponentProps) {
 
   const handlePopoverClose = () => {
     setSearchAnchorEl(null);
+  };
+
+  const handleNotificationOpen = (
+    event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+  ) => {
+    setNotificationAnchorEl(event.currentTarget);
+  };
+  const handleNotificationClose = () => {
+    setNotificationAnchorEl(null);
   };
 
   const [typingTimeout, setTypingTimout] = React.useState();
@@ -260,10 +289,14 @@ function PrimarySearchAppBar(props: Props & RouteComponentProps) {
     );
   };
 
-  const { isLoggedIn, logOutAction } = props;
+  const { isLoggedIn, logOutAction, isConnected } = props;
 
   const mobileAccountMenuId = 'primary-search-account-menu-mobile';
   const menuId = 'primary-search-account-menu';
+
+  if (isLoggedIn && !isConnected) {
+    props.initAction();
+  }
 
   return (
     <div className={classes.grow}>
@@ -319,7 +352,7 @@ function PrimarySearchAppBar(props: Props & RouteComponentProps) {
                           id={searchId}
                           open={isSearchOpen}
                           anchorEl={searchAnchorEl}
-                          className={classes.searchPopper}
+                          className={classes.popper}
                         >
                           <Paper className={classes.searchPaper}>
                             {userProfiles.models.map(profile => (
@@ -349,27 +382,55 @@ function PrimarySearchAppBar(props: Props & RouteComponentProps) {
           {isLoggedIn ? (
             <div className={classes.sectionDesktop}>
               {/* Mail Icon */}
-              <Tooltip title={<T id="messages" />}>
+              {/* <Tooltip title={<T id="messages" />}>
                 <IconButton aria-label="show 4 new mails" color="inherit">
                   <Badge badgeContent={420} color="secondary">
                     <MailIcon />
                   </Badge>
                 </IconButton>
-              </Tooltip>
+              </Tooltip> */}
               {/* Notifications Icon */}
-              <Tooltip title={<T id="notifications" />}>
-                <IconButton
-                  aria-label="show 17 new notifications"
-                  color="inherit"
-                  // onClick={() => window.alert('lololol')}
-                >
-                  <Badge variant="dot" invisible={false} color="secondary">
-                    {/* TODO: Dot visibility */}
-                    <NotificationsIcon />
-                  </Badge>
-                </IconButton>
-              </Tooltip>
-              <Notifications token={props.user?.token} />
+              <ClickAwayListener onClickAway={handleNotificationClose}>
+                <div>
+                  <Tooltip title={<T id="notifications" />}>
+                    <IconButton
+                      aria-label="show 17 new notifications"
+                      color="inherit"
+                      onClick={e => {
+                        props.readNotificationAction(true);
+                        if (!isNotificationOpen) {
+                          handleNotificationOpen(e);
+                        } else {
+                          handleNotificationClose();
+                        }
+                      }}
+                    >
+                      <Badge
+                        variant="dot"
+                        invisible={!props.isNewNotification}
+                        color="secondary"
+                      >
+                        <NotificationsIcon />
+                      </Badge>
+                    </IconButton>
+                  </Tooltip>
+                  <Grow in={isNotificationOpen}>
+                    <div>
+                      <Popper
+                        id={notificationId}
+                        anchorEl={notificationAnchorEl}
+                        open={isNotificationOpen}
+                        className={classes.popper}
+                      >
+                        <Notifications
+                          closeNotifications={handleNotificationClose}
+                          isOpen={isNotificationOpen}
+                        />
+                      </Popper>
+                    </div>
+                  </Grow>
+                </div>
+              </ClickAwayListener>
               <Tooltip title={<T id="profile" />}>
                 <IconButton
                   edge="end"
@@ -436,11 +497,15 @@ function PrimarySearchAppBar(props: Props & RouteComponentProps) {
 const mapStateToProps = (state: AppState) => ({
   isLoggedIn: state.user.loggedIn,
   user: state.user.details,
+  isNewNotification: state.notifications.isNewNotification,
+  isConnected: state.notifications.isConnectionOpen,
 });
 
 const mapDispatchToProps = (dispatch: any) => {
   return {
     logOutAction: () => dispatch(logout()),
+    readNotificationAction: (isread: boolean) => dispatch(read(isread)),
+    initAction: () => dispatch(init()),
   };
 };
 

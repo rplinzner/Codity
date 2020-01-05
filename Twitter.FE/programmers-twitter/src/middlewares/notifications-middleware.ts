@@ -20,7 +20,9 @@ const notificationsMiddlaware = (store: any) => (next: any) => (
   ) {
     const url = process.env.REACT_APP_SERVER + '/notificationHub';
     const token = store.getState().user.details.token;
-    if (!token) return;
+    if (!token) {
+      return;
+    }
     // Create instance
     const connection = new HubConnectionBuilder()
       .withUrl(url, {
