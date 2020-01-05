@@ -46,6 +46,7 @@ import * as constants from '../../constants/global.constats';
 import displayErrors from '../../helpers/display-errors';
 import get from '../../services/get.service';
 import User from '../../types/user';
+import Notifications from './notifications';
 
 const drawerWidth = 240;
 
@@ -368,6 +369,7 @@ function PrimarySearchAppBar(props: Props & RouteComponentProps) {
                   </Badge>
                 </IconButton>
               </Tooltip>
+              <Notifications token={props.user?.token} />
               <Tooltip title={<T id="profile" />}>
                 <IconButton
                   edge="end"
@@ -433,7 +435,7 @@ function PrimarySearchAppBar(props: Props & RouteComponentProps) {
 
 const mapStateToProps = (state: AppState) => ({
   isLoggedIn: state.user.loggedIn,
-  user: state.user.user,
+  user: state.user.details,
 });
 
 const mapDispatchToProps = (dispatch: any) => {

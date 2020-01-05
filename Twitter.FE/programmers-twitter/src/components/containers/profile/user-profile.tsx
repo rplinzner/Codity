@@ -276,7 +276,7 @@ const UserProfile: React.FC<Props & LocalizeContextProps> = (
   const isOwnProfile = (): boolean => {
     if (
       // tslint:disable-next-line: radix
-      props.user?.user?.id === parseInt(userId)
+      props.user?.details?.id === parseInt(userId)
     ) {
       return true;
     }
