@@ -22,7 +22,8 @@ namespace Twitter.WebApi
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc()
-                    .AddDataAnnotationsLocalization(options => {
+                    .AddDataAnnotationsLocalization(options =>
+                    {
                         options.DataAnnotationLocalizerProvider = (type, factory) =>
                             factory.Create(typeof(ErrorTranslations));
                     });
@@ -33,6 +34,7 @@ namespace Twitter.WebApi
             services.AddAuthentication(Configuration);
             services.AddAndConfigureLocalization();
             services.AddIdentity();
+            services.AddHangfire(Configuration);
             services.AddAndConfigureAutoMapper();
             services.AddServices();
             services.AddHttpClients();
@@ -59,7 +61,7 @@ namespace Twitter.WebApi
             app.UseRequestLocalization();
             app.UseRouting();
             app.UseAuthorization();
-
+            HangfireScheduler.ScheduleRecurringJobs();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
