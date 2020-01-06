@@ -324,7 +324,7 @@ const UserProfile: React.FC<Props & LocalizeContextProps> = (
       {isLoading && <LinearProgress />}
       {userProfile !== null ? (
         <Grid
-          style={{ height: '90vh', padding: '20px' }}
+          style={{ padding: '20px' }}
           container={true}
           justify="center"
           alignItems="center"

@@ -133,6 +133,7 @@ const useStyles = makeStyles((theme: Theme) =>
       [theme.breakpoints.up('md')]: {
         display: 'flex',
       },
+      paddingRight: theme.spacing(2),
     },
     sectionMobile: {
       display: 'flex',
