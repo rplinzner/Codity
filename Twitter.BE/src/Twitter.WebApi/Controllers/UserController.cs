@@ -24,7 +24,6 @@ namespace Twitter.WebApi.Controllers
             _userContext = userContext;
         }
 
-
         /// <summary>
         /// Search users
         /// </summary>

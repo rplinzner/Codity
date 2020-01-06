@@ -81,6 +81,26 @@ namespace Twitter.Services.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to &lt;strong&gt;Hello, {0}!&lt;/strong&gt;
+        ///&lt;p&gt;To reset Your password click the link below.&lt;/p&gt;
+        ///&lt;a href=&quot;{1}&quot; target=&quot;_blank&quot;&gt;Reset Password!&lt;/a&gt;.
+        /// </summary>
+        internal static string ForgetPasswordEmail {
+            get {
+                return ResourceManager.GetString("ForgetPasswordEmail", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Reset Password.
+        /// </summary>
+        internal static string ForgetPasswordEmailTitle {
+            get {
+                return ResourceManager.GetString("ForgetPasswordEmailTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Man.
         /// </summary>
         internal static string Man {
