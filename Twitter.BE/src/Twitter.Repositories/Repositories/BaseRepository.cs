@@ -86,6 +86,29 @@ namespace Twitter.Repositories.Repositories
             return await PagedList<T>.Create(query, pageNumber, pageSize);
         }
 
+        public virtual async Task<PagedList<T>> GetPagedByAsync<TKey>(
+           Expression<Func<T, bool>> getBy,
+           Expression<Func<T, TKey>> orderBy,
+           int pageNumber,
+           int pageSize,
+           bool withTracking = false,
+           bool orderByDescending = true,
+           params Expression<Func<T, object>>[] includes)
+        {
+            var query = GetAllByQuery(getBy, withTracking, includes);
+
+            if (orderByDescending)
+            {
+                query = query.OrderByDescending(orderBy);
+            }
+            else
+            {
+                query = query.OrderBy(orderBy);
+            }
+
+            return await PagedList<T>.Create(query, pageNumber, pageSize);
+        }
+
         public virtual async Task<T> GetAsync(
             int id,
             bool withTracking = false,

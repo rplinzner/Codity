@@ -38,8 +38,12 @@ namespace Twitter.Services.Services
         public async Task<IPagedResponse<NotificationDTO>> GetAllNotifications(int userId, PaginationRequest paginationRequest)
         {
             var response = new PagedResponse<NotificationDTO>();
-            var notifications = await _notificationRepository
-                .GetPagedByAsync(c => c.UserId == userId, paginationRequest.PageNumber, paginationRequest.PageSize, false, c => c.Notification);
+            var notifications = await _notificationRepository.GetPagedByAsync(
+                getBy: c => c.UserId == userId,
+                orderBy: c => c.Notification.CreatedTime,
+                pageNumber: paginationRequest.PageNumber,
+                pageSize: paginationRequest.PageSize,
+                includes: c => c.Notification);
             _mapper.Map(notifications, response);
 
             response.Models = _notificationMapperService.MapNotifications(notifications.Select(c => c.Notification));

@@ -70,16 +70,16 @@ namespace Twitter.Services.Services
             return response;
         }
 
-        public async Task<IPagedResponse<CommentDTO>> GetCommentsAsync(int tweetId, PaginationRequest paginationReqeust)
+        public async Task<IPagedResponse<CommentDTO>> GetCommentsAsync(int tweetId, PaginationRequest paginationRequest)
         {
             var response = new PagedResponse<CommentDTO>();
 
             var comments = await _commentRepository.GetPagedByAsync(
-                c => c.TweetId == tweetId,
-                paginationReqeust.PageNumber,
-                paginationReqeust.PageSize,
-                false,
-                c => c.Author);
+                getBy: c => c.TweetId == tweetId,
+                pageNumber: paginationRequest.PageNumber,
+                pageSize: paginationRequest.PageSize,
+                orderBy: c => c.CreationDate,
+                includes: c => c.Author);
 
             _mapper.Map(comments, response);
 
