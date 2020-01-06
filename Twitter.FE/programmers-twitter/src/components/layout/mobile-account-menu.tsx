@@ -121,7 +121,7 @@ const MobileAccountMenu: React.FC<Props> = (props: Props) => {
             color="primary"
             variant="contained"
           >
-            Close notifications
+            <T id="close" />
           </Button>
         </Paper>
       </Modal>
