@@ -169,7 +169,7 @@ const Notifications: React.FC<Props & RouteComponentProps> = (
   return (
     <Grow in={props.isOpen}>
       <div style={{ overflow: 'auto' }} className={props.className}>
-        <Paper>
+        <Paper elevation={3}>
           <T>
             {({ translate }) => (
               <div>
@@ -183,6 +183,7 @@ const Notifications: React.FC<Props & RouteComponentProps> = (
                 {hasMore() === true && !props.isLoading && (
                   <div style={{ textAlign: 'center' }}>
                     <Button
+                    style={{width: '100%'}}
                       variant="text"
                       color="secondary"
                       onClick={() =>

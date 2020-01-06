@@ -472,6 +472,7 @@ function PrimarySearchAppBar(props: Props & RouteComponentProps) {
                     open={isNotificationOpen}
                     className={classes.popper}
                   >
+                   <Paper elevation={3}>
                     <Notifications
                       className={classes.notifications}
                       closeNotifications={handleNotificationClose}
@@ -480,6 +481,7 @@ function PrimarySearchAppBar(props: Props & RouteComponentProps) {
                       oldNotifications={fetchedNotifications}
                       isLoading={blockClosing}
                     />
+                    </Paper>
                   </Popper>
                 </div>
               </ClickAwayListener>
