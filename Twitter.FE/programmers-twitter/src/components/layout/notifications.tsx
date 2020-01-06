@@ -207,7 +207,7 @@ const Notifications: React.FC<Props & RouteComponentProps> = (
                   </div>
                 )}
 
-                {!oldNotifications && props.notifications.length === 0 && (
+                {((!oldNotifications && props.notifications.length === 0) || (oldNotifications && oldNotifications.models.length === 0) ) && (
                   <div className={classes.standardPadding}>
                     <Typography variant="button">
                       <T id="noData" />
