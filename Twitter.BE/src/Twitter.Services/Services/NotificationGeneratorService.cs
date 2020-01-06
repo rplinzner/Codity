@@ -127,11 +127,14 @@ namespace Twitter.Services.Services
             var userNotifications = new List<UserNotification>();
             foreach (var followerId in followers)
             {
-                userNotifications.Add(new UserNotification
+                if (followerId != follower.Id && followerId != following.Id)
                 {
-                    NotificationId = notification.Id,
-                    UserId = followerId
-                });
+                    userNotifications.Add(new UserNotification
+                    {
+                        NotificationId = notification.Id,
+                        UserId = followerId
+                    });
+                }
             }
 
             var followingNotification = new Notification();
