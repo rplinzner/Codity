@@ -46,7 +46,7 @@ const useStyles = makeStyles((theme: Theme) =>
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      outline: 0
+      outline: 0,
     },
   }),
 );
@@ -115,7 +115,14 @@ const MobileAccountMenu: React.FC<Props> = (props: Props) => {
             oldNotifications={props.fetchedNotifications}
             isLoading={props.isLoadingNotification}
           />
-          <Button style={{width: '100%'}} color="primary" variant="contained">Close notifications</Button>
+          <Button
+            onClick={() => setIsModalOpen(false)}
+            style={{ width: '100%' }}
+            color="primary"
+            variant="contained"
+          >
+            Close notifications
+          </Button>
         </Paper>
       </Modal>
       <MenuItem onClick={props.handleOpen}>
