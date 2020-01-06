@@ -15,7 +15,7 @@ export default function notificationsReducer(
       return {
         ...state,
         isNewNotification: true,
-        notifications: [...state.notifications, action.payload],
+        notifications: [action.payload, ...state.notifications],
       };
     case 'NOTIFICATIONS_INIT':
       return {
