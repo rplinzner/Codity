@@ -108,7 +108,7 @@ function ResponsiveDrawer(props: Props & LocalizeContextProps) {
     </MenuList>
   );
 
-  const followPath: string = `/Following/?userId=${
+  const followPath = `/Following/?userId=${
     props.userId ? props.userId : '1'
   }`;
 
@@ -194,7 +194,7 @@ function ResponsiveDrawer(props: Props & LocalizeContextProps) {
 
 const mapStateToProps = (state: AppState) => ({
   isLoggedIn: state.user.loggedIn,
-  userId: state.user.user?.id,
+  userId: state.user.details?.id,
 });
 
 export default connect(mapStateToProps)(

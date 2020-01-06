@@ -2,7 +2,7 @@ import User from '../../types/user';
 export interface UserState {
   loggedIn: boolean;
   loggingIn: boolean;
-  user: User | null;
+  details: User | null;
 }
 
 export const LOGIN = 'USERS_LOGIN';

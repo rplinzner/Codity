@@ -14,7 +14,7 @@ import Badge from '@material-ui/core/Badge';
 import MenuIcon from '@material-ui/icons/Menu';
 import SearchIcon from '@material-ui/icons/Search';
 import AccountCircle from '@material-ui/icons/AccountCircle';
-import MailIcon from '@material-ui/icons/Mail';
+// import MailIcon from '@material-ui/icons/Mail';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import {
@@ -34,6 +34,7 @@ import Popper from '@material-ui/core/Popper';
 
 import ResponsiveDrawer from './drawer';
 import { logout } from '../../store/user/user.actions';
+import { read, init } from '../../store/notifications/notifications.actions';
 import { layoutTranslations } from '../../translations/index';
 import SearchResultCard from '../containers/additional/search-result-card';
 import MobileAccountMenu from './mobile-account-menu';
@@ -46,6 +47,9 @@ import * as constants from '../../constants/global.constats';
 import displayErrors from '../../helpers/display-errors';
 import get from '../../services/get.service';
 import User from '../../types/user';
+import Notifications from './notifications';
+import { NotificationsResponse } from '../../types/notifications-response';
+import { Notification } from '../../types/notification';
 
 const drawerWidth = 240;
 
@@ -112,7 +116,7 @@ const useStyles = makeStyles((theme: Theme) =>
         },
       },
     },
-    searchPopper: {
+    popper: {
       zIndex: theme.zIndex.modal,
       marginTop: 5,
     },
@@ -129,6 +133,7 @@ const useStyles = makeStyles((theme: Theme) =>
       [theme.breakpoints.up('md')]: {
         display: 'flex',
       },
+      paddingRight: theme.spacing(2),
     },
     sectionMobile: {
       display: 'flex',
@@ -148,6 +153,9 @@ const useStyles = makeStyles((theme: Theme) =>
         paddingTop: '56px',
       },
     },
+    notifications: {
+      maxHeight: '45vh',
+    },
   }),
 );
 
@@ -160,6 +168,11 @@ interface Props extends LocalizeContextProps {
   isLoggedIn: boolean;
   logOutAction: typeof logout;
   user: User | null;
+  isNewNotification: boolean;
+  readNotificationAction: typeof read;
+  isConnected: boolean;
+  initAction: typeof init;
+  notifications: Notification[];
 }
 
 function PrimarySearchAppBar(props: Props & RouteComponentProps) {
@@ -175,11 +188,20 @@ function PrimarySearchAppBar(props: Props & RouteComponentProps) {
   ] = React.useState<null | HTMLElement>(null);
   const [searchAnchorEl, setSearchAnchorEl] = React.useState<any | null>(null);
   const [searchField, setSearchField] = React.useState<string | null>('');
+  const [notificationAnchorEl, setNotificationAnchorEl] = React.useState<
+    any | null
+  >(null);
 
   const isMenuOpen = Boolean(primaryAccountMenuAnchorEl);
   const isMobileAccountMenuOpen = Boolean(mobileAccountMenuAnchorEl);
+
   const isSearchOpen = Boolean(searchAnchorEl);
   const searchId = isSearchOpen ? 'search-popover' : undefined;
+
+  const isNotificationOpen = Boolean(notificationAnchorEl);
+  const notificationId = isNotificationOpen
+    ? 'notification-popover'
+    : undefined;
 
   const [mobileDrawerOpen, setMobileDrawerOpen] = React.useState(false);
 
@@ -220,6 +242,17 @@ function PrimarySearchAppBar(props: Props & RouteComponentProps) {
     setSearchAnchorEl(null);
   };
 
+  const handleNotificationOpen = (
+    event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+  ) => {
+    setNotificationAnchorEl(event.currentTarget);
+  };
+  const handleNotificationClose = () => {
+    setNotificationAnchorEl(null);
+  };
+
+  const lang = props.activeLanguage ? props.activeLanguage.code : 'en';
+
   const [typingTimeout, setTypingTimout] = React.useState();
   const [userProfiles, setUserProfiles] = React.useState<SearchResponse | null>(
     null,
@@ -230,7 +263,7 @@ function PrimarySearchAppBar(props: Props & RouteComponentProps) {
       get<SearchResponse>(
         constants.usersController,
         `/search?query=${searchQuery}&pageSize=3`,
-        props.activeLanguage.code,
+        lang,
         <T id="errorConnection" />,
         true,
       ).then(
@@ -242,6 +275,46 @@ function PrimarySearchAppBar(props: Props & RouteComponentProps) {
         },
       );
     }
+  };
+
+  const [
+    fetchedNotifications,
+    setFetchedNotifications,
+  ] = React.useState<NotificationsResponse | null>(null);
+
+  const pageSize = 5;
+
+  const [blockClosing, setBlockClosing] = React.useState(false);
+
+  const getNotifications = (page: number = 1): void => {
+    setBlockClosing(true);
+    get<NotificationsResponse>(
+      constants.notificationController,
+      `?pageNumber=${page}&pageSize=${pageSize}`,
+      lang,
+      <T id="errorConnection" />,
+      true,
+    ).then(
+      resp => {
+        let temp = resp;
+        const idsToRemove = props.notifications.map(el => el.id);
+        temp.models = temp.models.filter(el => !idsToRemove.includes(el.id));
+
+        if (temp.currentPage === 1 || fetchedNotifications === null) {
+          setFetchedNotifications(temp);
+        } else if (temp.totalCount > fetchedNotifications.models.length) {
+          temp.models = [...fetchedNotifications.models, ...temp.models];
+          setFetchedNotifications(temp);
+        } else {
+          setFetchedNotifications(temp);
+        }
+        setBlockClosing(false);
+      },
+      error => {
+        setBlockClosing(false);
+        setFetchedNotifications(null);
+      },
+    );
   };
 
   const handleSearchFieldChange = (
@@ -259,10 +332,14 @@ function PrimarySearchAppBar(props: Props & RouteComponentProps) {
     );
   };
 
-  const { isLoggedIn, logOutAction } = props;
+  const { isLoggedIn, logOutAction, isConnected } = props;
 
   const mobileAccountMenuId = 'primary-search-account-menu-mobile';
   const menuId = 'primary-search-account-menu';
+
+  if (isLoggedIn && !isConnected) {
+    props.initAction();
+  }
 
   return (
     <div className={classes.grow}>
@@ -318,7 +395,7 @@ function PrimarySearchAppBar(props: Props & RouteComponentProps) {
                           id={searchId}
                           open={isSearchOpen}
                           anchorEl={searchAnchorEl}
-                          className={classes.searchPopper}
+                          className={classes.popper}
                         >
                           <Paper className={classes.searchPaper}>
                             {userProfiles.models.map(profile => (
@@ -347,23 +424,62 @@ function PrimarySearchAppBar(props: Props & RouteComponentProps) {
           {/* Normal menu */}
           {isLoggedIn ? (
             <div className={classes.sectionDesktop}>
-              <Tooltip title={<T id="messages" />}>
+              {/* Mail Icon */}
+              {/* <Tooltip title={<T id="messages" />}>
                 <IconButton aria-label="show 4 new mails" color="inherit">
                   <Badge badgeContent={420} color="secondary">
                     <MailIcon />
                   </Badge>
                 </IconButton>
-              </Tooltip>
-              <Tooltip title={<T id="notifications" />}>
-                <IconButton
-                  aria-label="show 17 new notifications"
-                  color="inherit"
-                >
-                  <Badge badgeContent={69} color="secondary">
-                    <NotificationsIcon />
-                  </Badge>
-                </IconButton>
-              </Tooltip>
+              </Tooltip> */}
+              {/* Notifications Icon */}
+              <ClickAwayListener
+                onClickAway={() => {
+                  if (!blockClosing) handleNotificationClose();
+                }}
+              >
+                <div>
+                  <Tooltip title={<T id="notifications" />}>
+                    <IconButton
+                      color="inherit"
+                      onClick={e => {
+                        props.readNotificationAction(true);
+                        if (!isNotificationOpen) {
+                          handleNotificationOpen(e);
+                        } else {
+                          handleNotificationClose();
+                        }
+                      }}
+                    >
+                      <Badge
+                        variant="dot"
+                        invisible={!props.isNewNotification}
+                        color="secondary"
+                      >
+                        <NotificationsIcon />
+                      </Badge>
+                    </IconButton>
+                  </Tooltip>
+
+                  <Popper
+                    id={notificationId}
+                    anchorEl={notificationAnchorEl}
+                    open={isNotificationOpen}
+                    className={classes.popper}
+                  >
+                    <Paper elevation={3}>
+                      <Notifications
+                        className={classes.notifications}
+                        closeNotifications={handleNotificationClose}
+                        isOpen={isNotificationOpen}
+                        getNotifications={getNotifications}
+                        oldNotifications={fetchedNotifications}
+                        isLoading={blockClosing}
+                      />
+                    </Paper>
+                  </Popper>
+                </div>
+              </ClickAwayListener>
               <Tooltip title={<T id="profile" />}>
                 <IconButton
                   edge="end"
@@ -406,6 +522,12 @@ function PrimarySearchAppBar(props: Props & RouteComponentProps) {
           isOpen={isMobileAccountMenuOpen}
           onClose={handleMobileAccountMenuClose}
           handleOpen={handleMobileAccountMenuOpen}
+          isLoadingNotification={blockClosing}
+          fetchedNotifications={fetchedNotifications}
+          getNotifications={getNotifications}
+          isNewNotification={props.isNewNotification}
+          notificationClassName={classes.notifications}
+          readNotificationAction={props.readNotificationAction}
         />
       ) : null}
       <AccountMenu
@@ -429,12 +551,17 @@ function PrimarySearchAppBar(props: Props & RouteComponentProps) {
 
 const mapStateToProps = (state: AppState) => ({
   isLoggedIn: state.user.loggedIn,
-  user: state.user.user,
+  user: state.user.details,
+  isNewNotification: state.notifications.isNewNotification,
+  isConnected: state.notifications.isConnectionOpen,
+  notifications: state.notifications.notifications,
 });
 
 const mapDispatchToProps = (dispatch: any) => {
   return {
     logOutAction: () => dispatch(logout()),
+    readNotificationAction: (isread: boolean) => dispatch(read(isread)),
+    initAction: () => dispatch(init()),
   };
 };
 

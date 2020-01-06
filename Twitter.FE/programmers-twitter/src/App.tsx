@@ -16,7 +16,6 @@ import {
   Translate as T,
 } from 'react-localize-redux';
 import { globalTranslations } from './translations/index';
-
 import 'react-toastify/dist/ReactToastify.css';
 
 import * as authentication from './components/containers/authentication/index';
@@ -26,7 +25,7 @@ import * as user from './components/containers/profile/index';
 import SearchResultCard from './components/containers/additional/search-result-card';
 import { settingsController } from './constants/global.constats';
 import { PrivateRoute } from './components/containers/authentication/index';
-import { Following } from "./components/containers/following/index";
+import { Following } from './components/containers/following/index';
 
 import { connect } from 'react-redux';
 import { AppState } from '.';
@@ -52,7 +51,6 @@ interface Props extends LocalizeContextProps {
   isLoggedIn: boolean;
   setAllSettingseAction: typeof setAllSettings;
 }
-
 // tslint:disable-next-line: typedef
 class App extends Component<Props> {
   constructor(props: Props) {
@@ -95,7 +93,7 @@ class App extends Component<Props> {
       },
       error => displayErrors(error),
     );
-  // tslint:disable-next-line: semicolon
+    // tslint:disable-next-line: semicolon
   };
 
   componentDidMount() {

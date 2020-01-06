@@ -9,6 +9,7 @@ import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 import * as stores from './store/index';
+import notificationsMiddlaware from './middlewares/notifications-middleware';
 
 declare global {
   interface Window {
@@ -21,7 +22,8 @@ const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 const rootReducer = combineReducers({
   localize: localizeReducer,
   user: stores.userReducer,
-  settings: stores.settingsReducer
+  settings: stores.settingsReducer,
+  notifications: stores.notificationsReducer,
 });
 
 const language = navigator.language;
@@ -30,7 +32,7 @@ export type AppState = ReturnType<typeof rootReducer>;
 
 const store = createStore(
   rootReducer,
-  composeEnhancers(applyMiddleware(thunk)),
+  composeEnhancers(applyMiddleware(thunk, notificationsMiddlaware)),
 );
 
 ReactDOM.render(

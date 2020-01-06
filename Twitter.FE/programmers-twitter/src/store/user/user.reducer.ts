@@ -4,8 +4,8 @@ const localUser = localStorage.getItem('user');
 const user: User = localUser === null ? null : JSON.parse(localStorage.getItem('user') || '{}');
 
 const initialState: types.UserState = user
-  ? { loggedIn: true, loggingIn: false, user }
-  : { loggedIn: false, loggingIn: false, user: null };
+  ? { loggedIn: true, loggingIn: false, details: user }
+  : { loggedIn: false, loggingIn: false, details: null };
 
 export default function userReducer(
   state = initialState,
@@ -16,19 +16,19 @@ export default function userReducer(
       return {
         ...state,
         loggingIn: true,
-        user: null,
+        details: null,
       };
     case 'USERS_LOGIN_SUCCESS':
       return {
         ...state,
         loggedIn: true,
-        user: action.payload,
+        details: action.payload,
         loggingIn: false,
       };
     case 'USERS_LOGIN_FAILURE':
     case 'USERS_LOGOUT':
       return {
-        user: null,
+        details: null,
         loggedIn: false,
         loggingIn: false,
       };

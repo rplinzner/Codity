@@ -99,7 +99,10 @@ const Following: React.FC<Props & LocalizeContextProps> = (
       {isLoading ? (
         <LinearProgress className={classes.marginTopBottom} />
       ) : profiles === null ? (
-        <div style={{ textAlign: 'center' }} className={classes.marginTopBottom}>
+        <div
+          style={{ textAlign: 'center' }}
+          className={classes.marginTopBottom}
+        >
           <Typography variant="h4">
             <T id="noData" />
           </Typography>
@@ -109,18 +112,19 @@ const Following: React.FC<Props & LocalizeContextProps> = (
           pageStart={1}
           hasMore={!(profiles.currentPage === profiles.totalPages)}
           loader={
-            <div style={{ textAlign: 'center' }}>
-              <CircularProgress />
+            <div key="div" style={{ textAlign: 'center' }}>
+              <CircularProgress key="spinner" />
             </div>
           }
           loadMore={page => getFollowing(page)}
           useWindow={true}
-          threshold={20}
+          threshold={50}
         >
           <Grid className={classes.container} container={true}>
             {profiles.models.map(model => (
               <Grid key={model.id} item={true} xs={12} md={6} lg={4}>
                 <UserCard
+                  key={model.id}
                   firstName={model.firstName}
                   followers={model.followersCount}
                   isFollowing={model.isFollowing}
