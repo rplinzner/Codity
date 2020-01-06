@@ -1,0 +1,18 @@
+{
+  "ago": ["ago", "temu"],
+  "day": ["day", "dzień"],
+  "days": ["days", "dni"],
+  "hour": ["hour", "godzina"],
+  "hours": ["hours", "godzin"],
+  "hours1": ["hours", "godziny"],
+  "minute": ["minute", "minuta"],
+  "minutes": ["minutes", "minut"],
+  "minutes1": ["minutes", "minuty"],
+  "month": ["month", "miesiąc"],
+  "months": ["months", "miesięcy"],
+  "months1": ["months", "miesiące"],
+  "overYear": ["Over a year ago", "Ponad rok temu"],
+  "second": ["second", "sekunda"],
+  "seconds": ["seconds", "sekund"],
+  "seconds1": ["seconds", "sekundy"]
+}

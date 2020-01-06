@@ -28,7 +28,6 @@ import {
   Tooltip,
   Paper,
   ClickAwayListener,
-  Grow,
 } from '@material-ui/core';
 import { connect } from 'react-redux';
 import {
@@ -54,6 +53,8 @@ import displayErrors from '../../helpers/display-errors';
 import get from '../../services/get.service';
 import User from '../../types/user';
 import Notifications from './notifications';
+import { NotificationsResponse } from '../../types/notifications-response';
+import { Notification } from '../../types/notification';
 
 const drawerWidth = 240;
 
@@ -156,6 +157,9 @@ const useStyles = makeStyles((theme: Theme) =>
         paddingTop: '56px',
       },
     },
+    notifications: {
+      maxHeight: '45vh',
+    },
   }),
 );
 
@@ -172,6 +176,7 @@ interface Props extends LocalizeContextProps {
   readNotificationAction: typeof read;
   isConnected: boolean;
   initAction: typeof init;
+  notifications: Notification[];
 }
 
 function PrimarySearchAppBar(props: Props & RouteComponentProps) {
@@ -250,6 +255,8 @@ function PrimarySearchAppBar(props: Props & RouteComponentProps) {
     setNotificationAnchorEl(null);
   };
 
+  const lang = props.activeLanguage ? props.activeLanguage.code : 'en';
+
   const [typingTimeout, setTypingTimout] = React.useState();
   const [userProfiles, setUserProfiles] = React.useState<SearchResponse | null>(
     null,
@@ -260,7 +267,7 @@ function PrimarySearchAppBar(props: Props & RouteComponentProps) {
       get<SearchResponse>(
         constants.usersController,
         `/search?query=${searchQuery}&pageSize=3`,
-        props.activeLanguage.code,
+        lang,
         <T id="errorConnection" />,
         true,
       ).then(
@@ -272,6 +279,46 @@ function PrimarySearchAppBar(props: Props & RouteComponentProps) {
         },
       );
     }
+  };
+
+  const [
+    fetchedNotifications,
+    setFetchedNotifications,
+  ] = React.useState<NotificationsResponse | null>(null);
+
+  const pageSize = 5;
+
+  const [blockClosing, setBlockClosing] = React.useState(false);
+
+  const getNotifications = (page: number = 1): void => {
+    setBlockClosing(true);
+    get<NotificationsResponse>(
+      constants.notificationController,
+      `?pageNumber=${page}&pageSize=${pageSize}`,
+      lang,
+      <T id="errorConnection" />,
+      true,
+    ).then(
+      resp => {
+        let temp = resp;
+        const idsToRemove = props.notifications.map(el => el.id);
+        temp.models = temp.models.filter(el => !idsToRemove.includes(el.id));
+
+        if (temp.currentPage === 1 || fetchedNotifications === null) {
+          setFetchedNotifications(temp);
+        } else if (temp.totalCount > fetchedNotifications.models.length) {
+          temp.models = [...fetchedNotifications.models, ...temp.models];
+          setFetchedNotifications(temp);
+        } else {
+          setFetchedNotifications(temp);
+        }
+        setBlockClosing(false);
+      },
+      error => {
+        setBlockClosing(false);
+        setFetchedNotifications(null);
+      },
+    );
   };
 
   const handleSearchFieldChange = (
@@ -390,7 +437,11 @@ function PrimarySearchAppBar(props: Props & RouteComponentProps) {
                 </IconButton>
               </Tooltip> */}
               {/* Notifications Icon */}
-              <ClickAwayListener onClickAway={handleNotificationClose}>
+              <ClickAwayListener
+                onClickAway={() => {
+                  if (!blockClosing) handleNotificationClose();
+                }}
+              >
                 <div>
                   <Tooltip title={<T id="notifications" />}>
                     <IconButton
@@ -414,21 +465,22 @@ function PrimarySearchAppBar(props: Props & RouteComponentProps) {
                       </Badge>
                     </IconButton>
                   </Tooltip>
-                  <Grow in={isNotificationOpen}>
-                    <div>
-                      <Popper
-                        id={notificationId}
-                        anchorEl={notificationAnchorEl}
-                        open={isNotificationOpen}
-                        className={classes.popper}
-                      >
-                        <Notifications
-                          closeNotifications={handleNotificationClose}
-                          isOpen={isNotificationOpen}
-                        />
-                      </Popper>
-                    </div>
-                  </Grow>
+
+                  <Popper
+                    id={notificationId}
+                    anchorEl={notificationAnchorEl}
+                    open={isNotificationOpen}
+                    className={classes.popper}
+                  >
+                    <Notifications
+                      className={classes.notifications}
+                      closeNotifications={handleNotificationClose}
+                      isOpen={isNotificationOpen}
+                      getNotifications={getNotifications}
+                      oldNotifications={fetchedNotifications}
+                      isLoading={blockClosing}
+                    />
+                  </Popper>
                 </div>
               </ClickAwayListener>
               <Tooltip title={<T id="profile" />}>
@@ -499,6 +551,7 @@ const mapStateToProps = (state: AppState) => ({
   user: state.user.details,
   isNewNotification: state.notifications.isNewNotification,
   isConnected: state.notifications.isConnectionOpen,
+  notifications: state.notifications.notifications,
 });
 
 const mapDispatchToProps = (dispatch: any) => {
