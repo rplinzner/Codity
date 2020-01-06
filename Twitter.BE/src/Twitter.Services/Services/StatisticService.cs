@@ -36,7 +36,6 @@ namespace Twitter.Services.Services
                                                                       c => c.CodeSnippet);
             var statisticDictionary = new Dictionary<string, (int, int, int)>();
 
-
             foreach (var programmingLanguage in programmingLanguages)
             {
                 var tweetCounter = 0;
