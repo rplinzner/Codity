@@ -23,12 +23,7 @@ import {
   withRouter,
   RouteComponentProps,
 } from 'react-router-dom';
-import {
-  Link,
-  Tooltip,
-  Paper,
-  ClickAwayListener,
-} from '@material-ui/core';
+import { Link, Tooltip, Paper, ClickAwayListener } from '@material-ui/core';
 import { connect } from 'react-redux';
 import {
   Translate as T,
@@ -445,7 +440,6 @@ function PrimarySearchAppBar(props: Props & RouteComponentProps) {
                 <div>
                   <Tooltip title={<T id="notifications" />}>
                     <IconButton
-                      aria-label="show 17 new notifications"
                       color="inherit"
                       onClick={e => {
                         props.readNotificationAction(true);
@@ -472,15 +466,15 @@ function PrimarySearchAppBar(props: Props & RouteComponentProps) {
                     open={isNotificationOpen}
                     className={classes.popper}
                   >
-                   <Paper elevation={3}>
-                    <Notifications
-                      className={classes.notifications}
-                      closeNotifications={handleNotificationClose}
-                      isOpen={isNotificationOpen}
-                      getNotifications={getNotifications}
-                      oldNotifications={fetchedNotifications}
-                      isLoading={blockClosing}
-                    />
+                    <Paper elevation={3}>
+                      <Notifications
+                        className={classes.notifications}
+                        closeNotifications={handleNotificationClose}
+                        isOpen={isNotificationOpen}
+                        getNotifications={getNotifications}
+                        oldNotifications={fetchedNotifications}
+                        isLoading={blockClosing}
+                      />
                     </Paper>
                   </Popper>
                 </div>
@@ -527,6 +521,12 @@ function PrimarySearchAppBar(props: Props & RouteComponentProps) {
           isOpen={isMobileAccountMenuOpen}
           onClose={handleMobileAccountMenuClose}
           handleOpen={handleMobileAccountMenuOpen}
+          isLoadingNotification={blockClosing}
+          fetchedNotifications={fetchedNotifications}
+          getNotifications={getNotifications}
+          isNewNotification={props.isNewNotification}
+          notificationClassName={classes.notifications}
+          readNotificationAction={props.readNotificationAction}
         />
       ) : null}
       <AccountMenu

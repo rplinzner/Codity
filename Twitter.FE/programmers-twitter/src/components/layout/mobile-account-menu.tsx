@@ -1,13 +1,28 @@
-import React from 'react';
-import { Menu, MenuItem, IconButton, Badge } from '@material-ui/core';
+import React, { useState } from 'react';
+import {
+  Menu,
+  MenuItem,
+  IconButton,
+  Badge,
+  Paper,
+  Modal,
+  Backdrop,
+  makeStyles,
+  Theme,
+  createStyles,
+  Button,
+} from '@material-ui/core';
 import {
   Translate as T,
   LocalizeContextProps,
   withLocalize,
 } from 'react-localize-redux';
-import MailIcon from '@material-ui/icons/Mail';
+// import MailIcon from '@material-ui/icons/Mail';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import AccountCircle from '@material-ui/icons/AccountCircle';
+import { NotificationsActionTypes } from '../../store/notifications/notifications.types';
+import Notifications from './notifications';
+import { NotificationsResponse } from '../../types/notifications-response';
 
 interface Props extends LocalizeContextProps {
   anchorEl: Element | ((element: Element) => Element) | null | undefined;
@@ -17,9 +32,30 @@ interface Props extends LocalizeContextProps {
     | ((event: {}, reason: 'backdropClick' | 'escapeKeyDown') => void)
     | undefined;
   handleOpen: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void;
+
+  readNotificationAction: (arg1: boolean) => NotificationsActionTypes;
+  isLoadingNotification: boolean;
+  isNewNotification: boolean;
+  notificationClassName: string;
+  getNotifications: (arg1: number) => void;
+  fetchedNotifications: NotificationsResponse | null;
 }
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    modal: {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      outline: 0
+    },
+  }),
+);
 
 const MobileAccountMenu: React.FC<Props> = (props: Props) => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const classes = useStyles();
+
   return (
     <Menu
       anchorEl={props.anchorEl}
@@ -30,7 +66,7 @@ const MobileAccountMenu: React.FC<Props> = (props: Props) => {
       open={props.isOpen}
       onClose={props.onClose}
     >
-      <MenuItem>
+      {/* <MenuItem>
         <IconButton aria-label="show 4 new mails" color="inherit">
           <Badge badgeContent={420} color="secondary">
             <MailIcon />
@@ -39,10 +75,20 @@ const MobileAccountMenu: React.FC<Props> = (props: Props) => {
         <p>
           <T id="messages" />
         </p>
-      </MenuItem>
-      <MenuItem>
+      </MenuItem> */}
+
+      <MenuItem
+        onClick={e => {
+          props.readNotificationAction(true);
+          setIsModalOpen(!isModalOpen);
+        }}
+      >
         <IconButton aria-label="show 11 new notifications" color="inherit">
-          <Badge variant="dot" color="secondary">
+          <Badge
+            invisible={!props.isNewNotification}
+            variant="dot"
+            color="secondary"
+          >
             <NotificationsIcon />
           </Badge>
         </IconButton>
@@ -50,6 +96,28 @@ const MobileAccountMenu: React.FC<Props> = (props: Props) => {
           <T id="notifications" />
         </p>
       </MenuItem>
+      <Modal
+        className={classes.modal}
+        open={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        closeAfterTransition={true}
+        BackdropComponent={Backdrop}
+        BackdropProps={{
+          timeout: 500,
+        }}
+      >
+        <Paper elevation={3}>
+          <Notifications
+            className={props.notificationClassName}
+            closeNotifications={() => setIsModalOpen(false)}
+            isOpen={isModalOpen}
+            getNotifications={props.getNotifications}
+            oldNotifications={props.fetchedNotifications}
+            isLoading={props.isLoadingNotification}
+          />
+          <Button style={{width: '100%'}} color="primary" variant="contained">Close notifications</Button>
+        </Paper>
+      </Modal>
       <MenuItem onClick={props.handleOpen}>
         <IconButton
           aria-label="account of current user"
