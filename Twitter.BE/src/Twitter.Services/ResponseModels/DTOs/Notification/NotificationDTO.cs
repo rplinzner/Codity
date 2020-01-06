@@ -5,6 +5,7 @@ namespace Twitter.Services.ResponseModels.DTOs.Notification
 {
     public class NotificationDTO : IResponseDTO
     {
+        public int Id { get; set; }
         public string RedirectTo { get; set; }
         public string Label { get; set; }
         public string Description { get; set; }
