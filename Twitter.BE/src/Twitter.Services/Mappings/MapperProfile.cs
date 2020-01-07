@@ -50,6 +50,7 @@ namespace Twitter.Services.Mappings
             CreateMap<Tweet, TweetDTO>()
                .ForMember(d => d.AuthorFirstName, o => o.MapFrom(s => s.Author.FirstName))
                .ForMember(d => d.AuthorLastName, o => o.MapFrom(s => s.Author.LastName))
+               .ForMember(d => d.AuthorImage, o => o.MapFrom(s => s.Author.Image))
                .ForMember(d => d.LikesCount, o => o.MapFrom(s => s.Likes.Count))
                .ForMember(d => d.CommentsCount, o => o.MapFrom(s => s.Comments.Count));
 

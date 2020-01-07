@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Twitter.Data.Context;
 using Twitter.Data.Model;
@@ -16,6 +17,8 @@ namespace Twitter.Services.Helpers
         private readonly IBaseRepository<Language> _languageRepository;
         private readonly IBaseRepository<Gender> _genderRepository;
         private readonly IBaseRepository<ProgrammingLanguage> _programmingLanguageRepository;
+        private readonly ITweetRepository _tweetRepository;
+        private readonly IBaseRepository<User> _userRepository;
         private readonly UserManager<User> _userManager;
 
         public DataSeeder(
@@ -23,12 +26,16 @@ namespace Twitter.Services.Helpers
             IBaseRepository<Language> languageRepository,
             IBaseRepository<Gender> genderRepository,
             IBaseRepository<ProgrammingLanguage> programmingLanguageRepository,
+            ITweetRepository tweetRepository,
+            IBaseRepository<User> userRepository,
             UserManager<User> userManager)
         {
             _dbContext = dbContext;
             _languageRepository = languageRepository;
             _genderRepository = genderRepository;
             _programmingLanguageRepository = programmingLanguageRepository;
+            _tweetRepository = tweetRepository;
+            _userRepository = userRepository;
             _userManager = userManager;
         }
 
@@ -38,6 +45,7 @@ namespace Twitter.Services.Helpers
             SeedGender().Wait();
             SeedUsers().Wait();
             SeedProgrammingLanguages().Wait();
+            SeedPostsComments().Wait();
         }
 
         private async Task SeedLanguages()
@@ -75,6 +83,22 @@ namespace Twitter.Services.Helpers
                     new ProgrammingLanguage
                     {
                         Name="Javascript"
+                    },
+                    new ProgrammingLanguage
+                    {
+                        Name="Python"
+                    },
+                    new ProgrammingLanguage
+                    {
+                        Name="C++"
+                    },
+                    new ProgrammingLanguage
+                    {
+                        Name="Typescript"
+                    },
+                    new ProgrammingLanguage
+                    {
+                        Name="Java"
                     }
                 };
 
@@ -87,7 +111,9 @@ namespace Twitter.Services.Helpers
             if (!await _dbContext.Users.AnyAsync())
             {
                 var languages = await _languageRepository.GetAllAsync();
+
                 var users = new List<User>();
+
 
                 for (int i = 0; i < 100; i++)
                 {
@@ -116,6 +142,39 @@ namespace Twitter.Services.Helpers
                     var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     await _userManager.ConfirmEmailAsync(user, token);
                 }
+            }
+        }
+
+        private async Task SeedPostsComments()
+        {
+            if (!await _dbContext.Tweets.AnyAsync())
+            {
+                var programmingLanguages = await _programmingLanguageRepository.GetAllAsync();
+                var users = (await _userRepository.GetPagedAsync(1, 5)).ToList();
+
+                var tweets = new List<Tweet>();
+                for (int i = 0; i < 50; i++)
+                {
+                    var tweetFaker = new Faker<Tweet>()
+                        .RuleFor(o => o.Text, f => f.Lorem.Paragraph(5))
+                        .RuleFor(o => o.CreationDate, f => f.Date.Between(DateTime.Now.AddDays(-7), DateTime.Now.AddHours(-2)))
+                        .RuleFor(o => o.CodeSnippet, f => new CodeSnippet
+                        {
+                            Text = f.Lorem.Paragraphs(5),
+                            ProgrammingLanguageId = f.PickRandom(programmingLanguages).Id
+                        })
+                        .RuleFor(o => o.Comments, f => f.Make(5, c => new Comment
+                        {
+                            AuthorId = f.PickRandom(users).Id,
+                            CreationDate = f.Date.Between(DateTime.Now.AddHours(-2), DateTime.Now),
+                            Text = f.Lorem.Paragraphs(2)
+                        }))
+                        .RuleFor(o => o.AuthorId, f => f.PickRandom(users).Id)
+                        .Generate();
+
+                    tweets.Add(tweetFaker);
+                }
+                await _tweetRepository.AddRangeAsync(tweets);
             }
         }
 

@@ -29,12 +29,12 @@ namespace Twitter.WebApi.Controllers
         }
 
         /// <summary>
-        /// Search tweets
+        /// Get paginated tweets
         /// </summary>
         /// <param name="paginationRequest">Pagination parameters</param>
         /// <returns>Tweets</returns>
-        [HttpGet("search")]
-        public async Task<ActionResult<IPagedResponse<TweetDTO>>> SearchTweets([FromQuery] PaginationRequest paginationRequest)
+        [HttpGet]
+        public async Task<ActionResult<IPagedResponse<TweetDTO>>> GetTweets([FromQuery] PaginationRequest paginationRequest)
         {
             var response = await _tweetService.GetTweetsAsync(paginationRequest);
 
