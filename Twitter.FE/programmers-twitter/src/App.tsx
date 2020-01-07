@@ -26,17 +26,18 @@ import SearchResultCard from './components/containers/additional/search-result-c
 import { settingsController } from './constants/global.constats';
 import { PrivateRoute } from './components/containers/authentication/index';
 import { Following } from './components/containers/following/index';
+import { Account } from './components/containers/account/index';
 
 import { connect } from 'react-redux';
 import { AppState } from '.';
 import get from './services/get.service';
 import SettingsResponse from './types/settings-response';
 import { setAllSettings } from './store/settings/settings.actions';
+import { SettingsState } from './store/settings/settings.types';
 
 import themeDark from './themes/dark-theme';
 import themeLight from './themes/light-theme';
 import displayErrors from './helpers/display-errors';
-import { SettingsState } from './store/settings/settings.types';
 
 const darkTheme = responsiveFontSizes(
   createMuiTheme(themeDark as ThemeOptions),
@@ -119,6 +120,7 @@ class App extends Component<Props> {
               <Route path="/test" component={SearchResultCard} />
               {/* Private Routes */}
               <PrivateRoute path="/MyFeed" component={main.Feed} />
+              <PrivateRoute path="/MyAccount" component={Account} />
               <PrivateRoute path="/Profile" component={user.Profile} />
               <PrivateRoute
                 path="/SearchResults"

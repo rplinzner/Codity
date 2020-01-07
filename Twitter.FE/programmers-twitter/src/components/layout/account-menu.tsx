@@ -41,7 +41,12 @@ const AccountMenu: React.FC<Props & RouteComponentProps> = (
       >
         <T id="profile" />
       </MenuItem>
-      <MenuItem onClick={props.onClose}>
+      <MenuItem
+        onClick={() => {
+          props.onClose();
+          props.history.push('/MyAccount');
+        }}
+      >
         <T id="myAccount" />
       </MenuItem>
       <MenuItem

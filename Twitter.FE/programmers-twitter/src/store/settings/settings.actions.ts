@@ -7,6 +7,14 @@ export function setDarkTheme(isDark: boolean): types.SettingsActionTypes {
     payload: isDark,
   };
 }
+
+export function setHasGithubToken(hasToken: boolean): types.SettingsActionTypes {
+  return {
+    type: "SETTINGS_SET_GITHUB_TOKEN",
+    payload: hasToken,
+  };
+}
+
 export function setAllSettings(
   settings: SettingsState,
 ): types.SettingsActionTypes {

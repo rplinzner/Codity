@@ -15,6 +15,11 @@ export default function settingsReducer(
         ...state,
         isDarkTheme: action.payload,
       };
+    case 'SETTINGS_SET_GITHUB_TOKEN':
+      return {
+        ...state,
+        hasGithubToken: action.payload,
+      };
     case 'SETTINGS_SET_ALL_SETTINGS':
       return {
         isDarkTheme: action.payload.isDarkTheme,

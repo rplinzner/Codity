@@ -55,5 +55,27 @@
   ],
   "cancel": ["Cancel", "Anuluj"],
   "loading": ["Loading...", "Ładowanie..."],
-  "gender": ["Gender", "Płeć"]
+  "gender": ["Gender", "Płeć"],
+  "settings": ["Settings", "Ustawienia"],
+  "basic": ["Basic", "Podstawowe"],
+  "additional": ["Additional", "Dodatkowe"],
+  "githubTokenState": ["Github token state", "Stan tokenu Github"],
+  "added": ["ADDED", "DODANY"],
+  "noToken": ["No token added", "Brak dodanego tokenu"],
+  "security": ["Security", "Bezpieczeństwo"],
+  "githubToken": ["Github token", "Token Github"],
+  "addNew": ["Add new", "Dodaj nowy"],
+  "deleteToken": ["Delete token", "Usuń token"],
+  "githubTokenSet": [
+    "Github token has been set!",
+    "Token Github został ustawiony!"
+  ],
+  "githubTokenRemove": [
+    "Github token has been removed!",
+    "Token Github został usunięty!"
+  ],
+  "settingsApplied": [
+    "New settings applied successfully",
+    "Nowe ustawienia zastosowane poprawnie"
+  ]
 }
