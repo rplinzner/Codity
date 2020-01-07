@@ -63,7 +63,7 @@ namespace Twitter.Services.Services
 
             foreach (var tweet in statisticDictionary.OrderBy(c => c.Value.Item1))
             {
-                statisticMessage.AppendLine($"<p>{counter++}. {tweet.Key} - {tweet.Value.Item3} tweets</p>");
+                statisticMessage.AppendLine($"<p>{counter++}. {tweet.Key} - {tweet.Value.Item1} tweets</p>");
             }
 
             counter = 1;
