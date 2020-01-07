@@ -143,4 +143,13 @@
   <data name="ForgetPasswordEmailTitle" xml:space="preserve">
     <value>Reset Hasła</value>
   </data>
+  <data name="ChangePasswordEmailTitle" xml:space="preserve">
+    <value>Zmiana Hasła</value>
+  </data>
+  <data name="ChangePasswordEmail" xml:space="preserve">
+    <value>&lt;strong&gt;Cześć, {0}!&lt;/strong&gt;
+&lt;p&gt;Twoje hasło zostało zmienione.&lt;/p&gt;
+&lt;p&gt;Jeśli to nie byłęś Ty kliknij w link poniżej, aby zresetować swoje hasło.&lt;/p&gt;
+&lt;a href="{1}" target="_blank"&gt;Zresetuj Hasło!&lt;/a&gt;</value>
+  </data>
 </root>
