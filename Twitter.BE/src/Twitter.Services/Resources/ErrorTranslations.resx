@@ -228,7 +228,7 @@
     <value>You don't have GitHub personal access token added to Your account.</value>
   </data>
   <data name="InvalidGithubToken" xml:space="preserve">
-    <value>Your GitHub personal access token is invalid.</value>
+    <value>Given personal access token does not exist on Github.</value>
   </data>
   <data name="GithubTokenMissingGists" xml:space="preserve">
     <value>Your GitHub personal access token is missing 'gist' permission.</value>

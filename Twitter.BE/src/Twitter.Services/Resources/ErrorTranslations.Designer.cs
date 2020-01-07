@@ -232,7 +232,7 @@ namespace Twitter.Services.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Your GitHub personal access token is invalid..
+        ///   Looks up a localized string similar to Given personal access token does not exist on Github..
         /// </summary>
         public static string InvalidGithubToken {
             get {
