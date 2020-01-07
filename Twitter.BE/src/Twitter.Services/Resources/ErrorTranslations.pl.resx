@@ -227,10 +227,10 @@
     <value>Nie masz dodanego personal access tokenu z GitHuba do Twojego konta.</value>
   </data>
   <data name="GithubTokenMissingGists" xml:space="preserve">
-    <value>Twój personal access token z GitHuba nie posiada pozwolenia na dodawanie gistów.</value>
+    <value>Twój personalny token dostępu GitHub nie posiada uprawnień do tworzenia 'gistów'.</value>
   </data>
   <data name="InvalidGithubToken" xml:space="preserve">
-    <value>Twój personal access token z GitHuba jest niepoprawny.</value>
+    <value>Podany personalny token dostępu nie istnieje na platformie GitHub.</value>
   </data>
   <data name="GithubGistError" xml:space="preserve">
     <value>Wystąpił błąd podczas publikowania Gista.</value>

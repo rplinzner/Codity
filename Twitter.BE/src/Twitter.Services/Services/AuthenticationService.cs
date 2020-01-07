@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using System.Net;
-using System.Text;
 using System.Threading.Tasks;
 using Twitter.Data.Model;
 using Twitter.Repositories.Interfaces;
@@ -121,7 +120,7 @@ namespace Twitter.Services.Services
             }
 
             var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-            var tokenVerificationUrl = $"{_redirectOptions.ConfirmEmailUrl}?id={user.Id}&token={WebUtility.UrlEncode(token)}";
+            var tokenVerificationUrl = string.Format(_redirectOptions.ConfirmEmailUrl, user.Id, WebUtility.UrlEncode(token));
             var message = string.Format(NotificationTranslations.ConfirmEmail, user.FirstName, tokenVerificationUrl);
             var emailTitle = NotificationTranslations.ConfirmEmailTitle;
 
@@ -132,8 +131,116 @@ namespace Twitter.Services.Services
                 {
                     Message = ErrorTranslations.EmailSendingError
                 });
+            }
+
+            return response;
+        }
+
+        public async Task<IBaseResponse> ChangePasswordAsync(int userId, ChangePasswordRequest model)
+        {
+            var response = new BaseResponse();
+            var user = await _userManager.FindByIdAsync(userId.ToString());
+            if (user == null)
+            {
+                response.AddError(new Error
+                {
+                    Message = ErrorTranslations.UserNotFound
+                });
 
                 return response;
+            }
+
+            var result = await _userManager.ChangePasswordAsync(user, model.OldPassword, model.NewPassword);
+            if (!result.Succeeded)
+            {
+                foreach (var error in result.Errors)
+                {
+                    if (!string.IsNullOrWhiteSpace(error.Description))
+                    {
+                        response.AddError(new Error
+                        {
+                            Message = error.Description
+                        });
+                    }
+                }
+                return response;
+            }
+
+            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+            var tokenResetPasswordUrl = string.Format(_redirectOptions.ResetPasswordUrl, WebUtility.UrlEncode(token));
+            var message = string.Format(NotificationTranslations.ChangePasswordEmail, user.FirstName, tokenResetPasswordUrl);
+            var emailTitle = NotificationTranslations.ChangePasswordEmailTitle;
+
+            var success = await _emailSenderService.SendEmail(user.Email, emailTitle, message);
+            if (!success)
+            {
+                response.AddError(new Error
+                {
+                    Message = ErrorTranslations.EmailSendingError
+                });
+            }
+
+            return response;
+        }
+
+        public async Task<IBaseResponse> ForgetPasswordAsync(ForgetPasswordRequest model)
+        {
+            var response = new BaseResponse();
+            var user = await _userManager.FindByEmailAsync(model.Email);
+            if (user == null)
+            {
+                response.AddError(new Error
+                {
+                    Message = ErrorTranslations.UserNotFound
+                });
+
+                return response;
+            }
+
+            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+            var tokenResetPasswordUrl = string.Format(_redirectOptions.ResetPasswordUrl, WebUtility.UrlEncode(token));
+            var message = string.Format(NotificationTranslations.ForgetPasswordEmail, user.FirstName, tokenResetPasswordUrl);
+            var emailTitle = NotificationTranslations.ForgetPasswordEmailTitle;
+
+            var success = await _emailSenderService.SendEmail(model.Email, emailTitle, message);
+            if (!success)
+            {
+                response.AddError(new Error
+                {
+                    Message = ErrorTranslations.EmailSendingError
+                });
+            }
+
+            return response;
+        }
+
+        public async Task<IBaseResponse> ResetPasswordAsync(ResetPasswordRequest model)
+        {
+            var response = new BaseResponse();
+            var user = await _userManager.FindByEmailAsync(model.Email);
+            if (user == null)
+            {
+                response.AddError(new Error
+                {
+                    Message = ErrorTranslations.UserNotFound
+                });
+
+                return response;
+            }
+
+            var result = await _userManager.ResetPasswordAsync(user, model.Token, model.NewPassword);
+            if (!result.Succeeded)
+            {
+                foreach (var error in result.Errors)
+                {
+                    if (!string.IsNullOrWhiteSpace(error.Description))
+                    {
+                        response.AddError(new Error
+                        {
+                            Message = error.Description
+                        });
+                    }
+                }
             }
 
             return response;

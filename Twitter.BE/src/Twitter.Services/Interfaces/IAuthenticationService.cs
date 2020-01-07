@@ -9,6 +9,9 @@ namespace Twitter.Services.Interfaces
     {
         Task<IBaseResponse> RegisterAsync(RegisterRequest model);
         Task<IResponse<AuthUserDTO>> LoginAsync(LoginRequest model);
+        Task<IBaseResponse> ChangePasswordAsync(int userId, ChangePasswordRequest model);
+        Task<IBaseResponse> ForgetPasswordAsync(ForgetPasswordRequest model);
+        Task<IBaseResponse> ResetPasswordAsync(ResetPasswordRequest model);
         Task<string> ConfirmEmailAsync(string id, string token);
     }
 }

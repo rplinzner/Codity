@@ -155,4 +155,21 @@
   <data name="ConfirmEmailTitle" xml:space="preserve">
     <value>Confirm Your Email</value>
   </data>
+  <data name="ForgetPasswordEmail" xml:space="preserve">
+    <value>&lt;strong&gt;Hello, {0}!&lt;/strong&gt;
+&lt;p&gt;To reset Your password click the link below.&lt;/p&gt;
+&lt;a href="{1}" target="_blank"&gt;Reset Password!&lt;/a&gt;</value>
+  </data>
+  <data name="ForgetPasswordEmailTitle" xml:space="preserve">
+    <value>Reset Password</value>
+  </data>
+  <data name="ChangePasswordEmail" xml:space="preserve">
+    <value>&lt;strong&gt;Hello, {0}!&lt;/strong&gt;
+&lt;p&gt;Your password has been changed.&lt;/p&gt;
+&lt;p&gt;If it wasn't You click the link below to reset Your password.&lt;/p&gt;
+&lt;a href="{1}" target="_blank"&gt;Reset Password!&lt;/a&gt;</value>
+  </data>
+  <data name="ChangePasswordEmailTitle" xml:space="preserve">
+    <value>Password Change</value>
+  </data>
 </root>

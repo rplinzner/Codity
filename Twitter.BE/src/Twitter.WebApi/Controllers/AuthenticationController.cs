@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Twitter.Services.Interfaces;
 using Twitter.Services.RequestModels.Authentication;
@@ -14,10 +15,12 @@ namespace Twitter.WebApi.Controllers
     public class AuthenticationController : ControllerBase
     {
         private readonly IAuthenticationService _authenticationService;
+        private readonly IUserContext _userContext;
 
-        public AuthenticationController(IAuthenticationService authenticationService)
+        public AuthenticationController(IAuthenticationService authenticationService, IUserContext userContext)
         {
             _authenticationService = authenticationService;
+            _userContext = userContext;
         }
 
         /// <summary>
@@ -36,8 +39,8 @@ namespace Twitter.WebApi.Controllers
             try
             {
                 var response = await _authenticationService.LoginAsync(model);
-                
-                if( response.IsError)
+
+                if (response.IsError)
                 {
                     return BadRequest(response);
                 }
@@ -91,6 +94,99 @@ namespace Twitter.WebApi.Controllers
             try
             {
                 var response = await _authenticationService.RegisterAsync(model);
+
+                if (response.IsError)
+                {
+                    return BadRequest(response);
+                }
+
+                return Ok(response);
+            }
+            catch (Exception exception)
+            {
+                return BadRequest(exception.Message);
+            }
+        }
+
+        /// <summary>
+        /// Sends to user reset password token
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns>Base response</returns>
+        [HttpPost]
+        public async Task<ActionResult<IBaseResponse>> ForgetPassword([FromBody] ForgetPasswordRequest model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return ValidationProblem(ModelState);
+            }
+
+            try
+            {
+                var response = await _authenticationService.ForgetPasswordAsync(model);
+
+                if (response.IsError)
+                {
+                    return BadRequest(response);
+                }
+
+                return Ok(response);
+            }
+            catch (Exception exception)
+            {
+                return BadRequest(exception.Message);
+            }
+        }
+
+        /// <summary>
+        /// Allows user to reset password
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns>Base response</returns>
+        [HttpPut]
+        public async Task<ActionResult<IBaseResponse>> ResetPassword([FromBody] ResetPasswordRequest model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return ValidationProblem(ModelState);
+            }
+
+            try
+            {
+                var response = await _authenticationService.ResetPasswordAsync(model);
+
+                if (response.IsError)
+                {
+                    return BadRequest(response);
+                }
+
+                return Ok(response);
+            }
+            catch (Exception exception)
+            {
+                return BadRequest(exception.Message);
+            }
+        }
+
+        /// <summary>
+        /// Allows user to change password
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns>Base response</returns>
+        [HttpPut]
+        [Authorize]
+        public async Task<ActionResult<IBaseResponse>> ChangePassword([FromBody] ChangePasswordRequest model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return ValidationProblem(ModelState);
+            }
+
+            try
+            {
+                var userId = _userContext.GetUserId();
+
+                var response = await _authenticationService.ChangePasswordAsync(userId, model);
 
                 if (response.IsError)
                 {
