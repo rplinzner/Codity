@@ -131,8 +131,6 @@ namespace Twitter.Services.Services
                 {
                     Message = ErrorTranslations.EmailSendingError
                 });
-
-                return response;
             }
 
             return response;
@@ -165,6 +163,21 @@ namespace Twitter.Services.Services
                         });
                     }
                 }
+                return response;
+            }
+
+            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+            var tokenResetPasswordUrl = string.Format(_redirectOptions.ResetPasswordUrl, WebUtility.UrlEncode(token));
+            var message = string.Format(NotificationTranslations.ChangePasswordEmail, user.FirstName, tokenResetPasswordUrl);
+            var emailTitle = NotificationTranslations.ChangePasswordEmailTitle;
+
+            var success = await _emailSenderService.SendEmail(user.Email, emailTitle, message);
+            if (!success)
+            {
+                response.AddError(new Error
+                {
+                    Message = ErrorTranslations.EmailSendingError
+                });
             }
 
             return response;
@@ -196,8 +209,6 @@ namespace Twitter.Services.Services
                 {
                     Message = ErrorTranslations.EmailSendingError
                 });
-
-                return response;
             }
 
             return response;
