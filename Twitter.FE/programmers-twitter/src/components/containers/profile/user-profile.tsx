@@ -15,6 +15,7 @@ import {
   InputLabel,
   Select,
   MenuItem,
+  Container,
 } from '@material-ui/core';
 import { withRouter, RouteComponentProps } from 'react-router';
 import {
@@ -524,10 +525,12 @@ const UserProfile: React.FC<Props & LocalizeContextProps> = (
           </Grid>
           {/*  User Posts */}
           <Divider className={classes.divider} />
-          <Grid item={true} xs={12} className={classes.posts}>
-            <Typography variant="h5">Recent Posts:</Typography>
+          <Container maxWidth="md">
+            <div style={{ textAlign: 'center' }}>
+              <Typography variant="h5">Recent Posts:</Typography>
+            </div>
             <PostSkeleton />
-          </Grid>
+          </Container>
         </Grid>
       ) : (
         !isLoading && (
