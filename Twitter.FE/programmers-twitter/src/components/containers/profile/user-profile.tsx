@@ -41,7 +41,7 @@ import {
   withLocalize,
 } from 'react-localize-redux';
 import displayErrors from '../../../helpers/display-errors';
-import CardSceleton from '../feed/card-sceleton';
+import { PostSkeleton } from '../../custom/index';
 import { AppState } from '../../..';
 import { connect } from 'react-redux';
 import { UserState } from '../../../store/user/user.types';
@@ -385,7 +385,9 @@ const UserProfile: React.FC<Props & LocalizeContextProps> = (
             )}
             {isEditing && genders && (
               <FormControl className={classes.formControl}>
-                <InputLabel id="demo-simple-select-label"><T id="gender"/></InputLabel>
+                <InputLabel id="demo-simple-select-label">
+                  <T id="gender" />
+                </InputLabel>
                 <Select value={selectedGender} onChange={handleGenderChange}>
                   {genders.models.map(model => (
                     <MenuItem key={model.genderId} value={model.genderId}>
@@ -524,7 +526,7 @@ const UserProfile: React.FC<Props & LocalizeContextProps> = (
           <Divider className={classes.divider} />
           <Grid item={true} xs={12} className={classes.posts}>
             <Typography variant="h5">Recent Posts:</Typography>
-            <CardSceleton />
+            <PostSkeleton />
           </Grid>
         </Grid>
       ) : (

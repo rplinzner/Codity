@@ -15,7 +15,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
   }),
 );
-const CardSceleton: React.FC<Props> = () => {
+const CardSkeleton: React.FC<Props> = () => {
   const classes = useStyles();
 
   return (
@@ -39,4 +39,4 @@ const CardSceleton: React.FC<Props> = () => {
     </Grid>
   );
 };
-export default CardSceleton;
+export default CardSkeleton;

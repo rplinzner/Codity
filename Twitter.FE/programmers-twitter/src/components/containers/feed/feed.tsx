@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import CardSceleton from './card-sceleton';
+import { PostSkeleton } from '../../custom/index';
 
 interface Props {}
 interface State {}
@@ -10,7 +10,7 @@ class Feed extends Component<Props, State> {
   render() {
     return (
       <>
-        <CardSceleton />
+        <PostSkeleton />
       </>
     );
   }
