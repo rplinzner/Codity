@@ -61,15 +61,15 @@ namespace Twitter.Services.Services
 
             statisticMessage.AppendLine("<strong>The largest number of tweets by programming language</strong>");
 
-            foreach (var tweet in statisticDictionary.OrderBy(c => c.Value.Item1))
+            foreach (var tweet in statisticDictionary.OrderByDescending(c => c.Value.Item1))
             {
-                statisticMessage.AppendLine($"<p>{counter++}. {tweet.Key} - {tweet.Value.Item3} tweets</p>");
+                statisticMessage.AppendLine($"<p>{counter++}. {tweet.Key} - {tweet.Value.Item1} tweets</p>");
             }
 
             counter = 1;
             statisticMessage.AppendLine("<br><strong>The largest number of comments by programming language</strong>");
 
-            foreach (var comment in statisticDictionary.OrderBy(c => c.Value.Item2))
+            foreach (var comment in statisticDictionary.OrderByDescending(c => c.Value.Item2))
             {
                 statisticMessage.AppendLine($"<p>{counter++}. {comment.Key} - {comment.Value.Item2} comments</p>");
 
@@ -78,7 +78,7 @@ namespace Twitter.Services.Services
             counter = 1;
             statisticMessage.AppendLine("<br><strong>The largest number of likes by programming language</strong>");
 
-            foreach (var like in statisticDictionary.OrderBy(c => c.Value.Item3))
+            foreach (var like in statisticDictionary.OrderByDescending(c => c.Value.Item3))
             {
                 statisticMessage.AppendLine($"<p>{counter++}. {like.Key} - {like.Value.Item3} likes</p>");
             }
