@@ -23,10 +23,11 @@ namespace Twitter.Repositories.Repositories
             return await query.FirstOrDefaultAsync(getBy);
         }
 
-        public async Task<PagedList<Tweet>> GetPagedAsync(int pageNumber, int pageSize, bool withTracking = false)
+        public async Task<PagedList<Tweet>> GetPagedByAsync(Expression<Func<Tweet, bool>> getBy, int pageNumber, int pageSize, bool withTracking = false)
         {
             var query = CreateGetQuery(withTracking)
-                .OrderByDescending(c => c.CreationDate);
+                .OrderByDescending(c => c.CreationDate)
+                .Where(getBy);
 
             return await PagedList<Tweet>.Create(query, pageNumber, pageSize);
         }
