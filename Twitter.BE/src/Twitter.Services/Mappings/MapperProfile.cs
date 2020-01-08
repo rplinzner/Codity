@@ -48,6 +48,7 @@ namespace Twitter.Services.Mappings
                 .ForMember(d => d.Models, o => o.MapFrom(s => s.ToList()));
 
             CreateMap<Tweet, TweetDTO>()
+               .ForMember(d => d.AuthorId, o => o.MapFrom(s => s.Author.Id))
                .ForMember(d => d.AuthorFirstName, o => o.MapFrom(s => s.Author.FirstName))
                .ForMember(d => d.AuthorLastName, o => o.MapFrom(s => s.Author.LastName))
                .ForMember(d => d.AuthorImage, o => o.MapFrom(s => s.Author.Image))
