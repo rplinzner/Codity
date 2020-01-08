@@ -1,6 +1,16 @@
 import React from 'react';
-import { Card, CardHeader, CardActions, IconButton, CardContent, Typography } from '@material-ui/core';
+import {
+  Card,
+  CardHeader,
+  CardActions,
+  IconButton,
+  CardContent,
+  Typography,
+} from '@material-ui/core';
 import FavoriteIcon from '@material-ui/icons/Favorite';
+import CommentIcon from '@material-ui/icons/Comment';
+import MoreVertIcon from '@material-ui/icons/MoreVert';
+
 
 import { withLocalize, LocalizeContextProps } from 'react-localize-redux';
 
@@ -31,6 +41,11 @@ const PostCard: React.FC<Props> = (props: Props) => {
               photo={post.authorImage}
             />
           }
+          action={
+            <IconButton aria-label="more">
+              <MoreVertIcon />
+            </IconButton>
+          }
           title={post.authorFirstName + ' ' + post.authorLastName}
           subheader={new Intl.DateTimeFormat(langCode, {
             weekday: 'long',
@@ -47,8 +62,11 @@ const PostCard: React.FC<Props> = (props: Props) => {
           </Typography>
         </CardContent>
         <CardActions disableSpacing>
-          <IconButton aria-label="add to favorites">
+          <IconButton aria-label="like">
             <FavoriteIcon style={{ color: red[500] }} />
+          </IconButton>
+          <IconButton aria-label="comment">
+            <CommentIcon />
           </IconButton>
         </CardActions>
       </Card>
