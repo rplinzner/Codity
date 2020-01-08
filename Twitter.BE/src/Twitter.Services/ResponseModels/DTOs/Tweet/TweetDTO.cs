@@ -17,6 +17,7 @@ namespace Twitter.Services.ResponseModels.DTOs.Tweet
         public int? CodeSnippetId { get; set; }
         public CodeSnippetDTO CodeSnippet { get; set; }
 
+        public bool IsLiked { get; set; }
         public int LikesCount { get; set; }
         public int CommentsCount { get; set; }
     }
