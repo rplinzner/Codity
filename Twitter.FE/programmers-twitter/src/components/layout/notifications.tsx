@@ -183,7 +183,7 @@ const Notifications: React.FC<Props & RouteComponentProps> = (
                 {hasMore() === true && !props.isLoading && (
                   <div style={{ textAlign: 'center' }}>
                     <Button
-                    style={{width: '100%'}}
+                      style={{ width: '100%' }}
                       variant="text"
                       color="secondary"
                       onClick={() =>
@@ -194,8 +194,7 @@ const Notifications: React.FC<Props & RouteComponentProps> = (
                         )
                       }
                     >
-                      Load more 
-                      {/* TODO: translation */}
+                      <T id="loadMore" />
                     </Button>
                   </div>
                 )}
@@ -208,7 +207,9 @@ const Notifications: React.FC<Props & RouteComponentProps> = (
                   </div>
                 )}
 
-                {((!oldNotifications && props.notifications.length === 0) || (oldNotifications && oldNotifications.models.length === 0) ) && (
+                {((!oldNotifications && props.notifications.length === 0) ||
+                  (oldNotifications &&
+                    oldNotifications.models.length === 0)) && (
                   <div className={classes.standardPadding}>
                     <Typography variant="button">
                       <T id="noData" />

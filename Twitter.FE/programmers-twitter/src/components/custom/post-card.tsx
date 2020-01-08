@@ -17,6 +17,7 @@ import {
   Divider,
   Button,
   TextField,
+  CircularProgress,
 } from '@material-ui/core';
 import {
   withLocalize,
@@ -35,14 +36,15 @@ import { red } from '@material-ui/core/colors';
 
 import postService from '../../services/post.service';
 import { Post } from '../../types/post';
-import { UserAvatar } from '../containers/profile/index';
-import { BaseResponse } from '../../types/base-response';
+import { UserAvatar } from '../containers/profile/';
 import { CommentsResponse } from '../../types/comments-response';
+import { CommentResponse } from '../../types/comment-response';
 import SingleComment from './single-comment';
 import * as constants from '../../constants/global.constats';
 import displayErrors from '../../helpers/display-errors';
 import deleteRequest from '../../services/delete.service';
 import get from '../../services/get.service';
+import { programmingLanguagesTranslations } from '../../translations';
 
 interface Props extends LocalizeContextProps {
   post: Post;
@@ -56,11 +58,11 @@ const useStyles = makeStyles((theme: Theme) =>
     snippet: {
       marginTop: theme.spacing(3),
       maxHeight: 300,
-      overflow: 'auto'
+      overflow: 'auto',
     },
     commentBox: {
-      margin: theme.spacing(2),
-      width: '90%',
+      padding: theme.spacing(2),
+      width: '100%',
     },
   }),
 );
@@ -72,8 +74,9 @@ const PostCard: React.FC<Props> = (props: Props) => {
     commentsResponse,
     setCommentsResponse,
   ] = useState<CommentsResponse | null>(null);
+  const [commentText, setCommentText] = useState('');
+  const [isCommentAdding, setIsCommentAdding] = useState(false);
 
-  console.log(commentsResponse);
   let commentNumber = 3;
   if (props.commentsOpen) {
     commentNumber = props.commentsOpen ? 7 : 3;
@@ -89,6 +92,7 @@ const PostCard: React.FC<Props> = (props: Props) => {
 
   const { post } = props;
   const langCode = props.activeLanguage ? props.activeLanguage.code : 'en';
+  props.addTranslation(programmingLanguagesTranslations);
 
   const classes = useStyles();
 
@@ -97,10 +101,8 @@ const PostCard: React.FC<Props> = (props: Props) => {
   };
 
   const likePost = () => {
-    console.log('like post');
-
     const data = { tweetId: post.id };
-    postService<BaseResponse, typeof data>(
+    postService(
       data,
       constants.likeController,
       '',
@@ -143,6 +145,32 @@ const PostCard: React.FC<Props> = (props: Props) => {
     );
   };
 
+  const addComment = () => {
+    setIsCommentAdding(true);
+    const data = { tweetId: post.id, text: commentText };
+    setCommentText('');
+    postService<CommentResponse, typeof data>(
+      data,
+      constants.commentController,
+      '',
+      langCode,
+      <T id="errorConnection" />,
+      true,
+    ).then(
+      resp => {
+        const temp = { ...commentsResponse } as CommentsResponse;
+        temp.models = [resp.model, ...temp.models];
+        setCommentsResponse(temp);
+        setIsCommentAdding(false);
+        props.updatePost(post.id);
+      },
+      error => {
+        displayErrors(error);
+        setIsCommentAdding(false);
+      },
+    );
+  };
+
   useEffect(() => {
     getComments();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -168,16 +196,22 @@ const PostCard: React.FC<Props> = (props: Props) => {
               <Menu
                 id="simple-menu"
                 anchorEl={anchorEl}
-                keepMounted
+                keepMounted={true}
                 open={Boolean(anchorEl)}
                 onClose={handleMenuClose}
               >
-                <MenuItem onClick={handleMenuClose}>Show User</MenuItem>
                 <MenuItem onClick={handleMenuClose}>
-                  Show post in new Window
+                  <T id="showUserProfile" />
                 </MenuItem>
-                <MenuItem onClick={handleMenuClose}>Delete post</MenuItem>
-                <MenuItem onClick={handleMenuClose}>Edit post</MenuItem>
+                <MenuItem onClick={handleMenuClose}>
+                  <T id="showPostNewWindow" />
+                </MenuItem>
+                <MenuItem onClick={handleMenuClose}>
+                  <T id="deletePost" />
+                </MenuItem>
+                <MenuItem onClick={handleMenuClose}>
+                  <T id="editPost" />
+                </MenuItem>
               </Menu>
             </div>
           }
@@ -199,7 +233,7 @@ const PostCard: React.FC<Props> = (props: Props) => {
           <div className={classes.snippet}>
             <Typography variant="subtitle2" color="textSecondary">
               <T id="language" /> {': '}
-              {post.codeSnippet.programmingLanguageName}
+              <T id={post.codeSnippet.programmingLanguageName} />
             </Typography>
             <SyntaxHighlighter
               style={androidstudio} // TODO: styles depending on theme
@@ -210,7 +244,7 @@ const PostCard: React.FC<Props> = (props: Props) => {
             </SyntaxHighlighter>
           </div>
         </CardContent>
-        <CardActions disableSpacing>
+        <CardActions disableSpacing={true}>
           <Tooltip title={<T id="giveKarma" />}>
             <IconButton
               onClick={() => {
@@ -234,7 +268,11 @@ const PostCard: React.FC<Props> = (props: Props) => {
             </IconButton>
           </Tooltip>
 
-          <Tooltip title={<T id="showComments" />}>
+          <Tooltip
+            title={
+              !expanded ? <T id="showComments" /> : <T id="hideComments" />
+            }
+          >
             <IconButton onClick={handleExpandClick} aria-label="comment">
               <Badge badgeContent={post.commentsCount} color="secondary">
                 <CommentIcon />
@@ -243,26 +281,35 @@ const PostCard: React.FC<Props> = (props: Props) => {
           </Tooltip>
 
           {post.codeSnippet.gistURL && (
-            <IconButton aria-label="gist">
-              <GitHubIcon />
-              {/* TODO: Add translation */}
-            </IconButton>
+            <Tooltip title={<T id="showGist" />}>
+              <IconButton aria-label="gist">
+                <GitHubIcon />
+                {/* TODO: Add translation */}
+              </IconButton>
+            </Tooltip>
           )}
         </CardActions>
-        <Collapse in={expanded} timeout="auto" unmountOnExit>
+        <Collapse in={expanded} timeout="auto" unmountOnExit={true}>
           <Divider />
-          <TextField
-            onKeyPress={ev => {
-              if (ev.key === 'Enter') {
-                window.alert('wysyłasz');
-                ev.preventDefault();
-              }
-            }}
-            multiline
-            className={classes.commentBox}
-            label="Write comment"
-            fullWidth
-          />
+          <div className={classes.commentBox}>
+            {isCommentAdding ? (
+              <CircularProgress />
+            ) : (
+              <TextField
+                onKeyPress={ev => {
+                  if (ev.key === 'Enter') {
+                    addComment();
+                    ev.preventDefault();
+                  }
+                }}
+                value={commentText}
+                onChange={e => setCommentText(e.target.value)}
+                multiline={true}
+                label={<T id="writeComment" />}
+                fullWidth={true}
+              />
+            )}
+          </div>
           {commentsResponse &&
             commentsResponse.models &&
             commentsResponse.models.length > 0 &&
@@ -287,8 +334,7 @@ const PostCard: React.FC<Props> = (props: Props) => {
                   variant="text"
                   color="secondary"
                 >
-                  Load more
-                  {/* TODO: translation */}
+                  <T id="loadMore" />
                 </Button>
               </div>
             )}

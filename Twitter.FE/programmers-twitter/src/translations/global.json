@@ -19,8 +19,8 @@
   "followers": ["Followers", "Obserwujących"],
   "following": ["Following", "Obserwowani"],
   "greeting": [
-    "Welcome to InzTwitter! To use our service you need to log in!",
-    "Witaj w InzTwitter! Żeby korzystać z naszych serwisów musisz się zalogować!"
+    "Welcome to Codity! To use our service you need to log in!",
+    "Witaj w Codity! Żeby korzystać z naszych serwisów musisz się zalogować!"
   ],
   "here": ["Here", "Tutaj"],
   "language": ["Language", "Język"],
@@ -80,5 +80,16 @@
   ],
   "giveKarma": ["Give karma", "Daj karmę"],
   "showComments": ["Show comments", "Pokaż komentarze"],
-  "showKarma": ["Show karma", "Pokaż karmę"]
+  "hideComments": ["Hide comments", "Ukryj komentarze"],
+  "showKarma": ["Show karma", "Pokaż karmę"],
+  "showUserProfile": ["Show user's profile", "Wyświetl profil użytkownika"],
+  "showPostNewWindow": [
+    "Show post in new window",
+    "Wyświetl post w nowym oknie"
+  ],
+  "deletePost": ["Delete post", "Usuń post"],
+  "editPost": ["Edit post", "Edytuj post"],
+  "showGist": ["Show Gist on Github", "Wyświetl Gist na platofirmie Github"],
+  "writeComment": ["Write comment", "Napisz komentarz"],
+  "loadMore": ["Load more", "Załaduj więcej"]
 }

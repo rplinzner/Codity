@@ -8,3 +8,4 @@ export const genderController = server + '/api/gender';
 export const notificationController = server + '/api/notification';
 export const postController = server + '/api/tweet';
 export const likeController = server + '/api/like';
+export const commentController = server + '/api/comment';

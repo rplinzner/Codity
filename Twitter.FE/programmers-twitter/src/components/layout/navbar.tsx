@@ -356,7 +356,7 @@ function PrimarySearchAppBar(props: Props & RouteComponentProps) {
           </IconButton>
           <Link component={Link1} to={isLoggedIn ? '/MyFeed' : '/'}>
             <Typography className={classes.title} variant="h6" noWrap={true}>
-              InzTwitter
+              Codity
             </Typography>
           </Link>
           {isLoggedIn ? (

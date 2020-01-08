@@ -30,7 +30,7 @@ const useStyles = makeStyles((theme: Theme) =>
       margin: theme.spacing(1),
     },
     root: {
-      marginTop: theme.spacing(2),
+      paddingTop: theme.spacing(2),
     },
   }),
 );
@@ -73,8 +73,6 @@ const Feed: React.FC<Props> = (props: Props) => {
   };
 
   const updatePost = (postId: number) => {
-    console.log('update post');
-
     get<PostResponse>(
       constants.postController,
       `/${postId}`,
@@ -83,8 +81,6 @@ const Feed: React.FC<Props> = (props: Props) => {
       true,
     ).then(
       resp => {
-        console.log(resp);
-
         if (posts === null) {
           toast.error('No data to update');
           return;
@@ -100,7 +96,6 @@ const Feed: React.FC<Props> = (props: Props) => {
           };
         });
         setPosts(temp);
-        console.log(posts);
       },
       error => displayErrors(error),
     );
