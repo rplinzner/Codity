@@ -91,5 +91,7 @@
   "editPost": ["Edit post", "Edytuj post"],
   "showGist": ["Show Gist on Github", "Wyświetl Gist na platofirmie Github"],
   "writeComment": ["Write comment", "Napisz komentarz"],
-  "loadMore": ["Load more", "Załaduj więcej"]
+  "loadMore": ["Load more", "Załaduj więcej"],
+  "deleteComment": ["Delete comment", "Usuń komentarz"],
+  "editComment": ["Edit comment", "Edytuj komentarz"]
 }

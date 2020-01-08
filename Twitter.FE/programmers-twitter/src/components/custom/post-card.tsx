@@ -24,6 +24,7 @@ import {
   LocalizeContextProps,
   Translate as T,
 } from 'react-localize-redux';
+import { connect } from 'react-redux';
 
 import SyntaxHighlighter from 'react-syntax-highlighter';
 import { androidstudio } from 'react-syntax-highlighter/dist/esm/styles/hljs';
@@ -45,12 +46,15 @@ import displayErrors from '../../helpers/display-errors';
 import deleteRequest from '../../services/delete.service';
 import get from '../../services/get.service';
 import { programmingLanguagesTranslations } from '../../translations';
+import { AppState } from '../..';
 
 interface Props extends LocalizeContextProps {
   post: Post;
   className?: string;
   updatePost: (arg1: number) => void;
   commentsOpen?: boolean;
+  // redux props
+  userId: number | undefined;
 }
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -206,12 +210,16 @@ const PostCard: React.FC<Props> = (props: Props) => {
                 <MenuItem onClick={handleMenuClose}>
                   <T id="showPostNewWindow" />
                 </MenuItem>
-                <MenuItem onClick={handleMenuClose}>
-                  <T id="deletePost" />
-                </MenuItem>
-                <MenuItem onClick={handleMenuClose}>
-                  <T id="editPost" />
-                </MenuItem>
+                {post.authorId === props.userId && (
+                  <div>
+                    <MenuItem onClick={handleMenuClose}>
+                      <T id="editPost" />
+                    </MenuItem>
+                    <MenuItem onClick={handleMenuClose}>
+                      <T id="deletePost" />
+                    </MenuItem>
+                  </div>
+                )}
               </Menu>
             </div>
           }
@@ -284,7 +292,6 @@ const PostCard: React.FC<Props> = (props: Props) => {
             <Tooltip title={<T id="showGist" />}>
               <IconButton aria-label="gist">
                 <GitHubIcon />
-                {/* TODO: Add translation */}
               </IconButton>
             </Tooltip>
           )}
@@ -322,6 +329,7 @@ const PostCard: React.FC<Props> = (props: Props) => {
                   authorImage={item.authorImage}
                   commentDate={item.creationDate}
                   commentText={item.text}
+                  authorId={item.authorId}
                 />
               </div>
             ))}
@@ -344,4 +352,8 @@ const PostCard: React.FC<Props> = (props: Props) => {
   );
 };
 
-export default withLocalize(PostCard);
+const mapStateToProps = (state: AppState) => ({
+  userId: state.user.details?.id,
+});
+
+export default connect(mapStateToProps)(withLocalize(PostCard));
