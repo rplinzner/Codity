@@ -86,10 +86,10 @@ class App extends Component<Props> {
       true,
     ).then(
       response => {
-        this.props.setActiveLanguage(response.model.languageCode);
+        this.props.setActiveLanguage(response.model?.languageCode || 'en');
         this.props.setAllSettingseAction({
-          isDarkTheme: response.model.isDarkTheme,
-          hasGithubToken: response.model.hasGithubToken,
+          isDarkTheme: response.model?.isDarkTheme || false,
+          hasGithubToken: response.model?.hasGithubToken || false,
         });
       },
       error => displayErrors(error),

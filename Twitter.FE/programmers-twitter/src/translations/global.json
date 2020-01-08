@@ -77,5 +77,8 @@
   "settingsApplied": [
     "New settings applied successfully",
     "Nowe ustawienia zastosowane poprawnie"
-  ]
+  ],
+  "giveKarma": ["Give karma", "Daj karmę"],
+  "showComments": ["Show comments", "Pokaż komentarze"],
+  "showKarma": ["Show karma", "Pokaż karmę"]
 }

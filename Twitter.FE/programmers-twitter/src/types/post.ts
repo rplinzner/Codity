@@ -1,5 +1,6 @@
 export interface Post {
   id: number;
+  authorId: number;
   authorFirstName: string;
   authorLastName: string;
   authorImage: string;
@@ -7,6 +8,7 @@ export interface Post {
   text: string;
   codeSnippetId: number;
   codeSnippet: CodeSnippet;
+  isLiked: boolean;
   likesCount: number;
   commentsCount: number;
 }
