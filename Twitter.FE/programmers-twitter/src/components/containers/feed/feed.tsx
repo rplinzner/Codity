@@ -114,9 +114,11 @@ const Feed: React.FC<Props> = (props: Props) => {
       {!posts && <PostSkeleton />}
       {/* NO DATA */}
       {posts && posts.length === 0 && (
-        <Typography variant="h4">
-          <T id="noData" />
-        </Typography>
+        <div style={{ textAlign: 'center' }}>
+          <Typography variant="h4">
+            <T id="noData" />
+          </Typography>
+        </div>
       )}
       {/* IS DATA */}
       {posts &&

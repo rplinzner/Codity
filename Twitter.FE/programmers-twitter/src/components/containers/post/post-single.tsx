@@ -78,6 +78,10 @@ const PostSingle: React.FC<Props & LocalizeContextProps> = (
     );
   };
 
+  const onPostDeleted = () => {
+    props.history.push('MyFeed');
+  };
+
   useEffect(() => {
     getPost();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -86,13 +90,20 @@ const PostSingle: React.FC<Props & LocalizeContextProps> = (
   return (
     <Container className={classes.root} maxWidth="md">
       {post ? (
-        <PostCard post={post} updatePost={getPost} isSingle={true} />
+        <PostCard
+          onPostDeleted={onPostDeleted}
+          post={post}
+          updatePost={getPost}
+          isSingle={true}
+        />
       ) : isLoading ? (
         <LinearProgress />
       ) : (
-        <Typography variant="h4">
-          <T id="noData" />
-        </Typography>
+        <div style={{ textAlign: 'center' }}>
+          <Typography variant="h4">
+            <T id="noData" />
+          </Typography>
+        </div>
       )}
     </Container>
   );

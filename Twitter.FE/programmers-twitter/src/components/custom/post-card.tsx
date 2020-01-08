@@ -53,6 +53,7 @@ interface Props extends LocalizeContextProps {
   post: Post;
   className?: string;
   updatePost: (arg1: number) => void;
+  onPostDeleted?: () => void;
   isSingle?: boolean;
   // redux props
   userId: number | undefined;
@@ -179,6 +180,34 @@ const PostCard: React.FC<Props & RouteComponentProps> = (
       error => {
         displayErrors(error);
         setIsCommentAdding(false);
+      },
+    );
+  };
+
+  const loadMoreComments = (): void => {
+    const page = commentsResponse ? commentsResponse.currentPage + 1 : 1;
+    get<CommentsResponse>(
+      constants.postController,
+      `/${post.id}/comment/?pageNumber=${page}&pageSize=${commentNumber}`,
+      langCode,
+      <T id="errorConnection" />,
+      true,
+    ).then(
+      resp => {
+        let temp = resp;
+
+        if (temp.currentPage === 1 || commentsResponse === null) {
+          setCommentsResponse(temp);
+        } else if (temp.totalCount > commentsResponse.models.length) {
+          temp.models = [...commentsResponse.models, ...temp.models];
+          setCommentsResponse(temp);
+        } else {
+          setCommentsResponse(temp);
+        }
+      },
+      error => {
+        displayErrors(error);
+        setCommentsResponse(null);
       },
     );
   };
@@ -364,6 +393,13 @@ const PostCard: React.FC<Props & RouteComponentProps> = (
                   style={{ width: '100%' }}
                   variant="text"
                   color="secondary"
+                  onClick={() => {
+                    if (props.isSingle === true) {
+                      loadMoreComments();
+                    } else {
+                      props.history.push(`/post?postId=${post.id}`);
+                    }
+                  }}
                 >
                   <T id="loadMore" />
                 </Button>

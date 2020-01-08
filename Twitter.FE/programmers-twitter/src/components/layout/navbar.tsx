@@ -313,6 +313,7 @@ function PrimarySearchAppBar(props: Props & RouteComponentProps) {
       error => {
         setBlockClosing(false);
         setFetchedNotifications(null);
+        displayErrors(error);
       },
     );
   };
