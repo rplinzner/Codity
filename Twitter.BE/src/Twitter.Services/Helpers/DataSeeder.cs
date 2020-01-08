@@ -78,27 +78,27 @@ namespace Twitter.Services.Helpers
                 {
                     new ProgrammingLanguage
                     {
-                        Name="C#"
+                        Name="cs"
                     },
                     new ProgrammingLanguage
                     {
-                        Name="Javascript"
+                        Name="javascript"
                     },
                     new ProgrammingLanguage
                     {
-                        Name="Python"
+                        Name="python"
                     },
                     new ProgrammingLanguage
                     {
-                        Name="C++"
+                        Name="cpp"
                     },
                     new ProgrammingLanguage
                     {
-                        Name="Typescript"
+                        Name="typescript"
                     },
                     new ProgrammingLanguage
                     {
-                        Name="Java"
+                        Name="java"
                     }
                 };
 
@@ -151,6 +151,23 @@ namespace Twitter.Services.Helpers
             {
                 var programmingLanguages = await _programmingLanguageRepository.GetAllAsync();
                 var users = (await _userRepository.GetPagedAsync(1, 5)).ToList();
+                var code = "        private async Task SeedProgrammingLanguages()\n"
+                         + "        {\n            if (!await _dbContext.ProgrammingLanguages.AnyAsync())\n"
+                         + "            {\n                var languages = new ProgrammingLanguage[]\n"
+                         + "                {\n                    new ProgrammingLanguage\n                    {\n"
+                         + "                        Name=\"cs\"\n                    },\n"
+                         + "                    new ProgrammingLanguage\n                    {\n"
+                         + "                        Name=\"javascript\"\n                    },\n"
+                         + "                    new ProgrammingLanguage\n                    {\n"
+                         + "                        Name=\"python\"\n                    },\n"
+                         + "                    new ProgrammingLanguage\n                    {\n"
+                         + "                        Name=\"cpp\"\n                    },\n"
+                         + "                    new ProgrammingLanguage\n                    {\n"
+                         + "                        Name=\"typescript\"\n                    },\n"
+                         + "                    new ProgrammingLanguage\n                    {\n"
+                         + "                        Name=\"java\"\n                    }\n"
+                         + "                };\n                await _programmingLanguageRepository.AddRangeAsync(languages);\n"
+                         + "            }\n        }";
 
                 var tweets = new List<Tweet>();
                 for (int i = 0; i < 50; i++)
@@ -160,7 +177,7 @@ namespace Twitter.Services.Helpers
                         .RuleFor(o => o.CreationDate, f => f.Date.Between(DateTime.Now.AddDays(-7), DateTime.Now.AddHours(-2)))
                         .RuleFor(o => o.CodeSnippet, f => new CodeSnippet
                         {
-                            Text = f.Lorem.Paragraphs(5),
+                            Text = code,
                             ProgrammingLanguageId = f.PickRandom(programmingLanguages).Id
                         })
                         .RuleFor(o => o.Comments, f => f.Make(5, c => new Comment
