@@ -28,7 +28,10 @@ import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 
 import SyntaxHighlighter from 'react-syntax-highlighter';
-import { androidstudio } from 'react-syntax-highlighter/dist/esm/styles/hljs';
+import {
+  vs2015,
+  githubGist,
+} from 'react-syntax-highlighter/dist/esm/styles/hljs';
 
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import CommentIcon from '@material-ui/icons/Comment';
@@ -57,6 +60,7 @@ interface Props extends LocalizeContextProps {
   isSingle?: boolean;
   // redux props
   userId: number | undefined;
+  isDarkTheme: boolean;
 }
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -134,6 +138,25 @@ const PostCard: React.FC<Props & RouteComponentProps> = (
       true,
     ).then(
       () => props.updatePost(post.id),
+      error => displayErrors(error),
+    );
+  };
+
+  const deleteMyPost = () => {
+    deleteRequest(
+      {},
+      constants.postController,
+      `/${post.id}`,
+      langCode,
+      <T id="errorConnection" />,
+      true,
+    ).then(
+      () => {
+        if (props.onPostDeleted) {
+          props.onPostDeleted();
+        }
+      },
+
       error => displayErrors(error),
     );
   };
@@ -265,7 +288,12 @@ const PostCard: React.FC<Props & RouteComponentProps> = (
                     <MenuItem onClick={handleMenuClose}>
                       <T id="editPost" />
                     </MenuItem>
-                    <MenuItem onClick={handleMenuClose}>
+                    <MenuItem
+                      onClick={() => {
+                        deleteMyPost();
+                        handleMenuClose();
+                      }}
+                    >
                       <T id="deletePost" />
                     </MenuItem>
                   </div>
@@ -294,7 +322,7 @@ const PostCard: React.FC<Props & RouteComponentProps> = (
               <T id={post.codeSnippet.programmingLanguageName} />
             </Typography>
             <SyntaxHighlighter
-              style={androidstudio} // TODO: styles depending on theme
+              style={props.isDarkTheme ? vs2015 : githubGist}
               language={post.codeSnippet.programmingLanguageName}
               showLineNumbers={true}
             >
@@ -413,6 +441,7 @@ const PostCard: React.FC<Props & RouteComponentProps> = (
 
 const mapStateToProps = (state: AppState) => ({
   userId: state.user.details?.id,
+  isDarkTheme: state.settings.isDarkTheme,
 });
 
 export default connect(mapStateToProps)(withLocalize(withRouter(PostCard)));
