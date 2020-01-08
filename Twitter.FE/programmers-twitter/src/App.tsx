@@ -15,18 +15,19 @@ import {
   LocalizeContextProps,
   Translate as T,
 } from 'react-localize-redux';
-import { globalTranslations } from './translations/index';
+import { globalTranslations } from './translations/';
 import 'react-toastify/dist/ReactToastify.css';
 
-import * as authentication from './components/containers/authentication/index';
-import * as additional from './components/containers/additional/index';
-import * as main from './components/containers/feed/index';
-import * as user from './components/containers/profile/index';
+import * as authentication from './components/containers/authentication/';
+import * as additional from './components/containers/additional/';
+import * as main from './components/containers/feed/';
+import * as user from './components/containers/profile/';
 import SearchResultCard from './components/containers/additional/search-result-card';
 import { settingsController } from './constants/global.constats';
-import { PrivateRoute } from './components/containers/authentication/index';
-import { Following } from './components/containers/following/index';
-import { Account } from './components/containers/account/index';
+import { PrivateRoute } from './components/containers/authentication/';
+import { Following } from './components/containers/following/';
+import { Account } from './components/containers/account/';
+import { Post } from './components/containers/post/';
 
 import { connect } from 'react-redux';
 import { AppState } from '.';
@@ -120,6 +121,7 @@ class App extends Component<Props> {
               <Route path="/test" component={SearchResultCard} />
               {/* Private Routes */}
               <PrivateRoute path="/MyFeed" component={main.Feed} />
+              <PrivateRoute path="/Post" component={Post} />
               <PrivateRoute path="/MyAccount" component={Account} />
               <PrivateRoute path="/Profile" component={user.Profile} />
               <PrivateRoute

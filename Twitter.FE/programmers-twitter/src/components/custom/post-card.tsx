@@ -25,6 +25,7 @@ import {
   Translate as T,
 } from 'react-localize-redux';
 import { connect } from 'react-redux';
+import { RouteComponentProps, withRouter } from 'react-router-dom';
 
 import SyntaxHighlighter from 'react-syntax-highlighter';
 import { androidstudio } from 'react-syntax-highlighter/dist/esm/styles/hljs';
@@ -52,7 +53,7 @@ interface Props extends LocalizeContextProps {
   post: Post;
   className?: string;
   updatePost: (arg1: number) => void;
-  commentsOpen?: boolean;
+  isSingle?: boolean;
   // redux props
   userId: number | undefined;
 }
@@ -71,8 +72,10 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-const PostCard: React.FC<Props> = (props: Props) => {
-  const [expanded, setExpanded] = useState(props.commentsOpen || false);
+const PostCard: React.FC<Props & RouteComponentProps> = (
+  props: Props & RouteComponentProps,
+) => {
+  const [expanded, setExpanded] = useState(props.isSingle || false);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [
     commentsResponse,
@@ -82,8 +85,8 @@ const PostCard: React.FC<Props> = (props: Props) => {
   const [isCommentAdding, setIsCommentAdding] = useState(false);
 
   let commentNumber = 3;
-  if (props.commentsOpen) {
-    commentNumber = props.commentsOpen ? 7 : 3;
+  if (props.isSingle) {
+    commentNumber = props.isSingle ? 7 : 3;
   }
 
   const handleMenuClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -209,12 +212,25 @@ const PostCard: React.FC<Props> = (props: Props) => {
                 open={Boolean(anchorEl)}
                 onClose={handleMenuClose}
               >
-                <MenuItem onClick={handleMenuClose}>
+                <MenuItem
+                  onClick={() => {
+                    props.history.push(`/profile?userId=${post.authorId}`);
+                    handleMenuClose();
+                  }}
+                >
                   <T id="showUserProfile" />
                 </MenuItem>
-                <MenuItem onClick={handleMenuClose}>
-                  <T id="showPostNewWindow" />
-                </MenuItem>
+                {props.isSingle !== true && (
+                  <MenuItem
+                    onClick={() => {
+                      props.history.push(`/post?postId=${post.id}`);
+                      handleMenuClose();
+                    }}
+                  >
+                    <T id="showPostNewWindow" />
+                  </MenuItem>
+                )}
+
                 {post.authorId === props.userId && (
                   <div>
                     <MenuItem onClick={handleMenuClose}>
@@ -363,4 +379,4 @@ const mapStateToProps = (state: AppState) => ({
   userId: state.user.details?.id,
 });
 
-export default connect(mapStateToProps)(withLocalize(PostCard));
+export default connect(mapStateToProps)(withLocalize(withRouter(PostCard)));
