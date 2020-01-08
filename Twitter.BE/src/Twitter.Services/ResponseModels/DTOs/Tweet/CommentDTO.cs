@@ -7,8 +7,10 @@ namespace Twitter.Services.ResponseModels.DTOs.Tweet
     {
         public int Id { get; set; }
 
+        public string AuthorId { get; set; }
         public string AuthorFirstName { get; set; }
         public string AuthorLastName { get; set; }
+        public string AuthorImage { get; set; }
 
         public DateTime CreationDate { get; set; }
         public string Text { get; set; }

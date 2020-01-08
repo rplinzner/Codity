@@ -48,6 +48,7 @@ namespace Twitter.Services.Mappings
                 .ForMember(d => d.Models, o => o.MapFrom(s => s.ToList()));
 
             CreateMap<Tweet, TweetDTO>()
+               .ForMember(d => d.AuthorId, o => o.MapFrom(s => s.Author.Id))
                .ForMember(d => d.AuthorFirstName, o => o.MapFrom(s => s.Author.FirstName))
                .ForMember(d => d.AuthorLastName, o => o.MapFrom(s => s.Author.LastName))
                .ForMember(d => d.AuthorImage, o => o.MapFrom(s => s.Author.Image))
@@ -55,8 +56,10 @@ namespace Twitter.Services.Mappings
                .ForMember(d => d.CommentsCount, o => o.MapFrom(s => s.Comments.Count));
 
             CreateMap<Comment, CommentDTO>()
+               .ForMember(d => d.AuthorId, o => o.MapFrom(s => s.Author.Id))
                .ForMember(d => d.AuthorFirstName, o => o.MapFrom(s => s.Author.FirstName))
-               .ForMember(d => d.AuthorLastName, o => o.MapFrom(s => s.Author.LastName));
+               .ForMember(d => d.AuthorLastName, o => o.MapFrom(s => s.Author.LastName))
+               .ForMember(d => d.AuthorImage, o => o.MapFrom(s => s.Author.Image));
 
 
             CreateMap<CodeSnippet, CodeSnippetDTO>()
@@ -64,6 +67,7 @@ namespace Twitter.Services.Mappings
 
             CreateMap<PagedList<Follow>, PagedResponse<BaseUserDTO>>();
             CreateMap<PagedList<UserNotification>, PagedResponse<NotificationDTO>>();
+            CreateMap<PagedList<TweetLike>, PagedResponse<LikeUserDTO>>();
             CreateMap<TweetRequest, Tweet>();
             CreateMap<UpdateTweetRequest, Tweet>();
             CreateMap<CodeSnippetRequest, CodeSnippet>();

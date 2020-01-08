@@ -36,7 +36,9 @@ namespace Twitter.WebApi.Controllers
         [HttpGet]
         public async Task<ActionResult<IPagedResponse<TweetDTO>>> GetTweets([FromQuery] PaginationRequest paginationRequest)
         {
-            var response = await _tweetService.GetTweetsAsync(paginationRequest);
+            int userId = _userContext.GetUserId();
+
+            var response = await _tweetService.GetTweetsAsync(paginationRequest,userId);
 
             if (response.IsError)
             {
@@ -54,7 +56,9 @@ namespace Twitter.WebApi.Controllers
         [HttpGet("{tweetId}")]
         public async Task<ActionResult<IResponse<TweetDTO>>> GetTweet(int tweetId)
         {
-            var response = await _tweetService.GetTweetAsync(tweetId);
+            int userId = _userContext.GetUserId();
+
+            var response = await _tweetService.GetTweetAsync(tweetId, userId);
 
             if (response.IsError)
             {
@@ -68,11 +72,12 @@ namespace Twitter.WebApi.Controllers
         /// Fetch likes for a tweet with specified id
         /// </summary>
         /// <param name="tweetId">Id of a tweet</param>
+        /// <param name="paginationRequest">Pagination parameters</param>
         /// <returns>Likes</returns>
         [HttpGet("{tweetId}/like")]
-        public async Task<ActionResult<ICollectionResponse<LikeUserDTO>>> GetLikes(int tweetId)
+        public async Task<ActionResult<IPagedResponse<LikeUserDTO>>> GetLikes(int tweetId, [FromQuery] PaginationRequest paginationRequest)
         {
-            var response = await _likeService.GetLikesAsync(tweetId);
+            var response = await _likeService.GetLikesAsync(tweetId, paginationRequest);
 
             if (response.IsError)
             {

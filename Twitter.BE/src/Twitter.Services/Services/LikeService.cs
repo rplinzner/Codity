@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Twitter.Data.Model;
 using Twitter.Repositories.Interfaces;
 using Twitter.Services.Interfaces;
+using Twitter.Services.RequestModels;
 using Twitter.Services.RequestModels.Tweet;
 using Twitter.Services.Resources;
 using Twitter.Services.ResponseModels;
@@ -84,17 +85,26 @@ namespace Twitter.Services.Services
             return response;
         }
 
-        public async Task<ICollectionResponse<LikeUserDTO>> GetLikesAsync(int tweetId)
+        public async Task<IPagedResponse<LikeUserDTO>> GetLikesAsync(int tweetId, PaginationRequest paginationRequest)
         {
-            var response = new CollectionResponse<LikeUserDTO>();
+            var response = new PagedResponse<LikeUserDTO>();
 
-            var likes = await _likeRepository.GetAllByAsync(c => c.TweetId == tweetId, false, c => c.User);
+            var likes = await _likeRepository.GetPagedByAsync(
+               c => c.TweetId == tweetId,
+               paginationRequest.PageNumber,
+               paginationRequest.PageSize,
+               false,
+               c => c.User);
+
             if (!likes.Any())
             {
                 return response;
             }
 
-            response.Models = _mapper.Map<IEnumerable<LikeUserDTO>>(likes.Select(c => c.User));
+            _mapper.Map(likes, response);
+
+            var likeUsers = likes.Select(c => c.User);
+            response.Models = _mapper.Map<IEnumerable<LikeUserDTO>>(likeUsers);
 
             return response;
         }

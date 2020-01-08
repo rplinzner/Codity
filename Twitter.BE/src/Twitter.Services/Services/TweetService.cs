@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Twitter.Data.Model;
 using Twitter.Repositories.Interfaces;
@@ -17,6 +18,8 @@ namespace Twitter.Services.Services
     {
         private readonly ITweetRepository _tweetRepository;
         private readonly IBaseRepository<Notification> _notificationRepository;
+        private readonly IBaseRepository<TweetLike> _tweetLikeRepository;
+        private readonly IBaseRepository<Follow> _followRepository;
         private readonly IGithubService _githubService;
         private readonly INotificationGeneratorService _notificationGeneratorService;
         private readonly IMapper _mapper;
@@ -24,12 +27,16 @@ namespace Twitter.Services.Services
         public TweetService(
             ITweetRepository tweetRepository,
             IBaseRepository<Notification> notificationRepository,
+            IBaseRepository<TweetLike> tweetLikeRepository,
+            IBaseRepository<Follow> followRepository,
             IGithubService githubService,
             INotificationGeneratorService notificationGeneratorService,
             IMapper mapper)
         {
             _tweetRepository = tweetRepository;
             _notificationRepository = notificationRepository;
+            _tweetLikeRepository = tweetLikeRepository;
+            _followRepository = followRepository;
             _githubService = githubService;
             _notificationGeneratorService = notificationGeneratorService;
             _mapper = mapper;
@@ -66,7 +73,7 @@ namespace Twitter.Services.Services
             return response;
         }
 
-        public async Task<IResponse<TweetDTO>> GetTweetAsync(int tweetId)
+        public async Task<IResponse<TweetDTO>> GetTweetAsync(int tweetId, int currentUserId)
         {
             var response = new Response<TweetDTO>();
 
@@ -81,21 +88,33 @@ namespace Twitter.Services.Services
 
                 return response;
             }
+            var tweetDTO = _mapper.Map<TweetDTO>(tweet);
+            tweetDTO.IsLiked = await _tweetLikeRepository.ExistAsync(c => c.UserId == currentUserId && c.TweetId == tweetDTO.Id);
 
-            response.Model = _mapper.Map<TweetDTO>(tweet);
+            response.Model = tweetDTO;
 
             return response;
         }
 
-        public async Task<IPagedResponse<TweetDTO>> GetTweetsAsync(PaginationRequest paginationRequest)
+        public async Task<IPagedResponse<TweetDTO>> GetTweetsAsync(PaginationRequest paginationRequest, int currentUserId)
         {
             var response = new PagedResponse<TweetDTO>();
 
-            var tweets = await _tweetRepository.GetPagedAsync(
+            var following = (await _followRepository.GetAllByAsync(c => c.FollowerId == currentUserId)).Select(c => c.FollowingId);
+
+            var tweets = await _tweetRepository.GetPagedByAsync(
+                c => following.Contains(c.Id),
                 paginationRequest.PageNumber,
                 paginationRequest.PageSize);
 
             _mapper.Map(tweets, response);
+
+            var tweetIds = tweets.Select(c => c.Id);
+            var likes = await _tweetLikeRepository.GetAllByAsync(c => tweetIds.Contains(c.TweetId) && c.UserId == currentUserId);
+            foreach (var model in response.Models)
+            {
+                model.IsLiked = likes.Any(c => c.TweetId == model.Id);
+            }
 
             return response;
         }

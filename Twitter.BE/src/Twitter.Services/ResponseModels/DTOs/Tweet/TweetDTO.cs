@@ -7,6 +7,7 @@ namespace Twitter.Services.ResponseModels.DTOs.Tweet
     {
         public int Id { get; set; }
 
+        public string AuthorId { get; set; }
         public string AuthorFirstName { get; set; }
         public string AuthorLastName { get; set; }
         public string AuthorImage { get; set; }
@@ -17,6 +18,7 @@ namespace Twitter.Services.ResponseModels.DTOs.Tweet
         public int? CodeSnippetId { get; set; }
         public CodeSnippetDTO CodeSnippet { get; set; }
 
+        public bool IsLiked { get; set; }
         public int LikesCount { get; set; }
         public int CommentsCount { get; set; }
     }
