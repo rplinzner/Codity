@@ -55,6 +55,8 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     snippet: {
       marginTop: theme.spacing(3),
+      maxHeight: 300,
+      overflow: 'auto'
     },
     commentBox: {
       margin: theme.spacing(2),
@@ -243,6 +245,7 @@ const PostCard: React.FC<Props> = (props: Props) => {
           {post.codeSnippet.gistURL && (
             <IconButton aria-label="gist">
               <GitHubIcon />
+              {/* TODO: Add translation */}
             </IconButton>
           )}
         </CardActions>

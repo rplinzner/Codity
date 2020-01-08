@@ -20,7 +20,6 @@ import {
   CircularProgress,
 } from '@material-ui/core';
 import { UserCard } from '../additional/index';
-import displayErrors from '../../../helpers/display-errors';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -83,7 +82,6 @@ const Following: React.FC<Props & LocalizeContextProps> = (
           setIsLoading(false);
         },
         error => {
-          displayErrors(error);
           setProfiles(null);
           setIsLoading(false);
         },
