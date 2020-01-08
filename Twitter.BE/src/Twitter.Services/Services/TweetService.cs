@@ -19,6 +19,7 @@ namespace Twitter.Services.Services
         private readonly ITweetRepository _tweetRepository;
         private readonly IBaseRepository<Notification> _notificationRepository;
         private readonly IBaseRepository<TweetLike> _tweetLikeRepository;
+        private readonly IBaseRepository<Follow> _followRepository;
         private readonly IGithubService _githubService;
         private readonly INotificationGeneratorService _notificationGeneratorService;
         private readonly IMapper _mapper;
@@ -27,6 +28,7 @@ namespace Twitter.Services.Services
             ITweetRepository tweetRepository,
             IBaseRepository<Notification> notificationRepository,
             IBaseRepository<TweetLike> tweetLikeRepository,
+            IBaseRepository<Follow> followRepository,
             IGithubService githubService,
             INotificationGeneratorService notificationGeneratorService,
             IMapper mapper)
@@ -34,6 +36,7 @@ namespace Twitter.Services.Services
             _tweetRepository = tweetRepository;
             _notificationRepository = notificationRepository;
             _tweetLikeRepository = tweetLikeRepository;
+            _followRepository = followRepository;
             _githubService = githubService;
             _notificationGeneratorService = notificationGeneratorService;
             _mapper = mapper;
@@ -87,7 +90,7 @@ namespace Twitter.Services.Services
             }
             var tweetDTO = _mapper.Map<TweetDTO>(tweet);
             tweetDTO.IsLiked = await _tweetLikeRepository.ExistAsync(c => c.UserId == currentUserId && c.TweetId == tweetDTO.Id);
-            
+
             response.Model = tweetDTO;
 
             return response;
@@ -97,7 +100,10 @@ namespace Twitter.Services.Services
         {
             var response = new PagedResponse<TweetDTO>();
 
-            var tweets = await _tweetRepository.GetPagedAsync(
+            var following = (await _followRepository.GetAllByAsync(c => c.FollowerId == currentUserId)).Select(c => c.FollowingId);
+
+            var tweets = await _tweetRepository.GetPagedByAsync(
+                c => following.Contains(c.Id),
                 paginationRequest.PageNumber,
                 paginationRequest.PageSize);
 
