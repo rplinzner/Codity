@@ -149,6 +149,11 @@ const PostCard: React.FC<Props> = (props: Props) => {
     );
   };
 
+  const updateComments = () => {
+    props.updatePost(post.id);
+    getComments();
+  };
+
   const addComment = () => {
     setIsCommentAdding(true);
     const data = { tweetId: post.id, text: commentText };
@@ -329,7 +334,9 @@ const PostCard: React.FC<Props> = (props: Props) => {
                   authorImage={item.authorImage}
                   commentDate={item.creationDate}
                   commentText={item.text}
+                  commentId={item.id}
                   authorId={item.authorId}
+                  updateComments={updateComments}
                 />
               </div>
             ))}
