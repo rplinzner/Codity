@@ -1,9 +1,12 @@
 import React from 'react';
-import { Card, CardHeader } from '@material-ui/core';
+import { Card, CardHeader, CardActions, IconButton } from '@material-ui/core';
+import FavoriteIcon from '@material-ui/icons/Favorite';
+
 import { withLocalize, LocalizeContextProps } from 'react-localize-redux';
 
 import { Post } from '../../types/post';
 import { UserAvatar } from '../containers/profile/index';
+import { red } from '@material-ui/core/colors';
 
 interface Props extends LocalizeContextProps {
   post: Post;
@@ -38,6 +41,11 @@ const PostCard: React.FC<Props> = (props: Props) => {
             minute: 'numeric',
           }).format(postDate)}
         />
+        <CardActions disableSpacing>
+          <IconButton aria-label="add to favorites">
+            <FavoriteIcon style={{ color: red[500] }} />
+          </IconButton>
+        </CardActions>
       </Card>
     </div>
   );
