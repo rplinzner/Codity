@@ -12,7 +12,8 @@ namespace Twitter.Repositories.Interfaces
             Expression<Func<Tweet, bool>> getBy,
             bool withTracking = false);
 
-        Task<PagedList<Tweet>> GetPagedAsync(
+        Task<PagedList<Tweet>> GetPagedByAsync(
+           Expression<Func<Tweet, bool>> getBy,
            int pageNumber,
            int pageSize,
            bool withTracking = false);
