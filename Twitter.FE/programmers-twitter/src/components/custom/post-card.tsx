@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Card,
   CardHeader,
@@ -13,6 +13,10 @@ import {
   createStyles,
   Menu,
   MenuItem,
+  Collapse,
+  Divider,
+  Button,
+  TextField,
 } from '@material-ui/core';
 import {
   withLocalize,
@@ -33,14 +37,18 @@ import postService from '../../services/post.service';
 import { Post } from '../../types/post';
 import { UserAvatar } from '../containers/profile/index';
 import { BaseResponse } from '../../types/base-response';
+import { CommentsResponse } from '../../types/comments-response';
+import SingleComment from './single-comment';
 import * as constants from '../../constants/global.constats';
 import displayErrors from '../../helpers/display-errors';
 import deleteRequest from '../../services/delete.service';
+import get from '../../services/get.service';
 
 interface Props extends LocalizeContextProps {
   post: Post;
   className?: string;
   updatePost: (arg1: number) => void;
+  commentsOpen?: boolean;
 }
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -48,12 +56,26 @@ const useStyles = makeStyles((theme: Theme) =>
     snippet: {
       marginTop: theme.spacing(3),
     },
+    commentBox: {
+      margin: theme.spacing(2),
+      width: '90%',
+    },
   }),
 );
 
 const PostCard: React.FC<Props> = (props: Props) => {
-  const [expanded, setExpanded] = useState(false);
+  const [expanded, setExpanded] = useState(props.commentsOpen || false);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const [
+    commentsResponse,
+    setCommentsResponse,
+  ] = useState<CommentsResponse | null>(null);
+
+  console.log(commentsResponse);
+  let commentNumber = 3;
+  if (props.commentsOpen) {
+    commentNumber = props.commentsOpen ? 7 : 3;
+  }
 
   const handleMenuClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -103,6 +125,26 @@ const PostCard: React.FC<Props> = (props: Props) => {
       error => displayErrors(error),
     );
   };
+
+  const getComments = () => {
+    get<CommentsResponse>(
+      constants.postController,
+      `/${post.id}/comment/?pageNumber=1&pageSize=${commentNumber}`,
+      langCode,
+      <T id="errorConnection" />,
+      true,
+    ).then(
+      resp => {
+        setCommentsResponse(resp);
+      },
+      error => displayErrors(error),
+    );
+  };
+
+  useEffect(() => {
+    getComments();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const postDate = new Date(post.creationDate);
   return (
@@ -204,6 +246,50 @@ const PostCard: React.FC<Props> = (props: Props) => {
             </IconButton>
           )}
         </CardActions>
+        <Collapse in={expanded} timeout="auto" unmountOnExit>
+          <Divider />
+          <TextField
+            onKeyPress={ev => {
+              if (ev.key === 'Enter') {
+                window.alert('wysyłasz');
+                ev.preventDefault();
+              }
+            }}
+            multiline
+            className={classes.commentBox}
+            label="Write comment"
+            fullWidth
+          />
+          {commentsResponse &&
+            commentsResponse.models &&
+            commentsResponse.models.length > 0 &&
+            commentsResponse.models.map(item => (
+              <div key={item.id}>
+                <Divider />
+                <SingleComment
+                  authorFirstName={item.authorFirstName}
+                  authorLastName={item.authorLastName}
+                  authorImage={item.authorImage}
+                  commentDate={item.creationDate}
+                  commentText={item.text}
+                />
+              </div>
+            ))}
+          {commentsResponse &&
+            !(commentsResponse.currentPage === commentsResponse.totalPages) && (
+              <div>
+                <Divider />
+                <Button
+                  style={{ width: '100%' }}
+                  variant="text"
+                  color="secondary"
+                >
+                  Load more
+                  {/* TODO: translation */}
+                </Button>
+              </div>
+            )}
+        </Collapse>
       </Card>
     </div>
   );

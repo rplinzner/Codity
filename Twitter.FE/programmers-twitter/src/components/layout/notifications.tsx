@@ -194,7 +194,8 @@ const Notifications: React.FC<Props & RouteComponentProps> = (
                         )
                       }
                     >
-                      Load more
+                      Load more 
+                      {/* TODO: translation */}
                     </Button>
                   </div>
                 )}
