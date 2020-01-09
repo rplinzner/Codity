@@ -42,7 +42,7 @@ import {
   withLocalize,
 } from 'react-localize-redux';
 import displayErrors from '../../../helpers/display-errors';
-import { PostSkeleton } from '../../custom/index';
+import { PostSkeleton, PostCard } from '../../custom/index';
 import { AppState } from '../../..';
 import { connect } from 'react-redux';
 import { UserState } from '../../../store/user/user.types';
@@ -95,11 +95,8 @@ const useStyles = makeStyles((theme: Theme) =>
         paddingTop: theme.spacing(5),
       },
     },
-    posts: {
-      textAlign: 'center',
-      [theme.breakpoints.down('xs')]: {
-        paddingTop: theme.spacing(5),
-      },
+    post: {
+      margin: theme.spacing(1),
     },
     divider: {
       margin: theme.spacing(2, 0, 2, 0),
@@ -535,20 +532,23 @@ const UserProfile: React.FC<Props & LocalizeContextProps> = (
           </Grid>
           {/*  User Posts */}
           <Divider className={classes.divider} />
-          {/* {userProfile && userProfile.model && userProfile.model.latestTweets && (
+          {userProfile && userProfile.model && userProfile.model.latestTweets && (
             <Container className={classes.root} maxWidth="md">
               <div style={{ textAlign: 'center' }}>
                 <Typography variant="h5">Recent Posts:</Typography>
               </div>
+              {/* TODO: Fix not working liking */}
               {userProfile.model.latestTweets.map(item => (
                 <PostCard
+                  onPostDeleted={() => getUserProfile()}
+                  className={classes.post}
                   key={item.id}
                   post={item}
                   updatePost={n => getUserProfile()}
                 />
               ))}
             </Container>
-          )} */}
+          )}
         </Grid>
       ) : (
         !isLoading && (
