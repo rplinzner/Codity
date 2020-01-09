@@ -199,6 +199,7 @@ namespace Twitter.WebApi.ExtensionMethods
             services.AddTransient<INotificationService, NotificationService>();
             services.AddTransient<ISettingsService, SettingsService>();
             services.AddTransient<IGenderService, GenderService>();
+            services.AddTransient<IProgrammingLanguageService, ProgrammingLanguageService>();
             services.AddTransient<ITweetService, TweetService>();
             services.AddTransient<ILikeService, LikeService>();
             services.AddTransient<ICommentService, CommentService>();

@@ -63,7 +63,8 @@ namespace Twitter.Services.Mappings
 
 
             CreateMap<CodeSnippet, CodeSnippetDTO>()
-               .ForMember(d => d.ProgrammingLanguageName, o => o.MapFrom(s => s.ProgrammingLanguage.Name));
+               .ForMember(d => d.ProgrammingLanguageName, o => o.MapFrom(s => s.ProgrammingLanguage.Name))
+               .ForMember(d => d.ProgrammingLanguageCode, o => o.MapFrom(s => s.ProgrammingLanguage.Code));
 
             CreateMap<PagedList<Follow>, PagedResponse<BaseUserDTO>>();
             CreateMap<PagedList<UserNotification>, PagedResponse<NotificationDTO>>();
@@ -74,6 +75,7 @@ namespace Twitter.Services.Mappings
             CreateMap<Notification, NotificationDTO>();
             CreateMap<UserProfileRequest, User>();
             CreateMap<User, LikeUserDTO>();
+            CreateMap<ProgrammingLanguage, ProgrammingLanguageDTO>();
         }
 
         internal class TranslateResolver : IMemberValueResolver<object, object, string, string>
