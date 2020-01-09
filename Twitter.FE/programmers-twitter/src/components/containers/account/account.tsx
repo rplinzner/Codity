@@ -273,11 +273,11 @@ const Account: React.FC<Props> = (props: Props) => {
         <Divider variant="fullWidth" />
         {/* SECURITY STUFF */}
 
-        <div className={classes.item}>
+        {/* <div className={classes.item}>
           <Typography className={classes.item} variant="h5">
             <T id="security" />
           </Typography>
-        </div>
+        </div> */}
       </Paper>
     </Container>
   );

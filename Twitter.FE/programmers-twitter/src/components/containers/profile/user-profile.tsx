@@ -113,6 +113,10 @@ const useStyles = makeStyles((theme: Theme) =>
       margin: theme.spacing(1),
       minWidth: 120,
     },
+    root: {
+      paddingTop: theme.spacing(2),
+      paddingBottom: theme.spacing(2),
+    },
   }),
 );
 
@@ -322,7 +326,13 @@ const UserProfile: React.FC<Props & LocalizeContextProps> = (
 
   return (
     <div className={classes.container}>
-      {isLoading && <LinearProgress />}
+      {isLoading && (
+        <Container className={classes.root} maxWidth="md">
+          <LinearProgress />
+          <PostSkeleton />
+        </Container>
+      )}
+
       {userProfile !== null ? (
         <Grid
           style={{ padding: '20px' }}
@@ -525,12 +535,20 @@ const UserProfile: React.FC<Props & LocalizeContextProps> = (
           </Grid>
           {/*  User Posts */}
           <Divider className={classes.divider} />
-          <Container maxWidth="md">
-            <div style={{ textAlign: 'center' }}>
-              <Typography variant="h5">Recent Posts:</Typography>
-            </div>
-            <PostSkeleton />
-          </Container>
+          {/* {userProfile && userProfile.model && userProfile.model.latestTweets && (
+            <Container className={classes.root} maxWidth="md">
+              <div style={{ textAlign: 'center' }}>
+                <Typography variant="h5">Recent Posts:</Typography>
+              </div>
+              {userProfile.model.latestTweets.map(item => (
+                <PostCard
+                  key={item.id}
+                  post={item}
+                  updatePost={n => getUserProfile()}
+                />
+              ))}
+            </Container>
+          )} */}
         </Grid>
       ) : (
         !isLoading && (

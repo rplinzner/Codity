@@ -27,7 +27,7 @@ import { settingsController } from './constants/global.constats';
 import { PrivateRoute } from './components/containers/authentication/';
 import { Following } from './components/containers/following/';
 import { Account } from './components/containers/account/';
-import { Post } from './components/containers/post/';
+import { Post, AddEditPost } from './components/containers/post/';
 
 import { connect } from 'react-redux';
 import { AppState } from '.';
@@ -122,6 +122,7 @@ class App extends Component<Props> {
               {/* Private Routes */}
               <PrivateRoute path="/MyFeed" component={main.Feed} />
               <PrivateRoute path="/Post" component={Post} />
+              <PrivateRoute path="/ManagePost" component={AddEditPost} />
               <PrivateRoute path="/MyAccount" component={Account} />
               <PrivateRoute path="/Profile" component={user.Profile} />
               <PrivateRoute
