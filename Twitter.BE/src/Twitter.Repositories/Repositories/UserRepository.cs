@@ -1,5 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using Twitter.Data.Context;
@@ -45,5 +47,29 @@ namespace Twitter.Repositories.Repositories
 
             return new PagedList<User>(result, count, pageNumber, pageSize);
         }
+
+        public virtual async Task<User> GetByAsync(
+          Expression<Func<User, bool>> getBy,
+          bool withTracking = false
+        )
+        {
+            var query = _dbContext.Users
+                .Include(c => c.Followers)
+                .Include(c => c.Following)
+                .Include(c => c.Gender)
+                .Include(c => c.Tweets).ThenInclude(c => c.Likes)
+                .Include(c => c.Tweets).ThenInclude(c => c.Comments)
+                .Include(c => c.Tweets).ThenInclude(c => c.CodeSnippet)
+                        .ThenInclude(c => c.ProgrammingLanguage)
+                as IQueryable<User>;
+
+            if (!withTracking)
+            {
+                query = query.AsNoTracking();
+            }
+
+            return await query.FirstOrDefaultAsync(getBy);
+        }
+
     }
 }

@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Linq.Expressions;
+using System.Threading.Tasks;
 using Twitter.Data.Model;
 using Twitter.Repositories.Helpers;
 
@@ -12,5 +14,10 @@ namespace Twitter.Repositories.Interfaces
            int pageSize,
            int exceptId,
            bool withTracking = false);
+
+        Task<User> GetByAsync(
+          Expression<Func<User, bool>> getBy,
+          bool withTracking = false
+        );
     }
 }
