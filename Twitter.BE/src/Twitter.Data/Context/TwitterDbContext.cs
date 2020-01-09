@@ -40,6 +40,18 @@ namespace Twitter.Data.Context
                     .WithOne(c => c.Following)
                     .HasForeignKey(c => c.FollowingId);
 
+                entity
+                    .HasMany<Comment>()
+                    .WithOne(c => c.Author)
+                    .HasForeignKey(c => c.AuthorId)
+                    .OnDelete(DeleteBehavior.Restrict);
+
+                entity
+                    .HasMany<TweetLike>()
+                    .WithOne(c => c.User)
+                    .HasForeignKey(c => c.UserId)
+                    .OnDelete(DeleteBehavior.Restrict); 
+
                 entity.ToTable("Users");
             });
 
@@ -49,13 +61,13 @@ namespace Twitter.Data.Context
                     .HasMany(c => c.Comments)
                     .WithOne(c => c.Tweet)
                     .HasForeignKey(c => c.TweetId)
-                    .OnDelete(DeleteBehavior.Restrict);
+                    .OnDelete(DeleteBehavior.Cascade);
 
                 entity
                     .HasMany(c => c.Likes)
                     .WithOne(c => c.Tweet)
                     .HasForeignKey(c => c.TweetId)
-                    .OnDelete(DeleteBehavior.Restrict);
+                    .OnDelete(DeleteBehavior.Cascade);
             });
 
 

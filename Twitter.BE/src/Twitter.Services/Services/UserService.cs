@@ -42,11 +42,7 @@ namespace Twitter.Services.Services
 
             var user = await _userRepository.GetByAsync(
                 c => c.Id == userId,
-                false,
-                c => c.Gender,
-                c => c.Followers,
-                c => c.Following,
-                c => c.Tweets);
+                false);
 
             if (user == null)
             {
@@ -60,7 +56,7 @@ namespace Twitter.Services.Services
 
             var userDTO = _mapper.Map<UserDTO>(user);
 
-            userDTO.LatestTweets = _mapper.Map<IEnumerable<TweetDTO>>(user.Tweets.Take(10));
+            userDTO.LatestTweets = _mapper.Map<IEnumerable<TweetDTO>>(user.Tweets.Take(5));
             userDTO.IsFollowing = await _followRepository.ExistAsync(c => c.FollowerId == currentUserId && c.FollowingId == userId);
 
             response.Model = userDTO;
