@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import {
   Container,
@@ -11,9 +11,11 @@ import {
   IconButton,
   CardActions,
   Badge,
-  //   TextField,
+  TextField,
   CardContent,
   Button,
+  InputLabel,
+  Select,
 } from '@material-ui/core';
 
 import FavoriteIcon from '@material-ui/icons/Favorite';
@@ -22,6 +24,10 @@ import GitHubIcon from '@material-ui/icons/GitHub';
 import AceEditor from 'react-ace';
 // import 'ace-builds/src-noconflict/mode-java';
 import 'ace-builds/src-noconflict/mode-csharp';
+import 'ace-builds/src-noconflict/mode-javascript';
+import 'ace-builds/src-noconflict/mode-python';
+import 'ace-builds/src-noconflict/mode-c_cpp';
+import 'ace-builds/src-noconflict/mode-typescript';
 // import 'ace-builds/src-noconflict/theme-github';
 import 'ace-builds/src-noconflict/theme-solarized_dark';
 
@@ -45,30 +51,44 @@ const useStyles = makeStyles((theme: Theme) =>
     button: {
       marginRight: theme.spacing(1),
     },
+    snippet: {
+      marginTop: theme.spacing(3),
+    },
   }),
 );
 
 const AddEditPost: React.FC<Props> = (props: Props) => {
   const classes = useStyles();
+  const [page, setPage] = useState(1);
+  const [description, setDescription] = useState('');
 
-  //   const descriptionPageDescription = (
-  //     <div>
-  //       <Typography variant="h4">Dodaj opis</Typography>
-  //       <Typography variant="h5" color="textSecondary">
-  //         W paru zdaniach opisz na czym polega twój post
-  //       </Typography>
-  //     </div>
-  //   );
+  // const languages = {
+  //   cs: 'csharp',
+  //   javascript: 'javascript',
+  //   python: 'python',
+  //   cpp: 'c_cpp',
+  //   typescript: 'typescript',
+  //   java: 'java',
+  // };
 
-  //   const descriptionPageContent = (
-  //     <TextField
-  //       // value={commentText}
-  //       // onChange={e => setCommentText(e.target.value)}
-  //       multiline={true}
-  //       label={'Description'}
-  //       fullWidth={true}
-  //     />
-  //   );
+  const descriptionPageDescription = (
+    <div>
+      <Typography variant="h4">Dodaj opis</Typography>
+      <Typography variant="h5" color="textSecondary">
+        W paru zdaniach opisz na czym polega twój post
+      </Typography>
+    </div>
+  );
+
+  const descriptionPageContent = (
+    <TextField
+      value={description}
+      onChange={e => setDescription(e.target.value)}
+      multiline={true}
+      label={'Description'}
+      fullWidth={true}
+    />
+  );
 
   const onChange = (newValue: string) => {
     console.log('change', newValue);
@@ -84,25 +104,102 @@ const AddEditPost: React.FC<Props> = (props: Props) => {
   );
 
   const codePageContent = (
-    <AceEditor
-      style={{ width: '100%', height: '300px' }}
-      placeholder="Place your code here"
-      mode="csharp"
-      theme="solarized_dark"
-      onChange={onChange}
-      editorProps={{ $blockScrolling: true }}
-    />
+    <div>
+      <Typography variant="body2" color="textPrimary" component="p">
+        {description}
+      </Typography>
+      <div className={classes.snippet}>
+        <InputLabel htmlFor="age-native-simple">Język</InputLabel>
+        <Select>
+          <option>C#</option>
+          <option>JavaScript</option>
+          <option>Python</option>
+          <option>Typescript</option>
+          <option>Java</option>
+        </Select>
+        <AceEditor
+          style={{ width: '100%', height: '300px' }}
+          placeholder="Place your code here"
+          mode="csharp"
+          theme="solarized_dark"
+          onChange={onChange}
+          editorProps={{ $blockScrolling: true }}
+        />
+      </div>
+    </div>
   );
+
+  const summaryPageDescription = (
+    <div>
+      <Typography variant="h4">Podsumowanie</Typography>
+      <Typography variant="h5" color="textSecondary">
+        Przejżyj swój post i zastanów się, czy chcesz go dodać do twoich Gistów
+        na platformie Github (dostępne tylko jeśli posiadasz dodany token w
+        profilu)
+      </Typography>
+    </div>
+  );
+
+  const getPageDescription = () => {
+    switch (page) {
+      case 1:
+        return descriptionPageDescription;
+      case 2:
+        return codePageDescription;
+      case 3:
+        return summaryPageDescription;
+
+      default:
+        return null;
+    }
+  };
+
+  const getPageContent = () => {
+    switch (page) {
+      case 1:
+        return descriptionPageContent;
+      case 2:
+        return codePageContent;
+
+      default:
+        return null;
+    }
+  };
+
+  const handlePrevButton = () => {
+    if (page > 1) {
+      setPage(page - 1);
+    }
+  };
+
+  const handleNextButton = () => {
+    if (page < 3) {
+      setPage(page + 1);
+    }
+  };
 
   return (
     <Container className={classes.root} maxWidth="md">
-      {codePageDescription}
+      {getPageDescription()}
       <div className={classes.marginStandard}>
-        <Button className={classes.button} variant="contained" color="primary">
-          Poprzednia strona
-        </Button>
-        <Button className={classes.button} variant="contained" color="primary">
-          Następna strona
+        {page !== 1 && (
+          <Button
+            className={classes.button}
+            onClick={handlePrevButton}
+            variant="contained"
+            color="primary"
+          >
+            Poprzednia strona
+          </Button>
+        )}
+
+        <Button
+          onClick={handleNextButton}
+          className={classes.button}
+          variant="contained"
+          color="primary"
+        >
+          {page !== 3 ? 'Następna strona' : 'Wyślij'}
         </Button>
       </div>
 
@@ -118,7 +215,7 @@ const AddEditPost: React.FC<Props> = (props: Props) => {
             title={'Your Name'}
             subheader={'Now'}
           />
-          <CardContent>{codePageContent}</CardContent>
+          <CardContent> {getPageContent()}</CardContent>
           <CardActions disableSpacing={true}>
             <IconButton aria-label="like">
               <FavoriteIcon />

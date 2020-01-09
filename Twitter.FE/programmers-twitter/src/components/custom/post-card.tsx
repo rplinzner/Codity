@@ -285,9 +285,10 @@ const PostCard: React.FC<Props & RouteComponentProps> = (
 
                 {post.authorId === props.userId && (
                   <div>
-                    <MenuItem onClick={handleMenuClose}>
+                    {/* TODO: Handle edit post */}
+                    {/* <MenuItem onClick={handleMenuClose}>
                       <T id="editPost" />
-                    </MenuItem>
+                    </MenuItem> */}
                     <MenuItem
                       onClick={() => {
                         deleteMyPost();
