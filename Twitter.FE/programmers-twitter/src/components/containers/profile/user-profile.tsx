@@ -51,6 +51,8 @@ import { toast } from 'react-toastify';
 import { BaseResponse } from '../../../types/base-response';
 import GenderResponse from '../../../types/gender-response';
 import FollowingFollowersModal from './following-followers-modal';
+import { PostResponse } from '../../../types/post-response';
+import { Post } from '../../../types/post';
 
 interface Props extends RouteComponentProps {
   user: UserState;
@@ -123,6 +125,7 @@ const UserProfile: React.FC<Props & LocalizeContextProps> = (
   const classes = useStyles();
 
   const [userProfile, setUserProfile] = useState<ProfileResponse | null>(null);
+  const [posts, setPosts] = useState<Post[] | null>(null);
   const [genders, setGenders] = useState<GenderResponse>();
   const [isLoading, setIsLoading] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
@@ -153,6 +156,35 @@ const UserProfile: React.FC<Props & LocalizeContextProps> = (
 
   //#region API calls
 
+  const updatePost = (postId: number) => {
+    get<PostResponse>(
+      constants.postController,
+      `/${postId}`,
+      langCode,
+      <T id="errorConnection" />,
+      true,
+    ).then(
+      resp => {
+        if (posts === null) {
+          toast.error('No data to update');
+          return;
+        }
+        const index = posts.findIndex(e => e.id === postId);
+        const temp = posts.map((item, iIndex) => {
+          if (iIndex !== index) {
+            return item;
+          }
+          return {
+            ...item,
+            ...resp.model,
+          };
+        });
+        setPosts(temp);
+      },
+      error => displayErrors(error),
+    );
+  };
+
   const getUserProfile = (): void => {
     setIsLoading(true);
     const id = userId;
@@ -167,6 +199,7 @@ const UserProfile: React.FC<Props & LocalizeContextProps> = (
         .then(
           resp => {
             setUserProfile(resp);
+            setPosts(resp.model.latestTweets);
             setIsLoading(false);
             setEditableStates(resp);
           },
@@ -180,6 +213,8 @@ const UserProfile: React.FC<Props & LocalizeContextProps> = (
         });
     } else {
       setUserProfile(null);
+      setPosts(null);
+
       setIsLoading(false);
     }
   };
@@ -532,19 +567,20 @@ const UserProfile: React.FC<Props & LocalizeContextProps> = (
           </Grid>
           {/*  User Posts */}
           <Divider className={classes.divider} />
-          {userProfile && userProfile.model && userProfile.model.latestTweets && (
+          {posts && posts.length > 0 && (
             <Container className={classes.root} maxWidth="md">
               <div style={{ textAlign: 'center' }}>
+                {/* TODO: Add translation */}
                 <Typography variant="h5">Recent Posts:</Typography>
               </div>
-              {/* TODO: Fix not working liking */}
-              {userProfile.model.latestTweets.map(item => (
+
+              {posts.map(item => (
                 <PostCard
                   onPostDeleted={() => getUserProfile()}
                   className={classes.post}
                   key={item.id}
                   post={item}
-                  updatePost={n => getUserProfile()}
+                  updatePost={updatePost}
                 />
               ))}
             </Container>
