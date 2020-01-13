@@ -78,27 +78,33 @@ namespace Twitter.Services.Helpers
                 {
                     new ProgrammingLanguage
                     {
-                        Name="cs"
+                        Name="C#",
+                        Code="cs"
                     },
                     new ProgrammingLanguage
                     {
-                        Name="javascript"
+                        Name="Javascript",
+                        Code="javascript"
                     },
                     new ProgrammingLanguage
                     {
-                        Name="python"
+                        Name="Python",
+                        Code="python"
                     },
                     new ProgrammingLanguage
                     {
-                        Name="cpp"
+                        Name="C++",
+                        Code="cpp"
                     },
                     new ProgrammingLanguage
                     {
-                        Name="typescript"
+                        Name="Typescript",
+                        Code="typescript"
                     },
                     new ProgrammingLanguage
                     {
-                        Name="java"
+                        Name="Java",
+                        Code="java"
                     }
                 };
 
