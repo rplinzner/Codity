@@ -18,4 +18,5 @@ export interface CodeSnippet {
   programmingLanguageId: number;
   programmingLanguageName: string;
   gistURL: string;
+  programmingLanguageCode: string;
 }

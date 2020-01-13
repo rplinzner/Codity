@@ -319,12 +319,12 @@ const PostCard: React.FC<Props & RouteComponentProps> = (
           </Typography>
           <div className={classes.snippet}>
             <Typography variant="subtitle2" color="textSecondary">
-              <T id="language" /> {': '}
-              <T id={post.codeSnippet.programmingLanguageName} />
+              <T id="language" />{': '}
+              {post.codeSnippet.programmingLanguageName}
             </Typography>
             <SyntaxHighlighter
               style={props.isDarkTheme ? vs2015 : githubGist}
-              language={post.codeSnippet.programmingLanguageName}
+              language={post.codeSnippet.programmingLanguageCode}
               showLineNumbers={true}
             >
               {post.codeSnippet.text}
