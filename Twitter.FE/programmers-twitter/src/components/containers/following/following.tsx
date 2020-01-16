@@ -60,6 +60,9 @@ const Following: React.FC<Props & LocalizeContextProps> = (
   const lang = props.activeLanguage ? props.activeLanguage.code : 'en';
 
   const getFollowing = (pageParam: number = 1): void => {
+    if (isLoading) {
+      return;
+    }
     let page = pageParam;
     if (pageParam === 0) {
       page = profiles ? profiles.currentPage + 1 : 1;

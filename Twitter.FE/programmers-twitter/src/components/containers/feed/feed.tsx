@@ -51,6 +51,9 @@ const Feed: React.FC<Props> = (props: Props) => {
   const langCode = props.activeLanguage ? props.activeLanguage.code : 'en';
 
   const getLatestPosts = (pageParam: number = 1) => {
+    if (isLoading) {
+      return;
+    }
     let page = pageParam;
     if (pageParam === 0) {
       page = postsResponse ? postsResponse.currentPage + 1 : 1;
