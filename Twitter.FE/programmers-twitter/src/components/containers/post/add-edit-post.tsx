@@ -168,6 +168,7 @@ const AddEditPost: React.FC<Props & RouteComponentProps> = (
 
   useEffect(() => {
     getProgrammingLangs();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const addPost = () => {

@@ -15,12 +15,14 @@ import {
   makeStyles,
   Theme,
   createStyles,
+  CircularProgress,
 } from '@material-ui/core';
 import get from '../../../services/get.service';
 import * as constants from '../../../constants/global.constats';
 import displayErrors from '../../../helpers/display-errors';
 import { toast } from 'react-toastify';
 import { Post } from '../../../types/post';
+import InfiniteScroll from 'react-infinite-scroller';
 
 interface Props extends LocalizeContextProps {}
 
@@ -38,14 +40,28 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const Feed: React.FC<Props> = (props: Props) => {
   const [posts, setPosts] = useState<Post[] | null>(null);
+  const [postsResponse, setPostsResponse] = useState<PostsResponse | null>(
+    null,
+  );
   const [isLoading, setIsLoading] = useState(false);
 
   const classes = useStyles();
-  const pageSize = 5;
+  const pageSize = 3;
 
   const langCode = props.activeLanguage ? props.activeLanguage.code : 'en';
 
-  const getLatestPosts = (page: number = 1) => {
+  const getLatestPosts = (pageParam: number = 1) => {
+    let page = pageParam;
+    if (pageParam === 0) {
+      page = postsResponse ? postsResponse.currentPage + 1 : 1;
+    }
+    if (
+      postsResponse &&
+      postsResponse.currentPage === postsResponse.totalPages
+    ) {
+      return;
+    }
+
     setIsLoading(true);
     get<PostsResponse>(
       constants.postController,
@@ -64,6 +80,7 @@ const Feed: React.FC<Props> = (props: Props) => {
           setPosts(resp.models);
         }
         setIsLoading(false);
+        setPostsResponse(resp);
       },
       error => {
         displayErrors(error);
@@ -120,17 +137,35 @@ const Feed: React.FC<Props> = (props: Props) => {
           </Typography>
         </div>
       )}
+
       {/* IS DATA */}
-      {posts &&
-        posts.length > 0 &&
-        posts.map(item => (
-          <PostCard
-            updatePost={updatePost}
-            className={classes.post}
-            key={item.id}
-            post={item}
-          />
-        ))}
+      {postsResponse && (
+        <div>
+          <InfiniteScroll
+            pageStart={1}
+            hasMore={!(postsResponse.currentPage === postsResponse.totalPages)}
+            loader={
+              <div key="div" style={{ textAlign: 'center' }}>
+                <CircularProgress key="spinner" />
+              </div>
+            }
+            loadMore={() => getLatestPosts(0)}
+            useWindow={true}
+            threshold={20}
+          >
+            {posts &&
+              posts.length > 0 &&
+              posts.map(item => (
+                <PostCard
+                  updatePost={updatePost}
+                  className={classes.post}
+                  key={item.id}
+                  post={item}
+                />
+              ))}
+          </InfiniteScroll>
+        </div>
+      )}
     </Container>
   );
 };

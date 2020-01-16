@@ -59,7 +59,14 @@ const Following: React.FC<Props & LocalizeContextProps> = (
   const userId = getUserIdSearchValue();
   const lang = props.activeLanguage ? props.activeLanguage.code : 'en';
 
-  const getFollowing = (page: number = 1): void => {
+  const getFollowing = (pageParam: number = 1): void => {
+    let page = pageParam;
+    if (pageParam === 0) {
+      page = profiles ? profiles.currentPage + 1 : 1;
+    }
+    if (profiles && profiles.currentPage === profiles.totalPages) {
+      return;
+    }
     const id = userId;
     if (id !== '') {
       get<FollowingResponse>(
@@ -116,7 +123,7 @@ const Following: React.FC<Props & LocalizeContextProps> = (
               <CircularProgress key="spinner" />
             </div>
           }
-          loadMore={page => getFollowing(page)}
+          loadMore={() => getFollowing(0)}
           useWindow={true}
           threshold={50}
         >
