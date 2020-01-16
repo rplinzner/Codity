@@ -319,7 +319,8 @@ const PostCard: React.FC<Props & RouteComponentProps> = (
           </Typography>
           <div className={classes.snippet}>
             <Typography variant="subtitle2" color="textSecondary">
-              <T id="language" />{': '}
+              <T id="language" />
+              {': '}
               {post.codeSnippet.programmingLanguageName}
             </Typography>
             <SyntaxHighlighter
@@ -369,7 +370,10 @@ const PostCard: React.FC<Props & RouteComponentProps> = (
 
           {post.codeSnippet.gistURL && (
             <Tooltip title={<T id="showGist" />}>
-              <IconButton aria-label="gist">
+              <IconButton
+                onClick={() => window.open(post.codeSnippet.gistURL, '_blank')}
+                aria-label="gist"
+              >
                 <GitHubIcon />
               </IconButton>
             </Tooltip>
