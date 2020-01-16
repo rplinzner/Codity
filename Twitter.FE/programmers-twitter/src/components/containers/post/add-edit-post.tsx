@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import {
   Container,
@@ -20,6 +20,7 @@ import {
   MenuItem,
   FormControlLabel,
   Checkbox,
+  LinearProgress,
 } from '@material-ui/core';
 
 import {
@@ -51,6 +52,32 @@ import {
 
 import { UserAvatar } from '../profile';
 import { AppState } from '../../..';
+import get from '../../../services/get.service';
+import {
+  ProgrammingLanguageResponse,
+  Programminglanguage,
+} from '../../../types/programming-language-response';
+import * as constants from '../../../constants/global.constats';
+import post from '../../../services/post.service';
+import { PostResponse } from '../../../types/post-response';
+import { toast } from 'react-toastify';
+import displayErrors from '../../../helpers/display-errors';
+interface PostBody {
+  text: string;
+  codeSnippet: CodeSnippet;
+}
+
+interface CodeSnippet {
+  text: string;
+  programmingLanguageId: number;
+  isGist: boolean;
+  gist: Gist;
+}
+
+interface Gist {
+  description: string;
+  fileName: string;
+}
 
 interface Props extends LocalizeContextProps {
   // redux props
@@ -98,7 +125,11 @@ const AddEditPost: React.FC<Props & RouteComponentProps> = (
   const [programmingLang, setProgrammingLang] = useState('');
   const [snippet, setSnippet] = useState('');
   const [fileName, setFileName] = useState('snippet.txt');
-  const [addToGists, setAddToGists] = useState(props.isTokenAdded);
+  const [addToGists, setAddToGists] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
+  const [programmingLanguages, setProgrammingLanguages] = useState<
+    Programminglanguage[] | null
+  >(null);
 
   const languages = {
     csharp: 'cs',
@@ -116,6 +147,65 @@ const AddEditPost: React.FC<Props & RouteComponentProps> = (
     c_cpp: '.cpp',
     typescript: '.ts',
     java: '.java',
+  };
+
+  const lang = props.activeLanguage ? props.activeLanguage.code : 'en';
+
+  const getProgrammingLangs = () => {
+    get<ProgrammingLanguageResponse>(
+      constants.programmingLanguageController,
+      '',
+      lang,
+      <T id="errorConnection" />,
+      true,
+    ).then(
+      resp => {
+        setProgrammingLanguages(resp.models);
+      },
+      () => setProgrammingLanguages(null),
+    );
+  };
+
+  useEffect(() => {
+    getProgrammingLangs();
+  }, []);
+
+  const addPost = () => {
+    setIsLoading(true);
+    const selected = programmingLanguages?.find(
+      e => e.code === languages[programmingLang],
+    )?.id;
+    const temp = selected ? selected : 1;
+    const language = programmingLanguages !== null ? temp : 1;
+    const isGist = props.isTokenAdded ? addToGists : false;
+    const gist: Gist = { description, fileName };
+    const data: PostBody = {
+      text: description,
+      codeSnippet: {
+        text: snippet,
+        programmingLanguageId: language,
+        isGist,
+        gist,
+      },
+    };
+    post<PostResponse, PostBody>(
+      data,
+      constants.postController,
+      '',
+      lang,
+      <T id="errorConnection" />,
+      true,
+    ).then(
+      resp => {
+        toast.success('Post added successfully');
+        props.history.push(`/Post?postId=${resp.model.id}`);
+        setIsLoading(false);
+      },
+      error => {
+        setIsLoading(false);
+        displayErrors(error);
+      },
+    );
   };
 
   const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
@@ -267,10 +357,14 @@ const AddEditPost: React.FC<Props & RouteComponentProps> = (
     if (page < 3) {
       setPage(page + 1);
     }
+    if (page === 3) {
+      addPost();
+    }
   };
 
   return (
     <Container className={classes.root} maxWidth="md">
+      <LinearProgress hidden={!isLoading} />
       {getPageDescription()}
       <div className={classes.marginStandard}>
         {page !== 1 && (
