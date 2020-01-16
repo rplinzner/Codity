@@ -361,7 +361,7 @@ const UserProfile: React.FC<Props & LocalizeContextProps> = (
       {isLoading && (
         <Container className={classes.root} maxWidth="md">
           <LinearProgress />
-          <PostSkeleton />
+          {posts === null && <PostSkeleton />}
         </Container>
       )}
 

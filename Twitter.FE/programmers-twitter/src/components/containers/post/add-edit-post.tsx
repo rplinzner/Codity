@@ -16,6 +16,10 @@ import {
   Button,
   InputLabel,
   Select,
+  FormControl,
+  MenuItem,
+  FormControlLabel,
+  Checkbox,
 } from '@material-ui/core';
 
 import FavoriteIcon from '@material-ui/icons/Favorite';
@@ -29,7 +33,13 @@ import 'ace-builds/src-noconflict/mode-python';
 import 'ace-builds/src-noconflict/mode-c_cpp';
 import 'ace-builds/src-noconflict/mode-typescript';
 // import 'ace-builds/src-noconflict/theme-github';
-import 'ace-builds/src-noconflict/theme-solarized_dark';
+import 'ace-builds/src-noconflict/theme-tomorrow_night';
+
+import SyntaxHighlighter from 'react-syntax-highlighter';
+import {
+  vs2015,
+  // githubGist,
+} from 'react-syntax-highlighter/dist/esm/styles/hljs';
 
 import { UserAvatar } from '../profile';
 
@@ -51,8 +61,17 @@ const useStyles = makeStyles((theme: Theme) =>
     button: {
       marginRight: theme.spacing(1),
     },
+    snippetEdit: {
+      marginTop: theme.spacing(3),
+    },
     snippet: {
       marginTop: theme.spacing(3),
+      maxHeight: 300,
+      overflow: 'auto',
+    },
+    formControl: {
+      margin: theme.spacing(1),
+      minWidth: 120,
     },
   }),
 );
@@ -61,15 +80,47 @@ const AddEditPost: React.FC<Props> = (props: Props) => {
   const classes = useStyles();
   const [page, setPage] = useState(1);
   const [description, setDescription] = useState('');
+  const [programmingLang, setProgrammingLang] = useState('');
+  const [snippet, setSnippet] = useState('');
+  const [fileName, setFileName] = useState('snippet.txt');
+  const [addToGists, setAddToGists] = useState(true);
 
-  // const languages = {
-  //   cs: 'csharp',
-  //   javascript: 'javascript',
-  //   python: 'python',
-  //   cpp: 'c_cpp',
-  //   typescript: 'typescript',
-  //   java: 'java',
-  // };
+  const languages = {
+    csharp: 'cs',
+    javascript: 'javascript',
+    python: 'python',
+    c_cpp: 'cpp',
+    typescript: 'typescript',
+    java: 'java',
+  };
+
+  const fileExt = {
+    csharp: '.cs',
+    javascript: '.js',
+    python: '.py',
+    c_cpp: '.cpp',
+    typescript: '.ts',
+    java: '.java',
+  };
+
+  const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+    const lang = event.target.value as string;
+    setProgrammingLang(lang);
+    const split = fileName.split('.');
+    setFileName(split[0] + fileExt[lang]);
+  };
+
+  const onEditorChange = (newValue: string) => {
+    setSnippet(newValue);
+  };
+
+  const handleAddToGists = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setAddToGists(event.target.checked);
+  };
+
+  const handleFileName = (newValue: string) => {
+    setFileName(newValue);
+  };
 
   const descriptionPageDescription = (
     <div>
@@ -90,10 +141,6 @@ const AddEditPost: React.FC<Props> = (props: Props) => {
     />
   );
 
-  const onChange = (newValue: string) => {
-    console.log('change', newValue);
-  };
-
   const codePageDescription = (
     <div>
       <Typography variant="h4">Dodaj snippet</Typography>
@@ -108,21 +155,25 @@ const AddEditPost: React.FC<Props> = (props: Props) => {
       <Typography variant="body2" color="textPrimary" component="p">
         {description}
       </Typography>
-      <div className={classes.snippet}>
-        <InputLabel htmlFor="age-native-simple">Język</InputLabel>
-        <Select>
-          <option>C#</option>
-          <option>JavaScript</option>
-          <option>Python</option>
-          <option>Typescript</option>
-          <option>Java</option>
-        </Select>
+      <div className={classes.snippetEdit}>
+        <FormControl className={classes.formControl}>
+          <InputLabel htmlFor="age-native-simple">Język</InputLabel>
+          <Select value={programmingLang} onChange={handleChange}>
+            <MenuItem value="csharp">C#</MenuItem>
+            <MenuItem value="javascript">JavaScript</MenuItem>
+            <MenuItem value="c_cpp">C++</MenuItem>
+            <MenuItem value="python">Python</MenuItem>
+            <MenuItem value="typescript">Typescript</MenuItem>
+            <MenuItem value="java">Java</MenuItem>
+          </Select>
+        </FormControl>
         <AceEditor
           style={{ width: '100%', height: '300px' }}
           placeholder="Place your code here"
-          mode="csharp"
-          theme="solarized_dark"
-          onChange={onChange}
+          mode={programmingLang}
+          theme="tomorrow_night"
+          value={snippet}
+          onChange={onEditorChange}
           editorProps={{ $blockScrolling: true }}
         />
       </div>
@@ -137,6 +188,23 @@ const AddEditPost: React.FC<Props> = (props: Props) => {
         na platformie Github (dostępne tylko jeśli posiadasz dodany token w
         profilu)
       </Typography>
+    </div>
+  );
+
+  const summaryPageContent = (
+    <div>
+      <Typography variant="body2" color="textPrimary" component="p">
+        {description}
+      </Typography>
+      <div className={classes.snippet}>
+        <SyntaxHighlighter
+          style={vs2015}
+          language={languages[programmingLang]}
+          showLineNumbers={true}
+        >
+          {snippet}
+        </SyntaxHighlighter>
+      </div>
     </div>
   );
 
@@ -160,6 +228,8 @@ const AddEditPost: React.FC<Props> = (props: Props) => {
         return descriptionPageContent;
       case 2:
         return codePageContent;
+      case 3:
+        return summaryPageContent;
 
       default:
         return null;
@@ -230,6 +300,27 @@ const AddEditPost: React.FC<Props> = (props: Props) => {
             <IconButton aria-label="gist">
               <GitHubIcon />
             </IconButton>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  color="primary"
+                  checked={addToGists}
+                  onChange={handleAddToGists}
+                />
+              }
+              label="Add to your Gists"
+            />
+            {addToGists && (
+              <TextField
+                defaultValue={
+                  programmingLang === '' ? '.txt' : fileExt[programmingLang]
+                }
+                className={classes.formControl}
+                value={fileName}
+                onChange={e => handleFileName(e.target.value)}
+                label={'File Name'}
+              />
+            )}
           </CardActions>
         </Card>
       </div>
