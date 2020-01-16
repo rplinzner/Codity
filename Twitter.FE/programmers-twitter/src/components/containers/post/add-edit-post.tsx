@@ -22,28 +22,41 @@ import {
   Checkbox,
 } from '@material-ui/core';
 
+import {
+  withLocalize,
+  LocalizeContextProps,
+  Translate as T,
+} from 'react-localize-redux';
+import { connect } from 'react-redux';
+import { RouteComponentProps, withRouter } from 'react-router-dom';
+
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import CommentIcon from '@material-ui/icons/Comment';
 import GitHubIcon from '@material-ui/icons/GitHub';
 import AceEditor from 'react-ace';
-// import 'ace-builds/src-noconflict/mode-java';
+import 'ace-builds/src-noconflict/mode-java';
 import 'ace-builds/src-noconflict/mode-csharp';
 import 'ace-builds/src-noconflict/mode-javascript';
 import 'ace-builds/src-noconflict/mode-python';
 import 'ace-builds/src-noconflict/mode-c_cpp';
 import 'ace-builds/src-noconflict/mode-typescript';
-// import 'ace-builds/src-noconflict/theme-github';
+import 'ace-builds/src-noconflict/theme-github';
 import 'ace-builds/src-noconflict/theme-tomorrow_night';
 
 import SyntaxHighlighter from 'react-syntax-highlighter';
 import {
   vs2015,
-  // githubGist,
+  githubGist,
 } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 
 import { UserAvatar } from '../profile';
+import { AppState } from '../../..';
 
-interface Props {}
+interface Props extends LocalizeContextProps {
+  // redux props
+  isDarkTheme: boolean;
+  isTokenAdded: boolean;
+}
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -76,14 +89,16 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-const AddEditPost: React.FC<Props> = (props: Props) => {
+const AddEditPost: React.FC<Props & RouteComponentProps> = (
+  props: Props & RouteComponentProps,
+) => {
   const classes = useStyles();
   const [page, setPage] = useState(1);
   const [description, setDescription] = useState('');
   const [programmingLang, setProgrammingLang] = useState('');
   const [snippet, setSnippet] = useState('');
   const [fileName, setFileName] = useState('snippet.txt');
-  const [addToGists, setAddToGists] = useState(true);
+  const [addToGists, setAddToGists] = useState(props.isTokenAdded);
 
   const languages = {
     csharp: 'cs',
@@ -124,9 +139,11 @@ const AddEditPost: React.FC<Props> = (props: Props) => {
 
   const descriptionPageDescription = (
     <div>
-      <Typography variant="h4">Dodaj opis</Typography>
+      <Typography variant="h4">
+        <T id="addDescription" />
+      </Typography>
       <Typography variant="h5" color="textSecondary">
-        W paru zdaniach opisz na czym polega twój post
+        <T id="addText" />
       </Typography>
     </div>
   );
@@ -136,28 +153,32 @@ const AddEditPost: React.FC<Props> = (props: Props) => {
       value={description}
       onChange={e => setDescription(e.target.value)}
       multiline={true}
-      label={'Description'}
+      label={<T id="postDescription" />}
       fullWidth={true}
     />
   );
 
   const codePageDescription = (
     <div>
-      <Typography variant="h4">Dodaj snippet</Typography>
+      <Typography variant="h4">
+        <T id="addSnippet" />
+      </Typography>
       <Typography variant="h5" color="textSecondary">
-        Dodaj snippet kodu którym chcesz się pochwalić
+        <T id="addSnippetText" />
       </Typography>
     </div>
   );
 
-  const codePageContent = (
+  const codePageContent = (t: any) => (
     <div>
       <Typography variant="body2" color="textPrimary" component="p">
         {description}
       </Typography>
       <div className={classes.snippetEdit}>
         <FormControl className={classes.formControl}>
-          <InputLabel htmlFor="age-native-simple">Język</InputLabel>
+          <InputLabel htmlFor="age-native-simple">
+            <T id="language" />
+          </InputLabel>
           <Select value={programmingLang} onChange={handleChange}>
             <MenuItem value="csharp">C#</MenuItem>
             <MenuItem value="javascript">JavaScript</MenuItem>
@@ -169,9 +190,9 @@ const AddEditPost: React.FC<Props> = (props: Props) => {
         </FormControl>
         <AceEditor
           style={{ width: '100%', height: '300px' }}
-          placeholder="Place your code here"
+          placeholder={t('placeCode') as string}
           mode={programmingLang}
-          theme="tomorrow_night"
+          theme={props.isDarkTheme ? 'tomorrow_night' : 'github'}
           value={snippet}
           onChange={onEditorChange}
           editorProps={{ $blockScrolling: true }}
@@ -182,11 +203,11 @@ const AddEditPost: React.FC<Props> = (props: Props) => {
 
   const summaryPageDescription = (
     <div>
-      <Typography variant="h4">Podsumowanie</Typography>
+      <Typography variant="h4">
+        <T id="summary" />
+      </Typography>
       <Typography variant="h5" color="textSecondary">
-        Przejżyj swój post i zastanów się, czy chcesz go dodać do twoich Gistów
-        na platformie Github (dostępne tylko jeśli posiadasz dodany token w
-        profilu)
+        <T id="lookThroughPost" />
       </Typography>
     </div>
   );
@@ -198,7 +219,7 @@ const AddEditPost: React.FC<Props> = (props: Props) => {
       </Typography>
       <div className={classes.snippet}>
         <SyntaxHighlighter
-          style={vs2015}
+          style={props.isDarkTheme ? vs2015 : githubGist}
           language={languages[programmingLang]}
           showLineNumbers={true}
         >
@@ -222,12 +243,12 @@ const AddEditPost: React.FC<Props> = (props: Props) => {
     }
   };
 
-  const getPageContent = () => {
+  const getPageContent = (t: any) => {
     switch (page) {
       case 1:
         return descriptionPageContent;
       case 2:
-        return codePageContent;
+        return codePageContent(t);
       case 3:
         return summaryPageContent;
 
@@ -259,7 +280,7 @@ const AddEditPost: React.FC<Props> = (props: Props) => {
             variant="contained"
             color="primary"
           >
-            Poprzednia strona
+            <T id="previousPage" />
           </Button>
         )}
 
@@ -269,23 +290,35 @@ const AddEditPost: React.FC<Props> = (props: Props) => {
           variant="contained"
           color="primary"
         >
-          {page !== 3 ? 'Następna strona' : 'Wyślij'}
+          {page !== 3 ? <T id="nextPage" /> : <T id="sent" />}
         </Button>
       </div>
 
       <div className={classes.root}>
         <Typography className={classes.marginSmall} variant="body1">
-          Twój post będzie wyglądać tak:
+          <T id="postWillLook" />
         </Typography>
         <Card>
-          <CardHeader
-            avatar={
-              <UserAvatar firstName={'Your'} lastName={'Name'} photo={null} />
-            }
-            title={'Your Name'}
-            subheader={'Now'}
-          />
-          <CardContent> {getPageContent()}</CardContent>
+          <T>
+            {({ translate }) => (
+              <div>
+                <CardHeader
+                  avatar={
+                    <UserAvatar
+                      firstName={translate('your') as string}
+                      lastName={translate('name') as string}
+                      photo={null}
+                    />
+                  }
+                  title={translate('yourName') as string}
+                  subheader={translate('now') as string}
+                />
+
+                <CardContent> {getPageContent(translate)}</CardContent>
+              </div>
+            )}
+          </T>
+
           <CardActions disableSpacing={true}>
             <IconButton aria-label="like">
               <FavoriteIcon />
@@ -300,26 +333,31 @@ const AddEditPost: React.FC<Props> = (props: Props) => {
             <IconButton aria-label="gist">
               <GitHubIcon />
             </IconButton>
-            <FormControlLabel
-              control={
-                <Checkbox
-                  color="primary"
-                  checked={addToGists}
-                  onChange={handleAddToGists}
+            {props.isTokenAdded && (
+              <>
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      color="primary"
+                      checked={addToGists}
+                      onChange={handleAddToGists}
+                    />
+                  }
+                  label={<T id="addToGists" />}
                 />
-              }
-              label="Add to your Gists"
-            />
-            {addToGists && (
-              <TextField
-                defaultValue={
-                  programmingLang === '' ? '.txt' : fileExt[programmingLang]
-                }
-                className={classes.formControl}
-                value={fileName}
-                onChange={e => handleFileName(e.target.value)}
-                label={'File Name'}
-              />
+
+                {addToGists && (
+                  <TextField
+                    defaultValue={
+                      programmingLang === '' ? '.txt' : fileExt[programmingLang]
+                    }
+                    className={classes.formControl}
+                    value={fileName}
+                    onChange={e => handleFileName(e.target.value)}
+                    label={<T id="fileName" />}
+                  />
+                )}
+              </>
             )}
           </CardActions>
         </Card>
@@ -328,4 +366,9 @@ const AddEditPost: React.FC<Props> = (props: Props) => {
   );
 };
 
-export default AddEditPost;
+const mapStateToProps = (state: AppState) => ({
+  isDarkTheme: state.settings.isDarkTheme,
+  isTokenAdded: state.settings.hasGithubToken,
+});
+
+export default connect(mapStateToProps)(withLocalize(withRouter(AddEditPost)));

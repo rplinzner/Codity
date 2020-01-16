@@ -93,5 +93,34 @@
   "writeComment": ["Write comment", "Napisz komentarz"],
   "loadMore": ["Load more", "Załaduj więcej"],
   "deleteComment": ["Delete comment", "Usuń komentarz"],
-  "editComment": ["Edit comment", "Edytuj komentarz"]
+  "editComment": ["Edit comment", "Edytuj komentarz"],
+  "addDescription": ["Add description", "Dodaj opis"],
+  "addText": [
+    "Describe your post in few sentences",
+    " W paru zdaniach opisz na czym polega twój post"
+  ],
+  "postDescription": ["Post description", "Opis posta"],
+  "postWillLook": [
+    "Your post will look like this:",
+    "Twój post będzie wyglądać tak:"
+  ],
+  "addSnippet": ["Add snippet", "Dodaj snippet"],
+  "addSnippetText": [
+    "Add code snippet you want to include in your post",
+    "Dodaj snippet kodu którym chcesz się pochwalić"
+  ],
+  "placeCode": ["Place your code here", "Wstaw swój kod tutaj"],
+  "summary": ["Summary", "Podsumowanie"],
+  "lookThroughPost": [
+    "Look through your post and decide if you want to add it to your Gists on Github (only available if you have added token in your profile)",
+    "Przejżyj swój post i zastanów się, czy chcesz go dodać do twoich Gistów na platformie Github (dostępne tylko jeśli posiadasz dodany token w profilu)"
+  ],
+  "nextPage": ["Next page", "Następna strona"],
+  "previousPage": ["Previous page", "Poprzednia strona"],
+  "your": ["Your", "Twoje"],
+  "name": ["Name", "Imię"],
+  "yourName": ["Your name", "Twoje imię"],
+  "now": ["Now", "Teraz"],
+  "addToGists": ["Add to your Gists", "Dodaj do swoich Gistów"],
+  "fileName": ["File name", "Nazwa pliku"]
 }
