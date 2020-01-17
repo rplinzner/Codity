@@ -19,17 +19,20 @@ namespace Twitter.Services.Services
 {
     public class UserService : IUserService
     {
+        private readonly IBaseRepository<TweetLike> _tweetLikeRepository;
         private readonly IBaseRepository<Follow> _followRepository;
         private readonly IUserRepository _userRepository;
         private readonly INotificationGeneratorService _notificationGeneratorService;
         private readonly IMapper _mapper;
 
         public UserService(
+            IBaseRepository<TweetLike> tweetLikeRepository,
             IBaseRepository<Follow> followRepository,
             IUserRepository userRepository,
             INotificationGeneratorService notificationGeneratorService,
             IMapper mapper)
         {
+            _tweetLikeRepository = tweetLikeRepository;
             _followRepository = followRepository;
             _userRepository = userRepository;
             _notificationGeneratorService = notificationGeneratorService;
@@ -56,7 +59,14 @@ namespace Twitter.Services.Services
 
             var userDTO = _mapper.Map<UserDTO>(user);
 
-            userDTO.LatestTweets = _mapper.Map<IEnumerable<TweetDTO>>(user.Tweets.Take(5));
+            userDTO.LatestTweets = _mapper.Map<IEnumerable<TweetDTO>>(user.Tweets.OrderByDescending(c => c.CreationDate).Take(5));
+            var tweetIds = userDTO.LatestTweets.Select(c => c.Id);
+            var likes = await _tweetLikeRepository.GetAllByAsync(c => tweetIds.Contains(c.TweetId) && c.UserId == currentUserId);
+            foreach (var tweet in userDTO.LatestTweets)
+            {
+                tweet.IsLiked = likes.Any(c => c.TweetId == tweet.Id);
+            }
+
             userDTO.IsFollowing = await _followRepository.ExistAsync(c => c.FollowerId == currentUserId && c.FollowingId == userId);
 
             response.Model = userDTO;

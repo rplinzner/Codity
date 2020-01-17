@@ -103,7 +103,7 @@ namespace Twitter.Services.Services
             var following = (await _followRepository.GetAllByAsync(c => c.FollowerId == currentUserId)).Select(c => c.FollowingId);
 
             var tweets = await _tweetRepository.GetPagedByAsync(
-                c => following.Contains(c.Id),
+                c => following.Contains(c.AuthorId),
                 paginationRequest.PageNumber,
                 paginationRequest.PageSize);
 
