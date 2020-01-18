@@ -70,6 +70,10 @@ const Following: React.FC<Props & LocalizeContextProps> = (
     if (profiles && profiles.currentPage === profiles.totalPages) {
       return;
     }
+    if (profiles && profiles.totalPages === 0) {
+      setProfiles(null);
+      return;
+    }
     const id = userId;
     if (id !== '') {
       get<FollowingResponse>(

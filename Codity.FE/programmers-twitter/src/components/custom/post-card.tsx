@@ -113,7 +113,7 @@ const PostCard: React.FC<Props & RouteComponentProps> = (
   };
 
   const likePost = () => {
-    const data = { tweetId: post.id };
+    const data = { postId: post.id };
     postService(
       data,
       constants.likeController,
@@ -128,7 +128,7 @@ const PostCard: React.FC<Props & RouteComponentProps> = (
   };
 
   const dislikePost = () => {
-    const data = { tweetId: post.id };
+    const data = { postId: post.id };
     deleteRequest(
       data,
       constants.likeController,
@@ -183,7 +183,7 @@ const PostCard: React.FC<Props & RouteComponentProps> = (
 
   const addComment = () => {
     setIsCommentAdding(true);
-    const data = { tweetId: post.id, text: commentText };
+    const data = { postId: post.id, text: commentText };
     setCommentText('');
     postService<CommentResponse, typeof data>(
       data,
@@ -419,7 +419,8 @@ const PostCard: React.FC<Props & RouteComponentProps> = (
               </div>
             ))}
           {commentsResponse &&
-            !(commentsResponse.currentPage === commentsResponse.totalPages) && (
+            !(commentsResponse.currentPage === commentsResponse.totalPages) &&
+            commentsResponse.totalCount > 0 && (
               <div>
                 <Divider />
                 <Button

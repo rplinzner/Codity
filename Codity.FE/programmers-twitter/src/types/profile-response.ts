@@ -9,7 +9,7 @@ export interface Model {
   birthDay: string;
   genderName: string;
   followingCount: number;
-  latestTweets: Post[];
+  latestPosts: Post[];
   id: number;
   firstName: string;
   lastName: string;

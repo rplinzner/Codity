@@ -46,7 +46,7 @@ const Feed: React.FC<Props> = (props: Props) => {
   const [isLoading, setIsLoading] = useState(false);
 
   const classes = useStyles();
-  const pageSize = 3;
+  const pageSize = 5;
 
   const langCode = props.activeLanguage ? props.activeLanguage.code : 'en';
 
@@ -64,6 +64,14 @@ const Feed: React.FC<Props> = (props: Props) => {
     ) {
       return;
     }
+    if (
+      postsResponse &&
+      postsResponse.totalPages === 0
+    ) {
+      setPostsResponse(null);
+      return;
+    }
+
 
     setIsLoading(true);
     get<PostsResponse>(

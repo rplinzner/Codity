@@ -199,9 +199,10 @@ const UserProfile: React.FC<Props & LocalizeContextProps> = (
         .then(
           resp => {
             setUserProfile(resp);
-            setPosts(resp.model.latestTweets);
+            setPosts(resp.model.latestPosts);
             setIsLoading(false);
             setEditableStates(resp);
+            
           },
           errors => {
             displayErrors(errors);
