@@ -43,20 +43,21 @@ namespace Codity.Services.Services
             var commentAuthorFullName = $"{commentAuthor.FirstName} {commentAuthor.LastName}";
             var postAuthorFullName = $"{postAuthor.FirstName} {postAuthor.LastName}";
 
-            var notification = new Notification();
-
             var notificationParams = new CommentParameters()
             {
                 CommentAuthorFullName = commentAuthorFullName,
                 PostAuthorFullName = postAuthorFullName
             };
 
-            notification.Parameters = _notificationMapper.SerializeNotificationParameters(notificationParams);
-            notification.PostId = post.Id;
-            notification.Type = NotificationType.Comment;
-            notification.Description = comment.Truncate(30);
-            notification.CreatedTime = DateTime.Now;
-            notification.RedirectTo = string.Format(_redirectOptions.PostUrl, post.Id);
+            var notification = new Notification
+            {
+                Parameters = _notificationMapper.SerializeNotificationParameters(notificationParams),
+                PostId = post.Id,
+                Type = NotificationType.Comment,
+                Description = comment.Truncate(30),
+                CreatedTime = DateTime.Now,
+                RedirectTo = string.Format(_redirectOptions.PostUrl, post.Id)
+            };
 
             await _notificationRepository.AddAsync(notification);
 
@@ -74,17 +75,20 @@ namespace Codity.Services.Services
 
             if (commentAuthor.Id != postAuthor.Id)
             {
-                var postAuthorNotification = new Notification();
                 var postAuthorNotificationParams = new CommentParameters()
                 {
                     CommentAuthorFullName = commentAuthorFullName
                 };
-                postAuthorNotification.Parameters = _notificationMapper.SerializeNotificationParameters(postAuthorNotificationParams);
-                postAuthorNotification.PostId = post.Id;
-                postAuthorNotification.Type = NotificationType.Comment;
-                postAuthorNotification.Description = comment.Truncate(30);
-                postAuthorNotification.CreatedTime = DateTime.Now;
-                postAuthorNotification.RedirectTo = string.Format(_redirectOptions.PostUrl, post.Id);
+
+                var postAuthorNotification = new Notification
+                {
+                    Parameters = _notificationMapper.SerializeNotificationParameters(postAuthorNotificationParams),
+                    PostId = post.Id,
+                    Type = NotificationType.Comment,
+                    Description = comment.Truncate(30),
+                    CreatedTime = DateTime.Now,
+                    RedirectTo = string.Format(_redirectOptions.PostUrl, post.Id)
+                };
 
                 await _notificationRepository.AddAsync(postAuthorNotification);
 
@@ -107,7 +111,6 @@ namespace Codity.Services.Services
             var followerFullName = $"{follower.FirstName} {follower.LastName}";
             var followingFullName = $"{following.FirstName} {following.LastName}";
 
-            var notification = new Notification();
 
             var notificationParams = new FollowerParameters()
             {
@@ -115,10 +118,13 @@ namespace Codity.Services.Services
                 FollowingFullName = followingFullName
             };
 
-            notification.Parameters = _notificationMapper.SerializeNotificationParameters(notificationParams);
-            notification.Type = NotificationType.Follower;
-            notification.CreatedTime = DateTime.Now;
-            notification.RedirectTo = string.Format(_redirectOptions.UserUrl, following.Id);
+            var notification = new Notification
+            {
+                Parameters = _notificationMapper.SerializeNotificationParameters(notificationParams),
+                Type = NotificationType.Follower,
+                CreatedTime = DateTime.Now,
+                RedirectTo = string.Format(_redirectOptions.UserUrl, following.Id)
+            };
 
             await _notificationRepository.AddAsync(notification);
 
@@ -137,15 +143,18 @@ namespace Codity.Services.Services
                 }
             }
 
-            var followingNotification = new Notification();
             var postAuthorNotificationParams = new FollowerParameters()
             {
                 FollowerFullName = followerFullName
             };
-            followingNotification.Parameters = _notificationMapper.SerializeNotificationParameters(postAuthorNotificationParams);
-            followingNotification.Type = NotificationType.Follower;
-            followingNotification.CreatedTime = DateTime.Now;
-            followingNotification.RedirectTo = string.Format(_redirectOptions.UserUrl, follower.Id);
+
+            var followingNotification = new Notification
+            {
+                Parameters = _notificationMapper.SerializeNotificationParameters(postAuthorNotificationParams),
+                Type = NotificationType.Follower,
+                CreatedTime = DateTime.Now,
+                RedirectTo = string.Format(_redirectOptions.UserUrl, follower.Id)
+            };
 
             await _notificationRepository.AddAsync(followingNotification);
 
@@ -272,19 +281,21 @@ namespace Codity.Services.Services
         {
             var postAuthorFullName = $"{postAuthor.FirstName} {postAuthor.LastName}";
 
-            var notification = new Notification();
 
             var notificationParams = new PostParameters()
             {
                 AuthorFullName = postAuthorFullName,
             };
 
-            notification.Parameters = _notificationMapper.SerializeNotificationParameters(notificationParams);
-            notification.PostId = post.Id;
-            notification.Type = NotificationType.Post;
-            notification.Description = post.Text.Truncate(30);
-            notification.CreatedTime = DateTime.Now;
-            notification.RedirectTo = string.Format(_redirectOptions.PostUrl, post.Id);
+            var notification = new Notification
+            {
+                Parameters = _notificationMapper.SerializeNotificationParameters(notificationParams),
+                PostId = post.Id,
+                Type = NotificationType.Post,
+                Description = post.Text.Truncate(30),
+                CreatedTime = DateTime.Now,
+                RedirectTo = string.Format(_redirectOptions.PostUrl, post.Id)
+            };
 
             await _notificationRepository.AddAsync(notification);
 

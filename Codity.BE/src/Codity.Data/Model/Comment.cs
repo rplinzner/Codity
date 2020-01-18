@@ -2,7 +2,7 @@
 
 namespace Codity.Data.Model
 {
-    public class Comment : BaseEntity, IBaseEntity
+    public class Comment : BaseEntity
     {
         public int PostId { get; set; }
         public Post Post { get; set; }

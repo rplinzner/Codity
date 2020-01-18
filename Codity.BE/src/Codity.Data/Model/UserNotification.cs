@@ -1,6 +1,6 @@
 ﻿namespace Codity.Data.Model
 {
-    public class UserNotification : BaseEntity, IBaseEntity
+    public class UserNotification : BaseEntity
     {
         public int UserId { get; set; }
         public User User { get; set; }

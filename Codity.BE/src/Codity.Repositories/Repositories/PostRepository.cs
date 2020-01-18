@@ -18,21 +18,21 @@ namespace Codity.Repositories.Repositories
 
         public async Task<Post> GetByAsync(Expression<Func<Post, bool>> getBy, bool withTracking = false)
         {
-            var query = CreateGetQuery(withTracking);
+            var query = GetAllQuery(withTracking);
 
             return await query.FirstOrDefaultAsync(getBy);
         }
 
         public async Task<PagedList<Post>> GetPagedByAsync(Expression<Func<Post, bool>> getBy, int pageNumber, int pageSize, bool withTracking = false)
         {
-            var query = CreateGetQuery(withTracking)
+            var query = GetAllQuery(withTracking)
                 .OrderByDescending(c => c.CreationDate)
                 .Where(getBy);
 
             return await PagedList<Post>.Create(query, pageNumber, pageSize);
         }
 
-        private IQueryable<Post> CreateGetQuery(bool withTracking)
+        private IQueryable<Post> GetAllQuery(bool withTracking)
         {
             var query = _dbContext.Posts
                 .Include(c => c.Author)

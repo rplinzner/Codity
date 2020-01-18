@@ -73,16 +73,6 @@ namespace Codity.Services.Services
             return response;
         }
 
-        public Task<IBaseResponse> MarkAllNotificationsAsRead()
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<IBaseResponse> MarkNotificationAsRead(int notificationId)
-        {
-            throw new NotImplementedException();
-        }
-
         public async Task SendNotification(int userId, int notificationId)
         {
             await _notificationContext.Clients.User(userId.ToString()).SendAsync("newNotification", notificationId);

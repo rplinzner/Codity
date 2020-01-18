@@ -1,6 +1,6 @@
 ﻿namespace Codity.Data.Model
 {
-    public class Gender : BaseEntity, IBaseEntity
+    public class Gender : BaseEntity
     {
         public string Name { get; set; }
     }

@@ -13,7 +13,5 @@ namespace Codity.Services.Interfaces
 
         Task<IResponse<NotificationDTO>> GetNotification(int notificationId);
         Task<IPagedResponse<NotificationDTO>> GetAllNotifications(int userId, PaginationRequest paingationRequest);
-        Task<IBaseResponse> MarkNotificationAsRead(int notificationId);
-        Task<IBaseResponse> MarkAllNotificationsAsRead();
     }
 }

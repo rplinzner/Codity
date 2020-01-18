@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Codity.Data.Model
 {
-    public class Post : BaseEntity, IBaseEntity
+    public class Post : BaseEntity
     {
         public int AuthorId { get; set; }
         public User Author { get; set; }

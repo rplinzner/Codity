@@ -1,6 +1,6 @@
 ﻿namespace Codity.Data.Model
 {
-    public class Settings : BaseEntity, IBaseEntity
+    public class Settings : BaseEntity
     {
         public bool IsDarkTheme { get; set; }
         public string GithubToken { get; set; }

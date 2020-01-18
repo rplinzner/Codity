@@ -1,6 +1,6 @@
 ﻿namespace Codity.Data.Model
 {
-    public class PostLike: BaseEntity, IBaseEntity
+    public class PostLike: BaseEntity
     {
         public int UserId { get; set; }
         public User User { get; set; }

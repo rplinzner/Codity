@@ -3,7 +3,7 @@ using Codity.Data.Model.Enums;
 
 namespace Codity.Data.Model
 {
-    public class Notification : BaseEntity, IBaseEntity
+    public class Notification : BaseEntity
     {
         public int? PostId { get; set; }
         public Post Post { get; set; }
