@@ -198,7 +198,7 @@ const AddEditPost: React.FC<Props & RouteComponentProps> = (
       true,
     ).then(
       resp => {
-        toast.success('Post added successfully');
+        toast.success(<T id="postAddedSuccess" />);
         props.history.push(`/Post?postId=${resp.model.id}`);
         setIsLoading(false);
       },

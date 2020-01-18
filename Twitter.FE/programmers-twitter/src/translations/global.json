@@ -122,5 +122,6 @@
   "yourName": ["Your name", "Twoje imię"],
   "now": ["Now", "Teraz"],
   "addToGists": ["Add to your Gists", "Dodaj do swoich Gistów"],
-  "fileName": ["File name", "Nazwa pliku"]
+  "fileName": ["File name", "Nazwa pliku"],
+  "postAddedSuccess": ["Post added successfully", "Post dodano pomyślnie"]
 }
