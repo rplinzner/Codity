@@ -128,7 +128,7 @@ namespace Codity.WebApi.ExtensionMethods
         public static void AddHangfire(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddHangfire(c => c
-               .UseSqlServerStorage(configuration.GetConnectionString("HangfireConnection"), new SqlServerStorageOptions
+               .UseSqlServerStorage(configuration.GetConnectionString("CodityConnection"), new SqlServerStorageOptions
                {
                    SlidingInvisibilityTimeout = TimeSpan.FromMinutes(5),
                    QueuePollInterval = TimeSpan.Zero,

@@ -8,11 +8,8 @@ namespace Codity.Services.Helpers
         public static void ScheduleRecurringJobs()
         {
             RecurringJob.AddOrUpdate<IStatisticService>(nameof(IStatisticService),
-                c => c.SendWeeklyStatisticSummary(),
-                "*/5 * * * *");
-            //RecurringJob.AddOrUpdate<IStatisticService>(nameof(IStatisticService),
-            //   c => c.SendWeeklyStatisticSummary(),
-            //   Cron.Weekly);
+               c => c.SendWeeklyStatisticSummary(),
+               Cron.Hourly);
         }
     }
 }
