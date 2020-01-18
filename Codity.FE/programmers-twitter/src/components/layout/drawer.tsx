@@ -8,6 +8,7 @@ import PersonAddIcon from '@material-ui/icons/PersonAdd';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ViewStreamIcon from '@material-ui/icons/ViewStream';
 import RssFeedIcon from '@material-ui/icons/RssFeed';
+import PostAddIcon from '@material-ui/icons/PostAdd';
 
 import {
   makeStyles,
@@ -108,9 +109,7 @@ function ResponsiveDrawer(props: Props & LocalizeContextProps) {
     </MenuList>
   );
 
-  const followPath = `/Following/?userId=${
-    props.userId ? props.userId : '1'
-  }`;
+  const followPath = `/Following/?userId=${props.userId ? props.userId : '1'}`;
 
   const loggedInMenu = (
     <MenuList>
@@ -118,7 +117,7 @@ function ResponsiveDrawer(props: Props & LocalizeContextProps) {
         className={classes.menuItem}
         component={Link}
         to="/MyFeed"
-        selected={'/MyFeed' === pathname}
+        selected={pathname.includes('/MyFeed')}
         onClick={onDrawerClose}
       >
         <ListItemIcon>
@@ -126,6 +125,21 @@ function ResponsiveDrawer(props: Props & LocalizeContextProps) {
         </ListItemIcon>
         <Typography variant="inherit">
           <T id="myFeed" />
+        </Typography>
+      </MenuItem>
+      <Divider variant="middle" />
+      <MenuItem
+        className={classes.menuItem}
+        component={Link}
+        to="/ManagePost"
+        selected={pathname.includes('/ManagePost')}
+        onClick={onDrawerClose}
+      >
+        <ListItemIcon>
+          <PostAddIcon fontSize="small" />
+        </ListItemIcon>
+        <Typography variant="inherit">
+          <T id="addPost" />
         </Typography>
       </MenuItem>
       <Divider variant="middle" />
