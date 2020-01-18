@@ -161,7 +161,7 @@ const Notifications: React.FC<Props & RouteComponentProps> = (
 
   const hasMore = () => {
     if (oldNotifications) {
-      return !(oldNotifications.currentPage === oldNotifications.totalPages);
+      return !(oldNotifications.currentPage === oldNotifications.totalPages) && oldNotifications.totalCount > 0;
     }
     return false;
   };
