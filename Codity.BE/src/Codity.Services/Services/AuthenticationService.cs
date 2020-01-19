@@ -57,16 +57,6 @@ namespace Codity.Services.Services
                 return response;
             }
 
-            if (!await _userManager.IsEmailConfirmedAsync(user))
-            {
-                response.AddError(new Error
-                {
-                    Message = ErrorTranslations.EmailNotConfirmed
-                });
-
-                return response;
-            }
-
             var result = await _signInManager.CheckPasswordSignInAsync(user, model.Password, false);
 
             if (!result.Succeeded)
@@ -74,6 +64,16 @@ namespace Codity.Services.Services
                 response.AddError(new Error
                 {
                     Message = ErrorTranslations.IncorrectCredentials
+                });
+
+                return response;
+            }
+
+            if (!await _userManager.IsEmailConfirmedAsync(user))
+            {
+                response.AddError(new Error
+                {
+                    Message = ErrorTranslations.EmailNotConfirmed
                 });
 
                 return response;
