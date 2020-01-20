@@ -99,7 +99,7 @@ namespace Codity.Services.Services
             {
                 response.AddError(new Error
                 {
-                    Message = ErrorTranslations.LanguageCodeNotFound
+                    Message = string.Format(ErrorTranslations.LanguageCodeNotFound, model.LanguageCode)
                 });
 
                 return response;
