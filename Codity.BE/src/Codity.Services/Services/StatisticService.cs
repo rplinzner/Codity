@@ -87,12 +87,10 @@ namespace Codity.Services.Services
 
             var users = await _userRepository.GetAllAsync();
 
-            //foreach (var user in users)
-            //{
-            //    await _emailSenderService.SendEmail(user.Email, title, statisticMessage.ToString());
-            //}
-            await _emailSenderService.SendEmail("damiansalata10@gmail.com", title, statisticMessage.ToString());
-            await _emailSenderService.SendEmail("rplinzner@gmail.com", title, statisticMessage.ToString());
+            foreach (var user in users)
+            {
+                await _emailSenderService.SendEmail(user.Email, title, statisticMessage.ToString());
+            }
         }
     }
 }

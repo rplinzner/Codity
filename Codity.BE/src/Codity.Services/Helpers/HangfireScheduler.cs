@@ -9,7 +9,7 @@ namespace Codity.Services.Helpers
         {
             RecurringJob.AddOrUpdate<IStatisticService>(nameof(IStatisticService),
                c => c.SendWeeklyStatisticSummary(),
-               Cron.Hourly);
+               Cron.Weekly);
         }
     }
 }
