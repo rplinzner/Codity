@@ -95,6 +95,15 @@ namespace Codity.Services.Services
             var user = _mapper.Map<User>(model);
 
             var language = await _languageRepository.GetByAsync(c => c.Code == model.LanguageCode);
+            if (language == null)
+            {
+                response.AddError(new Error
+                {
+                    Message = ErrorTranslations.LanguageCodeNotFound
+                });
+
+                return response;
+            }
 
             user.Settings = new Settings
             {

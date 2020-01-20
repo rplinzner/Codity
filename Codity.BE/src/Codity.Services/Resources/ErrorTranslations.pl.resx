@@ -238,4 +238,7 @@
   <data name="FollowingYourself" xml:space="preserve">
     <value>Nie możesz obserwować samego siebie.</value>
   </data>
+  <data name="LanguageCodeNotFound" xml:space="preserve">
+    <value>Language Code '{0}' nie istnieje w bazie danych.</value>
+  </data>
 </root>

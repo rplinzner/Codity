@@ -239,4 +239,7 @@
   <data name="FollowingYourself" xml:space="preserve">
     <value>You cannot follow Yourself.</value>
   </data>
+  <data name="LanguageCodeNotFound" xml:space="preserve">
+    <value>Language Code '{0}' does not exist in database.</value>
+  </data>
 </root>

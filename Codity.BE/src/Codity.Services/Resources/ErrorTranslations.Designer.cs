@@ -268,6 +268,15 @@ namespace Codity.Services.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Language Code &apos;{0}&apos; does not exist in database..
+        /// </summary>
+        public static string LanguageCodeNotFound {
+            get {
+                return ResourceManager.GetString("LanguageCodeNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to You already like this post..
         /// </summary>
         public static string LikeAlreadyExists {
@@ -403,6 +412,15 @@ namespace Codity.Services.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Post does not exist..
+        /// </summary>
+        public static string PostNotFound {
+            get {
+                return ResourceManager.GetString("PostNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Recovery code redemption failed..
         /// </summary>
         public static string RecoveryCodeRedemptionFailed {
@@ -426,15 +444,6 @@ namespace Codity.Services.Resources {
         public static string SearchUserMinLength {
             get {
                 return ResourceManager.GetString("SearchUserMinLength", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Post does not exist..
-        /// </summary>
-        public static string PostNotFound {
-            get {
-                return ResourceManager.GetString("PostNotFound", resourceCulture);
             }
         }
         
