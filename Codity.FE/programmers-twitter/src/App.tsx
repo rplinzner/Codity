@@ -22,7 +22,6 @@ import * as authentication from './components/containers/authentication/';
 import * as additional from './components/containers/additional/';
 import * as main from './components/containers/feed/';
 import * as user from './components/containers/profile/';
-import SearchResultCard from './components/containers/additional/search-result-card';
 import { settingsController } from './constants/global.constats';
 import { PrivateRoute } from './components/containers/authentication/';
 import { Following } from './components/containers/following/';
@@ -118,7 +117,6 @@ class App extends Component<Props> {
               <Route path="/" exact={true} component={authentication.Login} />
               <Route path="/Register" component={authentication.Register} />
               <Route path="/Verify/:type" component={additional.Verify} />
-              <Route path="/test" component={SearchResultCard} />
               {/* Private Routes */}
               <PrivateRoute path="/MyFeed" component={main.Feed} />
               <PrivateRoute path="/Post" component={Post} />

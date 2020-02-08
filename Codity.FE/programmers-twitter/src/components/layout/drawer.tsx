@@ -106,6 +106,7 @@ function ResponsiveDrawer(props: Props & LocalizeContextProps) {
           <T id="register" />
         </Typography>
       </MenuItem>
+      <Divider variant="middle" />
     </MenuList>
   );
 
