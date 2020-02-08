@@ -1,0 +1,128 @@
+{
+  "clickHere": [
+    "Click ${link} to go to login page",
+    "Kliknij ${link} aby przejść do strony logowania"
+  ],
+  "close": ["Close", "Zamknij"],
+  "darkTheme": ["Dark theme", "Ciemny motyw"],
+  "did404": ["You reached 404!", "Dotarłeś do 404!"],
+  "doNotWorry": [
+    " Don't worry though, I've got some good boys for you",
+    "Nie martw się jednak, mam dla Ciebie troszkę dobrych chłopaków"
+  ],
+  "errorConnection": [
+    "There was an error while communicating with server. Please try again later",
+    "Podczas komunikacji z serwerem wystapił błąd. Spróbuj ponownie później"
+  ],
+  "firstName": ["First name", "Imię"],
+  "follow": ["Follow", "Obserwuj"],
+  "followers": ["Followers", "Obserwujących"],
+  "following": ["Following", "Obserwowani"],
+  "greeting": [
+    "Welcome to Codity! To use our service you need to log in!",
+    "Witaj w Codity! Żeby korzystać z naszych serwisów musisz się zalogować!"
+  ],
+  "here": ["Here", "Tutaj"],
+  "language": ["Language", "Język"],
+  "lastName": ["Last name", "Nazwisko"],
+  "mailFailed": ["Mail verification failed", "Mail nie został zweryfikowany"],
+  "mailSuccess": [
+    "Mail verified successfully!",
+    "Mail zweryfikowany poprawnie!"
+  ],
+  "noData": ["No data to display", "Brak danych do wyświetlenia"],
+  "reset": ["Reset", "Wyczyść"],
+  "seemLost": ["You seem lost", "Wyglądasz na zagubionego"],
+  "sent": ["Submit", "Wyślij"],
+  "somethingWrong": ["Something went wrong", "Coś poszło nie tak"],
+  "unfollow": ["Unfollow", "Przestań obserwować"],
+  "whenReady": [
+    "When you're ready just click",
+    "Gdy będziesz gotowy po prostu kliknij:"
+  ],
+  "yearsOld": ["years old", "lat"],
+  "aboutMe": ["About me", "O mnie"],
+  "notWrittenYet": [
+    "User has not provided any info yet",
+    "Użytkownik nie uzupełnił jeszcze tej informacji"
+  ],
+  "editProfile": ["Edit Profile", "Edytuj Profil"],
+  "save": ["Save", "Zapisz"],
+  "birthDay": ["Birth Day", "Urodziny"],
+  "waitForServerResponse": [
+    "Please wait for server to respond",
+    "Proszę poczekać na odpowiedź od serwera"
+  ],
+  "cancel": ["Cancel", "Anuluj"],
+  "loading": ["Loading...", "Ładowanie..."],
+  "gender": ["Gender", "Płeć"],
+  "settings": ["Settings", "Ustawienia"],
+  "basic": ["Basic", "Podstawowe"],
+  "additional": ["Additional", "Dodatkowe"],
+  "githubTokenState": ["Github token state", "Stan tokenu Github"],
+  "added": ["ADDED", "DODANY"],
+  "noToken": ["No token added", "Brak dodanego tokenu"],
+  "security": ["Security", "Bezpieczeństwo"],
+  "githubToken": ["Github token", "Token Github"],
+  "addNew": ["Add new", "Dodaj nowy"],
+  "deleteToken": ["Delete token", "Usuń token"],
+  "githubTokenSet": [
+    "Github token has been set!",
+    "Token Github został ustawiony!"
+  ],
+  "githubTokenRemove": [
+    "Github token has been removed!",
+    "Token Github został usunięty!"
+  ],
+  "settingsApplied": [
+    "New settings applied successfully",
+    "Nowe ustawienia zastosowane poprawnie"
+  ],
+  "giveKarma": ["Give karma", "Daj karmę"],
+  "showComments": ["Show comments", "Pokaż komentarze"],
+  "hideComments": ["Hide comments", "Ukryj komentarze"],
+  "showKarma": ["Show karma", "Pokaż karmę"],
+  "showUserProfile": ["Show user's profile", "Wyświetl profil użytkownika"],
+  "showPostNewWindow": [
+    "Show post in new window",
+    "Wyświetl post w nowym oknie"
+  ],
+  "deletePost": ["Delete post", "Usuń post"],
+  "editPost": ["Edit post", "Edytuj post"],
+  "showGist": ["Show Gist on Github", "Wyświetl Gist na platofirmie Github"],
+  "writeComment": ["Write comment", "Napisz komentarz"],
+  "loadMore": ["Load more", "Załaduj więcej"],
+  "deleteComment": ["Delete comment", "Usuń komentarz"],
+  "editComment": ["Edit comment", "Edytuj komentarz"],
+  "addDescription": ["Add description", "Dodaj opis"],
+  "addText": [
+    "Describe your post in few sentences",
+    " W paru zdaniach opisz na czym polega twój post"
+  ],
+  "postDescription": ["Post description", "Opis posta"],
+  "postWillLook": [
+    "Your post will look like this:",
+    "Twój post będzie wyglądać tak:"
+  ],
+  "addSnippet": ["Add snippet", "Dodaj snippet"],
+  "addSnippetText": [
+    "Add code snippet you want to include in your post",
+    "Dodaj snippet kodu którym chcesz się pochwalić"
+  ],
+  "placeCode": ["Place your code here", "Wstaw swój kod tutaj"],
+  "summary": ["Summary", "Podsumowanie"],
+  "lookThroughPost": [
+    "Look through your post and decide if you want to add it to your Gists on Github (only available if you have added token in your profile)",
+    "Przejżyj swój post i zastanów się, czy chcesz go dodać do twoich Gistów na platformie Github (dostępne tylko jeśli posiadasz dodany token w profilu)"
+  ],
+  "nextPage": ["Next page", "Następna strona"],
+  "previousPage": ["Previous page", "Poprzednia strona"],
+  "your": ["Your", "Twoje"],
+  "name": ["Name", "Imię"],
+  "yourName": ["Your name", "Twoje imię"],
+  "now": ["Now", "Teraz"],
+  "addToGists": ["Add to your Gists", "Dodaj do swoich Gistów"],
+  "fileName": ["File name", "Nazwa pliku"],
+  "postAddedSuccess": ["Post added successfully", "Post dodano pomyślnie"],
+  "addPost": ["Add post", "Dodaj post"]
+}

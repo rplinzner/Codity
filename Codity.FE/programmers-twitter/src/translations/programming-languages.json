@@ -1,0 +1,8 @@
+{
+  "cs": ["C#", "C#"],
+  "javascript": ["JavaScript", "JavaScript"],
+  "python": ["Python", "Python"],
+  "cpp": ["C++", "C++"],
+  "typescript": ["TypeScript", "TypeScript"],
+  "java": ["Java", "Java"]
+}
